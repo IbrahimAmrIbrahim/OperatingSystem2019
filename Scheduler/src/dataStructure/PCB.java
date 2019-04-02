@@ -27,6 +27,13 @@ public class PCB {
     }
 
     /**
+     * for debugging only. it prints in the console window;
+     */
+    public void printPCB() {
+        System.out.println("{PID: " + this.pID + " ,Color: " + this.color + " ,Arrival Time: " + this.arrivalTime + " ,Burst Time: " + this.burstTime + " ,Priority: " + this.priority + "}");
+    }
+
+    /**
      * Generate Random Color.
      */
     private Color randomColor() {

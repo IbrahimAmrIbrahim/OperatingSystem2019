@@ -25,6 +25,7 @@ import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 
 import dataStructure.PCB;
+import dataStructure.Queue;
 
 public class SchedulerSimulationController implements Initializable {
 
@@ -49,6 +50,22 @@ public class SchedulerSimulationController implements Initializable {
 
     @FXML
     private void startOutputSimulationButton(MouseEvent event) {
+        Queue readyQueue = new Queue();
+        PCB currPCB = new PCB();
+
+        currPCB.setArrivalTime(0);
+        currPCB.setBurstTime(20);
+
+        readyQueue.enqueue(currPCB);
+
+        currPCB = new PCB();
+        currPCB.setArrivalTime(0);
+        currPCB.setBurstTime(20);
+
+        readyQueue.enqueue(currPCB);
+
+        readyQueue.printQueue();
+
         for (int i = 1; i <= 100; i++) {
             draw(i);
         }
