@@ -51,7 +51,8 @@
                               <Button layoutX="256.0" layoutY="37.0" mnemonicParsing="false" text="Stop" />
                            </children>
                         </Group>
-                        <Button layoutX="101.0" layoutY="191.0" mnemonicParsing="false" text="Change Scheduler" />
+                        <Button layoutX="31.0" layoutY="191.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="140.0" text="Add new process" />
+                        <Button layoutX="185.0" layoutY="191.0" mnemonicParsing="false" text="Change Scheduler" />
                      </children>
                   </Pane>
                </children>

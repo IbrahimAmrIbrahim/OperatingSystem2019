@@ -31,8 +31,16 @@ public class PCB {
      */
     private Color randomColor() {
         Color newColor;
-        newColor = Color.hsb(0, 0, 0);
+        newColor = Color.hsb(randomNo(0, 360), randomNo(0.6, 1), randomNo(0.5, 1));
         return newColor;
+    }
+
+    private double randomNo(double min, double max) {
+        double rand = ((Math.random() * ((max - min) + 1)) + min);
+        if (rand > max) {
+            rand = max;
+        }
+        return rand;
     }
 
     /**

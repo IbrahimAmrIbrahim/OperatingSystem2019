@@ -24,17 +24,19 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 
+import dataStructure.PCB;
+
 public class SchedulerSimulationController implements Initializable {
 
     private SchedulerSimulationController controller;
 
-    int currentTime = 0;
-    int currentXPosition = 0;
-    int currentYPosition = 20;
-    boolean canvasIsEmpty = true;
+    int currentTime;
+    int currentXPosition;
+    int currentYPosition;
+    boolean canvasIsEmpty;
 
     enum schedulerType {
-        Null, FCFS
+        None, FCFS, SJF_Preemptive_FCFS, SJF_NonPreemptive_FCFS, RoundRobin, Priority_Preemptive_FCFS, Priority_NonPreemptive_FCFS
     };
 
     schedulerType currentScheduler;
@@ -47,9 +49,9 @@ public class SchedulerSimulationController implements Initializable {
 
     @FXML
     private void startOutputSimulationButton(MouseEvent event) {
-        /*for (int i = 1; i <= 100; i++) {
+        for (int i = 1; i <= 100; i++) {
             draw(i);
-        }*/
+        }
     }
 
     @FXML
@@ -57,6 +59,11 @@ public class SchedulerSimulationController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        currentScheduler = schedulerType.None;
+        currentTime = 0;
+        currentXPosition = 0;
+        currentYPosition = 20;
+        canvasIsEmpty = true;
         schedulerSelectDialog();
     }
 
@@ -103,11 +110,16 @@ public class SchedulerSimulationController implements Initializable {
     /**
      * For Open a scheduler picker.
      */
-    public void schedulerSelectDialog() {
+    private void schedulerSelectDialog() {
         List<String> choices = new ArrayList<>();
+        //  None, FCFS, SJF_Preemptive_FCFS, SJF_NonPreemptive_FCFS, RoundRobin, Priority_Preemptive_FCFS, Priority_NonPreemptive_FCFS
+        choices.add("None");
         choices.add("FCFS");
-        choices.add("b");
-        choices.add("c");
+        choices.add("Round Robin");
+        choices.add("SJF Preemptive (FCFS)");
+        choices.add("SJF NonPreemptive (FCFS)");
+        choices.add("Priority Preemptive (FCFS)");
+        choices.add("Priority NonPreemptive (FCFS)");
 
         ChoiceDialog<String> dialog = new ChoiceDialog<>("Choose a scheduler", choices);
         dialog.setTitle("Choice Dialog");
@@ -116,11 +128,25 @@ public class SchedulerSimulationController implements Initializable {
 
         Optional<String> result = dialog.showAndWait();
 
-        /*
-        *missing Return handeler
-         */
         if (result.isPresent()) {
-            System.out.println("Your choice: " + result.get());
+            String ans = result.get();
+            if (ans == "None") {
+                currentScheduler = schedulerType.None;
+            } else if (ans == "FCFS") {
+                currentScheduler = schedulerType.FCFS;
+            } else if (ans == "Round Robin") {
+                currentScheduler = schedulerType.RoundRobin;
+            } else if (ans == "SJF Preemptive (FCFS)") {
+                currentScheduler = schedulerType.SJF_Preemptive_FCFS;
+            } else if (ans == "SJF NonPreemptive (FCFS)") {
+                currentScheduler = schedulerType.SJF_NonPreemptive_FCFS;
+            } else if (ans == "Priority Preemptive (FCFS)") {
+                currentScheduler = schedulerType.Priority_Preemptive_FCFS;
+            } else if (ans == "Priority NonPreemptive (FCFS)") {
+                currentScheduler = schedulerType.Priority_NonPreemptive_FCFS;
+            }
+        } else {
+            currentScheduler = schedulerType.None;
         }
     }
 
@@ -133,22 +159,33 @@ public class SchedulerSimulationController implements Initializable {
     }
 
     public void draw(int duration) {
+        PCB newOne = new PCB();
+
         final int unityTimeWidth = 40;
         GraphicsContext gc = canvas.getGraphicsContext2D();
 
         if (duration <= 0) {
             return;
         }
-        //**************************
-        currentScheduler = schedulerType.FCFS;
-        //**************************
 
         if (canvasIsEmpty == true) {
             // Write scheduler method
             gc.setFill(Color.WHITE);
             gc.setTextAlign(TextAlignment.LEFT);
-            if (currentScheduler == schedulerType.FCFS) {
+            if (currentScheduler == schedulerType.None) {
+                gc.fillText("No Scheduler", 20, currentYPosition);
+            } else if (currentScheduler == currentScheduler.FCFS) {
                 gc.fillText("FCFS Scheduler", 20, currentYPosition);
+            } else if (currentScheduler == currentScheduler.RoundRobin) {
+                gc.fillText("Round Robin Scheduler", 20, currentYPosition);
+            } else if (currentScheduler == currentScheduler.SJF_Preemptive_FCFS) {
+                gc.fillText("SJF Preemptive (FCFS) Scheduler", 20, currentYPosition);
+            } else if (currentScheduler == currentScheduler.SJF_NonPreemptive_FCFS) {
+                gc.fillText("SJF NonPreemptive (FCFS) Scheduler", 20, currentYPosition);
+            } else if (currentScheduler == currentScheduler.Priority_Preemptive_FCFS) {
+                gc.fillText("Priority Preemptive (FCFS) Scheduler", 20, currentYPosition);
+            } else if (currentScheduler == currentScheduler.Priority_NonPreemptive_FCFS) {
+                gc.fillText("Priority NonPreemptive (FCFS) Scheduler", 20, currentYPosition);
             }
 
             currentYPosition += 20;
@@ -190,7 +227,7 @@ public class SchedulerSimulationController implements Initializable {
         //color need to change 
         //*************************
         // draw process time
-        gc.setFill(Color.hsb(25, 1, 1));
+        gc.setFill(newOne.getColor());
         //gc.fillRect(currentXPosition, (currentYPosition + 10), (duration * unityTimeWidth), 30);
         gc.fillRoundRect(currentXPosition, (currentYPosition + 10), (duration * unityTimeWidth), 30, 20, 20);
 
@@ -200,7 +237,7 @@ public class SchedulerSimulationController implements Initializable {
         //pid need to be addad 
         //*************************
         gc.setTextAlign(TextAlignment.CENTER);
-        gc.fillText(Integer.toString(duration), (((duration * unityTimeWidth) / 2) + currentXPosition), (currentYPosition + 30));
+        gc.fillText(("P" + Integer.toString(newOne.getpID())), (((duration * unityTimeWidth) / 2) + currentXPosition), (currentYPosition + 30));
 
         // draw end time point
         gc.fillRect(nextPosition, currentYPosition, 1, 50);
