@@ -8,6 +8,7 @@ public class FCFS extends Queue implements ReadyQueue {
 
     @Override
     public void insert(PCB newPCB) {
+        enqueue(newPCB);
     }
 
     @Override

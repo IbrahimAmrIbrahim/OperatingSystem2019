@@ -26,38 +26,66 @@ import javafx.stage.Stage;
 
 import dataStructure.PCB;
 import dataStructure.Queue;
+import javafx.scene.input.KeyEvent;
 import javafx.stage.StageStyle;
+import schedulerAlgorithm.FCFS;
+import schedulerAlgorithm.Priority_NonPreemptive_FCFS;
+import schedulerAlgorithm.Priority_Preemptive_FCFS;
+import schedulerAlgorithm.RoundRobin;
+import schedulerAlgorithm.SJF_NonPreemptive_FCFS;
+import schedulerAlgorithm.SJF_Preemptive_FCFS;
 
 public class SchedulerSimulationController implements Initializable {
-
-    private SchedulerSimulationController myController;
-
-    int currentTime;
-    int currentXPosition;
-    int currentYPosition;
-    boolean canvasIsEmpty;
-    private boolean newProcess;
-    private PCB processtoAddd;
-    @FXML
-    private Button startOutputSimulation_btn;
-    @FXML
-    private Button addProcess_btn;
-
-    @FXML
-    private void addNewProcessButton(MouseEvent event) throws IOException {
-        addProcessDialog();
-    }
 
     public enum schedulerType {
         None, FCFS, SJF_Preemptive_FCFS, SJF_NonPreemptive_FCFS, RoundRobin, Priority_Preemptive_FCFS, Priority_NonPreemptive_FCFS
     };
 
     private schedulerType currentScheduler;
+    private SchedulerSimulationController myController;
 
+    private int currentTime;
+    private int currentXPosition;
+    private int currentYPosition;
+    private boolean canvasIsEmpty;
+    private boolean newProcess;
+    private PCB processtoAdd;
+    private FCFS FCFS_ProcessQueue;
+    private RoundRobin RoundRobin_ProcessQueue;
+    private SJF_Preemptive_FCFS SJF_Preemptive_FCFS_ProcessQueue;
+    private SJF_NonPreemptive_FCFS SJF_NonPreemptive_FCFS_ProcessQueue;
+    private Priority_Preemptive_FCFS Priority_Preemptive_FCFS_ProcessQueue;
+    private Priority_NonPreemptive_FCFS Priority_NonPreemptive_FCFS_ProcessQueue;
+
+    @FXML
+    private Button startOutputSimulation_btn;
+    @FXML
+    private Button addProcess_btn;
     @FXML
     private ToggleGroup Simulation_Method;
+    @FXML
+    private Canvas canvas;
 
     @FXML
+    private void startOutputSimulationButton_KeyboardEvent(KeyEvent event) {
+    }
+
+    @FXML
+    private void startOutputSimulationButton_MouseEvent(MouseEvent event) {
+    }
+
+    @FXML
+    private void addNewProcessButton_KeyboardEvent(KeyEvent event) throws IOException {
+        if (event.getCode().toString().equals("ENTER")) {
+            addProcessDialog();
+        }
+    }
+
+    @FXML
+    private void addNewProcessButton_MouseEvent(MouseEvent event) throws IOException {
+        addProcessDialog();
+    }
+
     private void startOutputSimulationButton(MouseEvent event) {
         Queue readyQueue = new Queue();
         PCB currPCB = new PCB();
@@ -79,9 +107,6 @@ public class SchedulerSimulationController implements Initializable {
             draw(i);
         }
     }
-
-    @FXML
-    private Canvas canvas;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -175,6 +200,7 @@ public class SchedulerSimulationController implements Initializable {
         } else {
             currentScheduler = schedulerType.None;
         }
+        queueInitialize();
     }
 
     private void addProcessDialog() throws IOException {
@@ -183,9 +209,9 @@ public class SchedulerSimulationController implements Initializable {
 
         AddProcessController ctrl = fxmlLoader.getController();
         if (newProcess == true) {
-            processtoAddd = new PCB();
+            processtoAdd = new PCB();
         }
-        ctrl.sceneInitilize(getMyController(), processtoAddd);
+        ctrl.sceneInitilize(getMyController(), processtoAdd);
 
         Stage stage = new Stage();
         stage.setScene(new Scene(root1));
@@ -193,7 +219,98 @@ public class SchedulerSimulationController implements Initializable {
         stage.showAndWait();
         if (newProcess == true) {
             /* Add process */
-            processtoAddd.printPCB();
+            insertMethodCall(processtoAdd);
+            FCFS_ProcessQueue.printQueue();
+        }
+    }
+
+    private void insertMethodCall(PCB process) {
+        switch (currentScheduler) {
+            case None:
+                break;
+            case FCFS:
+                FCFS_ProcessQueue.insert(process);
+                break;
+            case RoundRobin:
+                RoundRobin_ProcessQueue.insert(process);
+                break;
+            case SJF_Preemptive_FCFS:
+                SJF_Preemptive_FCFS_ProcessQueue.insert(process);
+                break;
+            case SJF_NonPreemptive_FCFS:
+                SJF_NonPreemptive_FCFS_ProcessQueue.insert(process);
+                break;
+            case Priority_Preemptive_FCFS:
+                Priority_Preemptive_FCFS_ProcessQueue.insert(process);
+                break;
+            case Priority_NonPreemptive_FCFS:
+                Priority_NonPreemptive_FCFS_ProcessQueue.insert(process);
+                break;
+            default:
+                break;
+        }
+    }
+
+    private void queueInitialize() {
+        switch (currentScheduler) {
+            case None:
+                FCFS_ProcessQueue = null;
+                RoundRobin_ProcessQueue = null;
+                SJF_Preemptive_FCFS_ProcessQueue = null;
+                SJF_NonPreemptive_FCFS_ProcessQueue = null;
+                Priority_Preemptive_FCFS_ProcessQueue = null;
+                Priority_NonPreemptive_FCFS_ProcessQueue = null;
+                break;
+            case FCFS:
+                FCFS_ProcessQueue = new FCFS();
+                RoundRobin_ProcessQueue = null;
+                SJF_Preemptive_FCFS_ProcessQueue = null;
+                SJF_NonPreemptive_FCFS_ProcessQueue = null;
+                Priority_Preemptive_FCFS_ProcessQueue = null;
+                Priority_NonPreemptive_FCFS_ProcessQueue = null;
+                break;
+            case RoundRobin:
+                FCFS_ProcessQueue = null;
+                RoundRobin_ProcessQueue = new RoundRobin();
+                SJF_Preemptive_FCFS_ProcessQueue = null;
+                SJF_NonPreemptive_FCFS_ProcessQueue = null;
+                Priority_Preemptive_FCFS_ProcessQueue = null;
+                Priority_NonPreemptive_FCFS_ProcessQueue = null;
+                break;
+            case SJF_Preemptive_FCFS:
+                FCFS_ProcessQueue = null;
+                RoundRobin_ProcessQueue = null;
+                SJF_Preemptive_FCFS_ProcessQueue = new SJF_Preemptive_FCFS();
+                SJF_NonPreemptive_FCFS_ProcessQueue = null;
+                Priority_Preemptive_FCFS_ProcessQueue = null;
+                Priority_NonPreemptive_FCFS_ProcessQueue = null;
+                break;
+            case SJF_NonPreemptive_FCFS:
+                FCFS_ProcessQueue = null;
+                RoundRobin_ProcessQueue = null;
+                SJF_Preemptive_FCFS_ProcessQueue = null;
+                SJF_NonPreemptive_FCFS_ProcessQueue = new SJF_NonPreemptive_FCFS();
+                Priority_Preemptive_FCFS_ProcessQueue = null;
+                Priority_NonPreemptive_FCFS_ProcessQueue = null;
+                break;
+            case Priority_Preemptive_FCFS:
+                FCFS_ProcessQueue = null;
+                RoundRobin_ProcessQueue = null;
+                SJF_Preemptive_FCFS_ProcessQueue = null;
+                SJF_NonPreemptive_FCFS_ProcessQueue = null;
+                Priority_Preemptive_FCFS_ProcessQueue = new Priority_Preemptive_FCFS();
+                Priority_NonPreemptive_FCFS_ProcessQueue = null;
+                break;
+            case Priority_NonPreemptive_FCFS:
+                FCFS_ProcessQueue = null;
+                RoundRobin_ProcessQueue = null;
+                SJF_Preemptive_FCFS_ProcessQueue = null;
+                SJF_NonPreemptive_FCFS_ProcessQueue = null;
+                Priority_Preemptive_FCFS_ProcessQueue = null;
+                Priority_NonPreemptive_FCFS_ProcessQueue = new Priority_NonPreemptive_FCFS();
+                break;
+            default:
+                break;
         }
     }
 
@@ -213,17 +330,17 @@ public class SchedulerSimulationController implements Initializable {
             gc.setTextAlign(TextAlignment.LEFT);
             if (getCurrentScheduler() == schedulerType.None) {
                 gc.fillText("No Scheduler", 20, currentYPosition);
-            } else if (getCurrentScheduler() == getCurrentScheduler().FCFS) {
+            } else if (getCurrentScheduler() == schedulerType.FCFS) {
                 gc.fillText("FCFS Scheduler", 20, currentYPosition);
-            } else if (getCurrentScheduler() == getCurrentScheduler().RoundRobin) {
+            } else if (getCurrentScheduler() == schedulerType.RoundRobin) {
                 gc.fillText("Round Robin Scheduler", 20, currentYPosition);
-            } else if (getCurrentScheduler() == getCurrentScheduler().SJF_Preemptive_FCFS) {
+            } else if (getCurrentScheduler() == schedulerType.SJF_Preemptive_FCFS) {
                 gc.fillText("SJF Preemptive (FCFS) Scheduler", 20, currentYPosition);
-            } else if (getCurrentScheduler() == getCurrentScheduler().SJF_NonPreemptive_FCFS) {
+            } else if (getCurrentScheduler() == schedulerType.SJF_NonPreemptive_FCFS) {
                 gc.fillText("SJF NonPreemptive (FCFS) Scheduler", 20, currentYPosition);
-            } else if (getCurrentScheduler() == getCurrentScheduler().Priority_Preemptive_FCFS) {
+            } else if (getCurrentScheduler() == schedulerType.Priority_Preemptive_FCFS) {
                 gc.fillText("Priority Preemptive (FCFS) Scheduler", 20, currentYPosition);
-            } else if (getCurrentScheduler() == getCurrentScheduler().Priority_NonPreemptive_FCFS) {
+            } else if (getCurrentScheduler() == schedulerType.Priority_NonPreemptive_FCFS) {
                 gc.fillText("Priority NonPreemptive (FCFS) Scheduler", 20, currentYPosition);
             }
 
