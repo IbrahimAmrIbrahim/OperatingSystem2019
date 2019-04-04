@@ -26,27 +26,36 @@ import javafx.stage.Stage;
 
 import dataStructure.PCB;
 import dataStructure.Queue;
+import javafx.stage.StageStyle;
 
 public class SchedulerSimulationController implements Initializable {
 
-    private SchedulerSimulationController controller;
+    private SchedulerSimulationController myController;
 
     int currentTime;
     int currentXPosition;
     int currentYPosition;
     boolean canvasIsEmpty;
+    private boolean newProcess;
+    private PCB processtoAddd;
+    @FXML
+    private Button startOutputSimulation_btn;
+    @FXML
+    private Button addProcess_btn;
 
-    enum schedulerType {
+    @FXML
+    private void addNewProcessButton(MouseEvent event) throws IOException {
+        addProcessDialog();
+    }
+
+    public enum schedulerType {
         None, FCFS, SJF_Preemptive_FCFS, SJF_NonPreemptive_FCFS, RoundRobin, Priority_Preemptive_FCFS, Priority_NonPreemptive_FCFS
     };
 
-    schedulerType currentScheduler;
+    private schedulerType currentScheduler;
 
     @FXML
     private ToggleGroup Simulation_Method;
-
-    @FXML
-    private Button startOutputSimulation;
 
     @FXML
     private void startOutputSimulationButton(MouseEvent event) {
@@ -59,8 +68,8 @@ public class SchedulerSimulationController implements Initializable {
         readyQueue.enqueue(currPCB);
 
         currPCB = new PCB();
-        currPCB.setArrivalTime(0);
-        currPCB.setBurstTime(20);
+        currPCB.setArrivalTime(5);
+        currPCB.setBurstTime(30);
 
         readyQueue.enqueue(currPCB);
 
@@ -81,6 +90,7 @@ public class SchedulerSimulationController implements Initializable {
         currentXPosition = 0;
         currentYPosition = 20;
         canvasIsEmpty = true;
+        newProcess = true;
         schedulerSelectDialog();
     }
 
@@ -89,7 +99,7 @@ public class SchedulerSimulationController implements Initializable {
      *
      * @param msg Question string
      */
-    public void errorDialog(String msg) {
+    private void errorDialog(String msg) {
         Alert alert = new Alert(AlertType.ERROR);
         alert.setTitle("Error Dialog");
         alert.setHeaderText(null);
@@ -104,7 +114,7 @@ public class SchedulerSimulationController implements Initializable {
      * @param msg Question string
      * @return return True if Yes ; return False if No
      */
-    public boolean yesNoDialog(String msg) {
+    private boolean yesNoDialog(String msg) {
         Alert alert = new Alert(AlertType.CONFIRMATION);
         alert.setTitle("Confirmation Dialog");
         alert.setHeaderText(null);
@@ -147,32 +157,44 @@ public class SchedulerSimulationController implements Initializable {
 
         if (result.isPresent()) {
             String ans = result.get();
-            if (ans == "None") {
-                currentScheduler = schedulerType.None;
-            } else if (ans == "FCFS") {
+            if (ans.equals("FCFS")) {
                 currentScheduler = schedulerType.FCFS;
-            } else if (ans == "Round Robin") {
+            } else if (ans.equals("Round Robin")) {
                 currentScheduler = schedulerType.RoundRobin;
-            } else if (ans == "SJF Preemptive (FCFS)") {
+            } else if (ans.equals("SJF Preemptive (FCFS)")) {
                 currentScheduler = schedulerType.SJF_Preemptive_FCFS;
-            } else if (ans == "SJF NonPreemptive (FCFS)") {
+            } else if (ans.equals("SJF NonPreemptive (FCFS)")) {
                 currentScheduler = schedulerType.SJF_NonPreemptive_FCFS;
-            } else if (ans == "Priority Preemptive (FCFS)") {
+            } else if (ans.equals("Priority Preemptive (FCFS)")) {
                 currentScheduler = schedulerType.Priority_Preemptive_FCFS;
-            } else if (ans == "Priority NonPreemptive (FCFS)") {
+            } else if (ans.equals("Priority NonPreemptive (FCFS)")) {
                 currentScheduler = schedulerType.Priority_NonPreemptive_FCFS;
+            } else {
+                currentScheduler = schedulerType.None;
             }
         } else {
             currentScheduler = schedulerType.None;
         }
     }
 
-    public void addProcessDialog() throws IOException {
+    private void addProcessDialog() throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("AddProcess.fxml"));
         Parent root1 = (Parent) fxmlLoader.load();
+
+        AddProcessController ctrl = fxmlLoader.getController();
+        if (newProcess == true) {
+            processtoAddd = new PCB();
+        }
+        ctrl.sceneInitilize(getMyController(), processtoAddd);
+
         Stage stage = new Stage();
         stage.setScene(new Scene(root1));
+        stage.initStyle(StageStyle.UNDECORATED);
         stage.showAndWait();
+        if (newProcess == true) {
+            /* Add process */
+            processtoAddd.printPCB();
+        }
     }
 
     public void draw(int duration) {
@@ -189,19 +211,19 @@ public class SchedulerSimulationController implements Initializable {
             // Write scheduler method
             gc.setFill(Color.WHITE);
             gc.setTextAlign(TextAlignment.LEFT);
-            if (currentScheduler == schedulerType.None) {
+            if (getCurrentScheduler() == schedulerType.None) {
                 gc.fillText("No Scheduler", 20, currentYPosition);
-            } else if (currentScheduler == currentScheduler.FCFS) {
+            } else if (getCurrentScheduler() == getCurrentScheduler().FCFS) {
                 gc.fillText("FCFS Scheduler", 20, currentYPosition);
-            } else if (currentScheduler == currentScheduler.RoundRobin) {
+            } else if (getCurrentScheduler() == getCurrentScheduler().RoundRobin) {
                 gc.fillText("Round Robin Scheduler", 20, currentYPosition);
-            } else if (currentScheduler == currentScheduler.SJF_Preemptive_FCFS) {
+            } else if (getCurrentScheduler() == getCurrentScheduler().SJF_Preemptive_FCFS) {
                 gc.fillText("SJF Preemptive (FCFS) Scheduler", 20, currentYPosition);
-            } else if (currentScheduler == currentScheduler.SJF_NonPreemptive_FCFS) {
+            } else if (getCurrentScheduler() == getCurrentScheduler().SJF_NonPreemptive_FCFS) {
                 gc.fillText("SJF NonPreemptive (FCFS) Scheduler", 20, currentYPosition);
-            } else if (currentScheduler == currentScheduler.Priority_Preemptive_FCFS) {
+            } else if (getCurrentScheduler() == getCurrentScheduler().Priority_Preemptive_FCFS) {
                 gc.fillText("Priority Preemptive (FCFS) Scheduler", 20, currentYPosition);
-            } else if (currentScheduler == currentScheduler.Priority_NonPreemptive_FCFS) {
+            } else if (getCurrentScheduler() == getCurrentScheduler().Priority_NonPreemptive_FCFS) {
                 gc.fillText("Priority NonPreemptive (FCFS) Scheduler", 20, currentYPosition);
             }
 
@@ -287,17 +309,30 @@ public class SchedulerSimulationController implements Initializable {
     }
 
     /**
-     * @return the controller
+     * @return the myController
      */
-    public SchedulerSimulationController getController() {
-        return controller;
+    public SchedulerSimulationController getMyController() {
+        return myController;
     }
 
     /**
-     * @param controller the controller to set
+     * @param myController the myController to set
      */
-    public void setController(SchedulerSimulationController controller) {
-        this.controller = controller;
+    public void setMyController(SchedulerSimulationController myController) {
+        this.myController = myController;
     }
 
+    /**
+     * @return the currentScheduler
+     */
+    public schedulerType getCurrentScheduler() {
+        return currentScheduler;
+    }
+
+    /**
+     * @param newProcess the newProcess to set
+     */
+    public void setNewProcess(boolean newProcess) {
+        this.newProcess = newProcess;
+    }
 }

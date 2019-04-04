@@ -14,7 +14,7 @@ public class Scheduler extends Application {
         Parent root = loader.load();
         
         SchedulerSimulationController myController = loader.getController();
-        myController.setController(myController);
+        myController.setMyController(myController);
         
         Scene scene = new Scene(root);
         stage.setTitle("CPU Scheduler");

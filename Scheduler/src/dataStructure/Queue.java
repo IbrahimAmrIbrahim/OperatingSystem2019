@@ -12,6 +12,7 @@ public class Queue {
 
     /**
      * enqueue a new node
+     * @param newPCB
      */
     public void enqueue(PCB newPCB) {
         // Create a new node with given PCB 
@@ -22,8 +23,8 @@ public class Queue {
             Head = newNode;
             Tail = newNode;
         } else {
-            newNode.setNext(Head);
-            Head = newNode;
+            Tail.setNext(newNode);
+            Tail = newNode;
         }
     }
 

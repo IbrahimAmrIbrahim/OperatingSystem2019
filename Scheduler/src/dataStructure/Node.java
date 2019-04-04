@@ -2,11 +2,11 @@ package dataStructure;
 
 public class Node {
 
-    private PCB processPCB;
+    private PCB pcb;
     private Node next;
 
     public Node(PCB newPCB) {
-        this.processPCB = newPCB;
+        this.pcb = newPCB;
         next = null;
     }
 
@@ -14,7 +14,7 @@ public class Node {
      * for debugging only. it prints in the console window;
      */
     public void printNode() {
-        processPCB.printPCB();
+        getPcb().printPCB();
     }
 
     /**
@@ -29,5 +29,12 @@ public class Node {
      */
     public void setNext(Node next) {
         this.next = next;
+    }
+
+    /**
+     * @return the pcb
+     */
+    public PCB getPcb() {
+        return pcb;
     }
 }

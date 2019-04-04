@@ -16,7 +16,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.Pane?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="497.0" prefWidth="751.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="scheduler.SchedulerSimulationController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="540.0" prefWidth="751.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="scheduler.SchedulerSimulationController">
    <children>
       <SplitPane dividerPositions="0.5" orientation="VERTICAL" prefHeight="501.0" prefWidth="732.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <items>
@@ -28,7 +28,7 @@
                       <TableColumn prefWidth="75.0" text="C2" />
                     </columns>
                   </TableView>
-                  <Pane layoutX="407.0" prefHeight="236.0" prefWidth="342.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                  <Pane layoutX="407.0" prefHeight="265.0" prefWidth="342.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                      <children>
                         <RadioButton layoutX="11.0" layoutY="8.0" mnemonicParsing="false" selected="true" text="Output Simulation">
                            <toggleGroup>
@@ -39,7 +39,7 @@
                         <Group layoutX="33.0" layoutY="35.0">
                            <children>
                               <TextField disable="true" promptText="Time Slice" />
-                              <Button fx:id="startOutputSimulation" layoutX="207.0" mnemonicParsing="false" onMouseClicked="#startOutputSimulationButton" prefHeight="31.0" prefWidth="88.0" text="Start" />
+                              <Button fx:id="startOutputSimulation_btn" layoutX="207.0" mnemonicParsing="false" onMouseClicked="#startOutputSimulationButton" prefHeight="31.0" prefWidth="88.0" text="Start" />
                            </children>
                         </Group>
                         <Group disable="true" layoutX="21.0" layoutY="106.0">
@@ -51,8 +51,9 @@
                               <Button layoutX="256.0" layoutY="37.0" mnemonicParsing="false" text="Stop" />
                            </children>
                         </Group>
-                        <Button layoutX="31.0" layoutY="191.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="140.0" text="Add new process" />
-                        <Button layoutX="185.0" layoutY="191.0" mnemonicParsing="false" text="Change Scheduler" />
+                        <Button fx:id="addProcess_btn" layoutX="31.0" layoutY="191.0" mnemonicParsing="false" onMouseClicked="#addNewProcessButton" prefHeight="31.0" prefWidth="140.0" text="Add new process" />
+                        <Button layoutX="203.0" layoutY="191.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="124.0" text="Clear" />
+                        <Button layoutX="105.0" layoutY="231.0" mnemonicParsing="false" text="Change Scheduler" />
                      </children>
                   </Pane>
                </children>
