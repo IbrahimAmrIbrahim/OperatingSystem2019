@@ -37,13 +37,12 @@ public class AddProcessController implements Initializable {
     private Button addProcee_btn;
     @FXML
     private Button cancel_btn;
+    @FXML
+    private Label PriorityIndication_Label;
 
     private PCB newProcess;
     private SchedulerSimulationController parentController;
     private SchedulerSimulationController.schedulerType currentScheduler;
-
-    @FXML
-    private Label PriorityIndication_Label;
 
     /**
      * Initializes the controller class.
@@ -115,11 +114,11 @@ public class AddProcessController implements Initializable {
 
     private void setProcess() {
         if (arrivalTime_Text.getText().isEmpty()) {
-            errorDialog("Arrival Time text field can't be empty");
+            errorDialog("Arrival Time text field can't be empty.");
             return;
         }
         if (burstTime_Text.getText().isEmpty()) {
-            errorDialog("Burst Time text field can't be empty");
+            errorDialog("Burst Time text field can't be empty.");
             return;
         }
 
@@ -130,7 +129,7 @@ public class AddProcessController implements Initializable {
 
         } else {
             if (priority_Text.getText().isEmpty()) {
-                errorDialog("Priority text field can't be empty");
+                errorDialog("Priority text field can't be empty.");
                 return;
             }
             newProcess.setPriority(Integer.valueOf(priority_Text.getText()));

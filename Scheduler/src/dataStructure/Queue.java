@@ -1,13 +1,13 @@
 package dataStructure;
 
-public class Queue {
+public class Queue{
 
-    private Node Head;
-    private Node Tail;
+    protected Node head;
+    protected Node tail;
 
     public Queue() {
-        Head = null;
-        Tail = null;
+        head = null;
+        tail = null;
     }
 
     /**
@@ -19,12 +19,12 @@ public class Queue {
         Node newNode = new Node(newPCB);
 
         // If the Linked List is empty,then make the new node as head 
-        if (Head == null) {
-            Head = newNode;
-            Tail = newNode;
+        if (head == null) {
+            head = newNode;
+            tail = newNode;
         } else {
-            Tail.setNext(newNode);
-            Tail = newNode;
+            tail.setNext(newNode);
+            tail = newNode;
         }
     }
 
@@ -32,7 +32,7 @@ public class Queue {
      * for debugging only. it prints in the console window;
      */
     public void printQueue() {
-        Node currNode = Head;
+        Node currNode = head;
 
         System.out.println("Queue: ");
 

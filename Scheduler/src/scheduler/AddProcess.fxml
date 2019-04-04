@@ -18,7 +18,7 @@
          <children>
             <Label alignment="CENTER" text="Add new process" textAlignment="CENTER">
                <font>
-                  <Font size="18.0" />
+                  <Font name="System Bold" size="18.0" />
                </font>
             </Label>
             <GridPane alignment="CENTER" hgap="10.0" maxWidth="300.0" prefWidth="300.0" vgap="10.0">
