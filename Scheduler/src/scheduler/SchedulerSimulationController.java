@@ -88,28 +88,6 @@ public class SchedulerSimulationController implements Initializable {
         addProcessDialog();
     }
 
-    private void startOutputSimulationButton(MouseEvent event) {
-        Queue readyQueue = new Queue();
-        PCB currPCB = new PCB();
-
-        currPCB.setArrivalTime(0);
-        currPCB.setBurstTime(20);
-
-        readyQueue.enqueue(currPCB);
-
-        currPCB = new PCB();
-        currPCB.setArrivalTime(5);
-        currPCB.setBurstTime(30);
-
-        readyQueue.enqueue(currPCB);
-
-        readyQueue.printQueue();
-
-        for (int i = 1; i <= 100; i++) {
-            draw(i);
-        }
-    }
-
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         currentScheduler = schedulerType.None;
