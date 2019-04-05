@@ -8,6 +8,7 @@ public class Priority_NonPreemptive_FCFS extends Queue implements ReadyQueue {
 
     @Override
     public void insert(PCB newPCB) {
+        
     }
 
     @Override
