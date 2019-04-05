@@ -9,7 +9,9 @@ public class RoundRobin extends Queue implements ReadyQueue {
 
     private int RR_time = 10;// for now the RR period is 10 unit time 
     private int node_number = 0;
-
+    private int run_time=0;
+    // run time must be a factor of 10 like 0 10 20 30 etc
+    
     private int waiting_time = 0;
     private PCB new_pcb;
 
@@ -26,15 +28,24 @@ public class RoundRobin extends Queue implements ReadyQueue {
         //process -> brust time and arrival time .
         // i need first qq then a second qq 
         // i need to know when we call insert .
+        
+        
         //==============================//
+        
+        
         // if the time is less than the RR_TIME then just add it in the qq 
         if (newPCB.getBurstTime() > 0) {
             enqueue(newPCB);
             node_number++;
-        } //-------------------------------------------------------//
+        } 
+        
+        
+        //-------------------------------------------------------//
         // the time is bigger than the qq time, then i will suffer 
         // i need to add it again so i need to change in the schedual itself 
         // chanign it from p1 p2 p3 p4 to be p1 p2 p3 p4 p1 etc
+        
+        
         else {
             // while the burst time bigger than zero
             while (newPCB.getBurstTime() > 0) {
@@ -43,6 +54,7 @@ public class RoundRobin extends Queue implements ReadyQueue {
 
                 newPCB.setBurstTime(RR_time);// change the time to be as qq time
                 enqueue(newPCB);
+                
                 node_number++;
                 //====================================//
                 //change the burst time from x to x - RR_time 
@@ -89,8 +101,12 @@ public class RoundRobin extends Queue implements ReadyQueue {
                         // temp ->next->next of the next
                         temp.getNext().setNext(temp);// let the next point at temp      temp ->next and temp<-next 
                         temp.setNext(dummy.getNext());// let temp point at next of the next  next->temp->next of the next 
-
+                        
                         //=====================================//
+                    }
+                    else 
+                    {
+                        temp=temp.getNext();
                     }
                 }
 
