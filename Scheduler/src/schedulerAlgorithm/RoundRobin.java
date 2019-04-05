@@ -9,7 +9,7 @@ public class RoundRobin extends Queue implements ReadyQueue {
 
     private int RR_time = 10;// for now the RR period is 10 unit time 
     private int node_number = 0;
-
+    private int run_time=0;
     private int waiting_time = 0;
     private PCB new_pcb;
 
@@ -28,6 +28,7 @@ public class RoundRobin extends Queue implements ReadyQueue {
         // i need to know when we call insert .
         //==============================//
         // if the time is less than the RR_TIME then just add it in the qq 
+       
         if (newPCB.getBurstTime() > 0) {
             enqueue(newPCB);
             node_number++;
