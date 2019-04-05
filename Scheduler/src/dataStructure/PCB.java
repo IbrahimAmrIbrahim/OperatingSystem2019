@@ -106,4 +106,14 @@ public class PCB {
         this.priority = priority;
     }
 
+    /**
+     * This method sets the start point of pID sequence generator. WARNING:
+     * Don't use this method until you are sure about what are you doing.
+     *
+     * @param aCurrentPID the currentPID to set
+     */
+    public static void setCurrentPID(int aCurrentPID) {
+        currentPID = aCurrentPID;
+    }
+
 }

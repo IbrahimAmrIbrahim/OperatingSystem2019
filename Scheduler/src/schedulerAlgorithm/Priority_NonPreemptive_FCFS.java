@@ -46,15 +46,4 @@ public class Priority_NonPreemptive_FCFS extends Queue implements ReadyQueue {
     @Override
     public void DrawGanttChart(SchedulerSimulationController ctrl) {
     }
-
-    @Override
-    public double getAvgWaitingTime() {
-        return 0;
-    }
-
-    @Override
-    public double getAvgTurnarroundTime() {
-        return 0;
-    }
-
 }
