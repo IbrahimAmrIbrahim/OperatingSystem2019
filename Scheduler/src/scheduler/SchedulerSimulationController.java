@@ -25,7 +25,6 @@ import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 
 import dataStructure.PCB;
-import dataStructure.Queue;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.StageStyle;
 import schedulerAlgorithm.FCFS;
@@ -48,10 +47,10 @@ public class SchedulerSimulationController implements Initializable {
     private int currentXPosition;
     private int currentYPosition;
     private boolean canvasIsEmpty;
-    
+
     private boolean newProcess;
     private PCB processtoAdd;
-    
+
     private FCFS FCFS_ProcessQueue;
     private RoundRobin RoundRobin_ProcessQueue;
     private SJF_Preemptive_FCFS SJF_Preemptive_FCFS_ProcessQueue;
@@ -86,28 +85,6 @@ public class SchedulerSimulationController implements Initializable {
     @FXML
     private void addNewProcessButton_MouseEvent(MouseEvent event) throws IOException {
         addProcessDialog();
-    }
-
-    private void startOutputSimulationButton(MouseEvent event) {
-        Queue readyQueue = new Queue();
-        PCB currPCB = new PCB();
-
-        currPCB.setArrivalTime(0);
-        currPCB.setBurstTime(20);
-
-        readyQueue.enqueue(currPCB);
-
-        currPCB = new PCB();
-        currPCB.setArrivalTime(5);
-        currPCB.setBurstTime(30);
-
-        readyQueue.enqueue(currPCB);
-
-        readyQueue.printQueue();
-
-        for (int i = 1; i <= 100; i++) {
-            draw(i);
-        }
     }
 
     @Override
@@ -316,7 +293,7 @@ public class SchedulerSimulationController implements Initializable {
         }
     }
 
-    public void draw(int duration) {
+    public void draw(int duration, int processID, Color color) {
         PCB newOne = new PCB();
 
         final int unityTimeWidth = 40;
@@ -368,12 +345,12 @@ public class SchedulerSimulationController implements Initializable {
 
         if (nextPosition > 8000) {
             int theRest = duration - ((8000 - currentXPosition) / unityTimeWidth);
-            draw(((8000 - currentXPosition) / unityTimeWidth));
+            draw(((8000 - currentXPosition) / unityTimeWidth), 0, Color.WHITE);
             currentXPosition = 40;
             currentYPosition += 100;
             canvas.setHeight(currentYPosition + 100);
             if (theRest > 0) {
-                draw(theRest);
+                draw(theRest, 0, Color.WHITE);
 
             }
             return;
@@ -407,6 +384,24 @@ public class SchedulerSimulationController implements Initializable {
         gc.rotate(-45);
 
         currentXPosition = nextPosition + 1;
+    }
+
+    /**
+     * This method writes average waiting time.
+     *
+     * @param avgWaitingTime
+     */
+    public void writeAvgWaitingTime(double avgWaitingTime) {
+
+    }
+
+    /**
+     * This method writes average turnaround time.
+     *
+     * @param avgTurnarroundTime
+     */
+    public void writeAvgTurnarroundTime(double avgTurnarroundTime) {
+
     }
 
     private double rotatedX(double x, double y) {

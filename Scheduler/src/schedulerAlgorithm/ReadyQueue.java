@@ -20,17 +20,4 @@ public interface ReadyQueue {
      * @param ctrl
      */
     void DrawGanttChart(SchedulerSimulationController ctrl);
-
-    /**
-     *
-     * @return double average waiting time
-     */
-    double getAvgWaitingTime();
-
-    /**
-     *
-     * @return double average turnaround time
-     */
-    double getAvgTurnarroundTime();
-
-}
+ }
