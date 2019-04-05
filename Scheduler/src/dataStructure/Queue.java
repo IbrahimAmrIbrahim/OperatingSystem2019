@@ -29,7 +29,7 @@ public class Queue{
     }
 
     /**
-     * for debugging only. it prints in the console window;
+     * For debugging only. This method prints the queue in the console window.
      */
     public void printQueue() {
         Node currNode = head;

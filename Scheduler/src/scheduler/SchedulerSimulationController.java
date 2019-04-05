@@ -48,8 +48,10 @@ public class SchedulerSimulationController implements Initializable {
     private int currentXPosition;
     private int currentYPosition;
     private boolean canvasIsEmpty;
+    
     private boolean newProcess;
     private PCB processtoAdd;
+    
     private FCFS FCFS_ProcessQueue;
     private RoundRobin RoundRobin_ProcessQueue;
     private SJF_Preemptive_FCFS SJF_Preemptive_FCFS_ProcessQueue;
@@ -211,7 +213,7 @@ public class SchedulerSimulationController implements Initializable {
         if (newProcess == true) {
             processtoAdd = new PCB();
         }
-        ctrl.sceneInitilize(getMyController(), processtoAdd);
+        ctrl.sceneInitilize(myController, processtoAdd);
 
         Stage stage = new Stage();
         stage.setScene(new Scene(root1));
@@ -423,13 +425,6 @@ public class SchedulerSimulationController implements Initializable {
         double r = Math.sqrt((x * x) + (y * y));
         double seta = Math.atan2(y, x);
         return (r * Math.sin(seta - (0.25 * Math.PI)));
-    }
-
-    /**
-     * @return the myController
-     */
-    public SchedulerSimulationController getMyController() {
-        return myController;
     }
 
     /**

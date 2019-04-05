@@ -15,4 +15,14 @@ public class FCFS extends Queue implements ReadyQueue {
     public void DrawGanttChart(SchedulerSimulationController ctrl) {
     }
 
+    @Override
+    public double getAvgWaitingTime() {
+        return 0;
+    }
+
+    @Override
+    public double getAvgTurnarroundTime() {
+        return 0;
+    }
+
 }
