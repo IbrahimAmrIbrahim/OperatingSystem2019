@@ -37,9 +37,11 @@ public class PCB {
     }
 
     /**
-     *This method check if two PCBs are identical or not.
+     * This method check if two PCBs are identical or not.
+     *
      * @param pcb
-     * @return boolean true if parameter PCB equal called PCB and false if not equal.
+     * @return boolean true if parameter PCB equal called PCB and false if not
+     * equal.
      */
     public boolean equals(PCB pcb) {
         if (this.pID == pcb.getpID()
