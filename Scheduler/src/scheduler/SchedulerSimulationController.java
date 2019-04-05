@@ -188,7 +188,7 @@ public class SchedulerSimulationController implements Initializable {
 
         AddProcessController ctrl = fxmlLoader.getController();
         if (newProcess == true) {
-            processtoAdd = new PCB();
+            processtoAdd = new PCB(true);
         }
         ctrl.sceneInitilize(myController, processtoAdd);
 
@@ -294,7 +294,6 @@ public class SchedulerSimulationController implements Initializable {
     }
 
     public void draw(int duration, int processID, Color color) {
-        PCB newOne = new PCB();
 
         final int unityTimeWidth = 40;
         GraphicsContext gc = canvas.getGraphicsContext2D();
@@ -362,7 +361,7 @@ public class SchedulerSimulationController implements Initializable {
         //color need to change 
         //*************************
         // draw process time
-        gc.setFill(newOne.getColor());
+        gc.setFill(Color.AQUA);
         //gc.fillRect(currentXPosition, (currentYPosition + 10), (duration * unityTimeWidth), 30);
         gc.fillRoundRect(currentXPosition, (currentYPosition + 10), (duration * unityTimeWidth), 30, 20, 20);
 
@@ -372,7 +371,7 @@ public class SchedulerSimulationController implements Initializable {
         //pid need to be addad 
         //*************************
         gc.setTextAlign(TextAlignment.CENTER);
-        gc.fillText(("P" + Integer.toString(newOne.getpID())), (((duration * unityTimeWidth) / 2) + currentXPosition), (currentYPosition + 30));
+        gc.fillText(("P" + Integer.toString(1)), (((duration * unityTimeWidth) / 2) + currentXPosition), (currentYPosition + 30));
 
         // draw end time point
         gc.fillRect(nextPosition, currentYPosition, 1, 50);

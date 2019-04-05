@@ -16,14 +16,37 @@ public class PCB {
      * Make a new PCB for a process. it set the burstTime = 0,arrivalTime =
      * 0,priority = 0, and assign a unique ID to the process , and a random
      * color.
+     *
+     * @param isNewProsess
      */
-    public PCB() {
-        pID = currentPID;
-        currentPID++;
-        color = randomColor();
-        burstTime = 0;
-        arrivalTime = 0;
-        priority = 0;
+    public PCB(boolean isNewProsess) {
+        if (isNewProsess) {
+            pID = currentPID;
+            currentPID++;
+            color = randomColor();
+            burstTime = 0;
+            arrivalTime = 0;
+            priority = 0;
+        } else {
+            pID = 0;
+            color = Color.BLACK;
+            burstTime = 0;
+            arrivalTime = 0;
+            priority = 0;
+        }
+    }
+
+    /**
+     * This method copy the pcb which given in the parameter to the current pcb.
+     *
+     * @param pcb
+     */
+    public void copy(PCB pcb) {
+        this.pID = pcb.getpID();
+        this.color = pcb.getColor();
+        this.arrivalTime = pcb.getArrivalTime();
+        this.burstTime = pcb.getBurstTime();
+        this.priority = pcb.getPriority();
     }
 
     /**
