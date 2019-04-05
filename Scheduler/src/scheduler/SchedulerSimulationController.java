@@ -199,7 +199,7 @@ public class SchedulerSimulationController implements Initializable {
         if (newProcess == true) {
             /* Add process */
             insertMethodCall(processtoAdd);
-            FCFS_ProcessQueue.printQueue();
+            RoundRobin_ProcessQueue.printQueue();
         }
     }
 
