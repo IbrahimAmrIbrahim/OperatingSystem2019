@@ -37,7 +37,23 @@ public class PCB {
     }
 
     /**
-     * This method copy the pcb which given in the parameter to the current pcb.
+     *This method check if two PCBs are identical or not.
+     * @param pcb
+     * @return boolean true if parameter PCB equal called PCB and false if not equal.
+     */
+    public boolean equals(PCB pcb) {
+        if (this.pID == pcb.getpID()
+                && this.color.equals(pcb.getColor())
+                && this.arrivalTime == pcb.getArrivalTime()
+                && this.burstTime == pcb.getBurstTime()
+                && this.priority == pcb.getPriority()) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * This method copy the PCB which given in the parameter to the current PCB.
      *
      * @param pcb
      */
