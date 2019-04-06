@@ -11,6 +11,8 @@ public class PCB {
     private int burstTime;
     private int arrivalTime;
     private int priority;
+    private int startofExec;
+    private int endofExec;
 
     /**
      * Make a new PCB for a process. it set the burstTime = 0,arrivalTime =
@@ -27,17 +29,39 @@ public class PCB {
             burstTime = 0;
             arrivalTime = 0;
             priority = 0;
+            startofExec = -1;
+            endofExec = -1;
         } else {
             pID = 0;
             color = Color.BLACK;
             burstTime = 0;
             arrivalTime = 0;
             priority = 0;
+            startofExec = -1;
+            endofExec = -1;
         }
     }
 
     /**
-     * This method copy the pcb which given in the parameter to the current pcb.
+     * This method check if two PCBs are identical or not.
+     *
+     * @param pcb
+     * @return boolean true if parameter PCB equal called PCB and false if not
+     * equal.
+     */
+    public boolean equals(PCB pcb) {
+        if (this.pID == pcb.getpID()
+                && this.color.equals(pcb.getColor())
+                && this.arrivalTime == pcb.getArrivalTime()
+                && this.burstTime == pcb.getBurstTime()
+                && this.priority == pcb.getPriority()) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * This method copy the PCB which given in the parameter to the current PCB.
      *
      * @param pcb
      */
@@ -137,6 +161,34 @@ public class PCB {
      */
     public static void setCurrentPID(int aCurrentPID) {
         currentPID = aCurrentPID;
+    }
+
+    /**
+     * @return the startofExec
+     */
+    public int getStartofExec() {
+        return startofExec;
+    }
+
+    /**
+     * @param startofExec the startofExec to set
+     */
+    public void setStartofExec(int startofExec) {
+        this.startofExec = startofExec;
+    }
+
+    /**
+     * @return the endofExec
+     */
+    public int getEndofExec() {
+        return endofExec;
+    }
+
+    /**
+     * @param endofExec the endofExec to set
+     */
+    public void setEndofExec(int endofExec) {
+        this.endofExec = endofExec;
     }
 
 }
