@@ -3,6 +3,7 @@ package schedulerAlgorithm;
 import dataStructure.PCB;
 import dataStructure.Queue;
 import dataStructure.Node;
+import javafx.scene.paint.Color;
 import scheduler.SchedulerSimulationController;
 
 public class RoundRobin extends Queue implements ReadyQueue {
@@ -14,9 +15,13 @@ public class RoundRobin extends Queue implements ReadyQueue {
     // run time must be a factor of 10 like 0 10 20 30 etc
 
     private int waiting_time = 0;
-    private PCB new_pcb;
+    private PCB new_pcb= new PCB(false);
 
-    @Override
+    
+    public void set_RR_time(int x)
+    {
+        RR_time=x;
+    }
     public void insert(PCB newPCB) {
 
         //==============================//
@@ -24,26 +29,29 @@ public class RoundRobin extends Queue implements ReadyQueue {
         if (newPCB.getBurstTime() <= RR_time) {
             enqueue(newPCB);
             node_number++;
+          
         } //======================================================//
         else {
             System.out.println("flag 1");
+          
+            new_pcb.copy(newPCB);
             // while the burst time bigger than zero
-            while (newPCB.getBurstTime() > 0) {
-                int new_pcb_time = newPCB.getBurstTime();
+            while (new_pcb.getBurstTime() > 0) {
+                int new_pcb_time = new_pcb.getBurstTime();
                 PCB next_new = new PCB(false);// fix it
 
                 int put_in;
                 //======================================//
-                if (newPCB.getBurstTime() > RR_time) {
+                if (new_pcb.getBurstTime() > RR_time) {
                     put_in = RR_time;
                 } else {
-                    put_in = newPCB.getBurstTime();
+                    put_in = new_pcb.getBurstTime();
                 }
                 //=================================================//
 
-                newPCB.setBurstTime(put_in);// change the time to be as qq time
+                new_pcb.setBurstTime(put_in);// change the time to be as qq time
                 //next_new start copy here
-                next_new.copy(newPCB);
+                next_new.copy(new_pcb);
 
                 enqueue(next_new);
 
@@ -52,8 +60,8 @@ public class RoundRobin extends Queue implements ReadyQueue {
                 //change the burst time from x to x - RR_time 
                 // example from 15 to 15  - 10 = 5
                 //============================================//
-                newPCB.setBurstTime(new_pcb_time - RR_time);
-                newPCB.setArrivalTime(newPCB.getArrivalTime() + RR_time);
+                new_pcb.setBurstTime(new_pcb_time - RR_time);
+                new_pcb.setArrivalTime(new_pcb.getArrivalTime() + RR_time);
 
                 //===========================================//
                 // insert it again  
@@ -68,7 +76,22 @@ public class RoundRobin extends Queue implements ReadyQueue {
     // insert done 
     @Override
     public void DrawGanttChart(SchedulerSimulationController ctrl) {
+        Node temp = head;
+       
+        int start_time=0;
+        for (int i = 0; i < node_number; i++) {
+            //fixed area //
 
+            //========================================//
+            if (temp.getPcb().getStartofExec()>start_time)
+            {
+                 ctrl.drawIdleProcess( temp.getPcb().getStartofExec()-start_time);
+               
+            }
+            ctrl.draw(temp.getPcb().getBurstTime() , temp.getPcb().getPID() , temp.getPcb().getColor());
+             start_time=temp.getPcb().getEndofExec();
+            temp = temp.getNext();
+        }
     }
 
     public void sort2(int mode) {
@@ -168,8 +191,10 @@ public class RoundRobin extends Queue implements ReadyQueue {
         //======= fixed area =======//
         int final_value = 0;
         int end_of_exe = 0;
+        run_time = 0;
         int arrival_time = 0;
         int brust_time = 0;
+        int start_time = 0;
         int start_of_exe = 0;
         int time_diff = 0;
         int number_of_pcb = node_number;
@@ -194,7 +219,6 @@ public class RoundRobin extends Queue implements ReadyQueue {
                 end_of_exe = brust_time + arrival_time;
 
                 //=============================//
-                run_time = arrival_time;
                 start_of_exe = arrival_time;
                 //==========set =============================//
                 current.getPcb().setStartofExec(arrival_time);
@@ -231,6 +255,9 @@ public class RoundRobin extends Queue implements ReadyQueue {
 
                 //================set ==========================//
                 current.getPcb().setStartofExec(end_of_exe);// my start is the end of the  first
+                if (arrival_time > end_of_exe) {
+                    current.getPcb().setStartofExec(arrival_time);// my start is the arrival
+                }
                 //=============== fixed area ====================//
                 start_of_exe = current.getPcb().getStartofExec();
                 //==================================//
@@ -248,9 +275,16 @@ public class RoundRobin extends Queue implements ReadyQueue {
 
             run_time += brust_time;
 
+            System.out.println("==============");
+            System.out.println("start = " + current.getPcb().getStartofExec());
+            System.out.println("RUN = " + run_time);
+            System.out.println("end = " + current.getPcb().getEndofExec());
+
+            System.out.println("==============");
             current = current.getNext();
 
         }
+
         // claclulat turn around time //
         for (int i = 0; i < node_number; i++) {
 
@@ -288,6 +322,7 @@ public class RoundRobin extends Queue implements ReadyQueue {
                 break;
 
         }
+     
         return final_value;
     }
 }
