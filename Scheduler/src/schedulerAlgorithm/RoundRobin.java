@@ -205,7 +205,7 @@ public class RoundRobin extends Queue implements ReadyQueue {
         // so all i need is to get the first element and it's arrival time is my start xD
 
         //======= fixed area =======//
-        int final_value = 0;
+        float final_value = 0;
         int end_of_exe = 0;
         run_time = 0;
         int arrival_time = 0;
