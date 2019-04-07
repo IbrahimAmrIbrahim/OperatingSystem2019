@@ -131,7 +131,7 @@ public class SchedulerSimulationController implements Initializable {
         if (currentScheduler == schedulerType.RoundRobin) {
             String timeSliceText = timeSlice_textField.getText();
             if (timeSliceText.isEmpty()) {
-                errorDialog("Arrival Time text field can't be empty.");
+                errorDialog("Time Slice text field can't be empty.");
                 return;
             } else if (Integer.valueOf(timeSliceText) == 0) {
                 errorDialog("Time Slice can't be 0.");
@@ -216,6 +216,7 @@ public class SchedulerSimulationController implements Initializable {
 
     private void tableInitialization() {
         processIDColumn.setCellValueFactory(new PropertyValueFactory<>("pID"));
+
         processColorColumn.setCellValueFactory(new PropertyValueFactory<>("color"));
 
         // Custom rendering of the table cell.
@@ -224,14 +225,10 @@ public class SchedulerSimulationController implements Initializable {
                 @Override
                 protected void updateItem(Color item, boolean empty) {
                     super.updateItem(item, empty);
-                    if (item == null || empty) {
+                    if (getTableRow() == null || empty) {
                         setText(null);
-                        setStyle("");
-                    } else if (item.equals(Color.WHITE) || item.equals(Color.GRAY) ) {
-                        setText(null);
-                        setStyle("");
+                        setBackground(new Background(new BackgroundFill(Color.TRANSPARENT, CornerRadii.EMPTY, Insets.EMPTY)));
                     } else {
-                        System.out.println(item.toString());
                         setTextFill(Color.WHITE);
                         setText(item.toString());
                         setBackground(new Background(new BackgroundFill(item, CornerRadii.EMPTY, Insets.EMPTY)));
@@ -239,9 +236,13 @@ public class SchedulerSimulationController implements Initializable {
                 }
             };
         });
-        arrivalTimeColumn.setCellValueFactory(new PropertyValueFactory<>("arrivalTime"));
-        burstTimeColumn.setCellValueFactory(new PropertyValueFactory<>("burstTime"));
-        priorityColumn.setCellValueFactory(new PropertyValueFactory<>("priority"));
+
+        arrivalTimeColumn.setCellValueFactory(
+                new PropertyValueFactory<>("arrivalTime"));
+        burstTimeColumn.setCellValueFactory(
+                new PropertyValueFactory<>("burstTime"));
+        priorityColumn.setCellValueFactory(
+                new PropertyValueFactory<>("priority"));
 
     }
 
