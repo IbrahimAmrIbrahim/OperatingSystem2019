@@ -11,8 +11,7 @@ public class RoundRobin extends Queue implements ReadyQueue {
 
     private int RR_time = 3;// for now the RR period is 10 unit time 
     private int node_number = 0;
-    private boolean repete[]= new boolean [1000];
-    int repete_increment=0;
+   
     private int last_arrival_time=0;
     private int run_time = 0;
     // run time must be a factor of 10 like 0 10 20 30 etc
