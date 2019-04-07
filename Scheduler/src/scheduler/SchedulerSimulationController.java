@@ -40,6 +40,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
+import javafx.stage.Modality;
 import javafx.stage.StageStyle;
 import schedulerAlgorithm.FCFS;
 import schedulerAlgorithm.Priority_NonPreemptive_FCFS;
@@ -298,6 +299,7 @@ public class SchedulerSimulationController implements Initializable {
         timeSlice = 0;
         newProcess = true;
         canvasReset();
+        processTable.getItems().clear();
         queueInitialize();
         sceneInitialization();
         PCB.setCurrentPID(0);
@@ -414,6 +416,7 @@ public class SchedulerSimulationController implements Initializable {
 
         Stage stage = new Stage();
         stage.setScene(new Scene(root1));
+        stage.initModality(Modality.APPLICATION_MODAL);
         stage.initStyle(StageStyle.UTILITY);
         stage.showAndWait();
         if (newProcess == true) {
@@ -607,7 +610,7 @@ public class SchedulerSimulationController implements Initializable {
         if (canvas.getWidth() < (8040)) {
             if (nextPosition >= 749 && nextPosition < 8000) {
                 canvas.setWidth(nextPosition + 40);
-            } else {
+            } else if (nextPosition > 8000) {
                 canvas.setWidth(8040);
             }
         }
