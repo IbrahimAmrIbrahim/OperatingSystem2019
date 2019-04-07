@@ -25,6 +25,13 @@ import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 
 import dataStructure.PCB;
+import java.util.function.UnaryOperator;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.scene.Group;
+import javafx.scene.control.TextField;
+import javafx.scene.control.TextFormatter;
+import javafx.scene.input.InputMethodEvent;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.StageStyle;
 import schedulerAlgorithm.FCFS;
@@ -43,10 +50,14 @@ public class SchedulerSimulationController implements Initializable {
     private schedulerType currentScheduler;
     private SchedulerSimulationController myController;
 
+    final private int unityTimeWidth = 40;
     private int currentTime;
     private int currentXPosition;
     private int currentYPosition;
+    private int scheduleXPosition;
+    private int scheduleYPosition;
     private boolean canvasIsEmpty;
+    private int timeSlice;
 
     private boolean newProcess;
     private PCB processtoAdd;
@@ -66,13 +77,51 @@ public class SchedulerSimulationController implements Initializable {
     private ToggleGroup Simulation_Method;
     @FXML
     private Canvas canvas;
+    @FXML
+    private Group outputSimulationGroup;
+    @FXML
+    private Button clear_btn;
+    @FXML
+    private TextField timeSlice_textField;
 
     @FXML
     private void startOutputSimulationButton_KeyboardEvent(KeyEvent event) {
+        if (event.getCode().toString().equals("ENTER")) {
+            startOutputSimulation_btn.setDisable(true);
+            if (currentScheduler == schedulerType.RoundRobin) {
+                String timeSliceText = timeSlice_textField.getText();
+                if (timeSliceText.isEmpty()) {
+                    errorDialog("Arrival Time text field can't be empty.");
+                    return;
+                } else if (Integer.valueOf(timeSliceText) == 0) {
+                    errorDialog("Time Slice can't be 0.");
+                    return;
+                } else {
+                    timeSlice = Integer.valueOf(timeSliceText);
+
+                }
+            }
+            drawMethodCall();
+        }
     }
 
     @FXML
     private void startOutputSimulationButton_MouseEvent(MouseEvent event) {
+        startOutputSimulation_btn.setDisable(true);
+        if (currentScheduler == schedulerType.RoundRobin) {
+            String timeSliceText = timeSlice_textField.getText();
+            if (timeSliceText.isEmpty()) {
+                errorDialog("Arrival Time text field can't be empty.");
+                return;
+            } else if (Integer.valueOf(timeSliceText) == 0) {
+                errorDialog("Time Slice can't be 0.");
+                return;
+            } else {
+                timeSlice = Integer.valueOf(timeSliceText);
+
+            }
+        }
+        drawMethodCall();
     }
 
     @FXML
@@ -87,15 +136,107 @@ public class SchedulerSimulationController implements Initializable {
         addProcessDialog();
     }
 
+    @FXML
+    private void clearButton_KeyboardEvent(KeyEvent event) {
+        if (event.getCode().toString().equals("ENTER")) {
+            if (yesNoDialog("Are you sure you want to clear every thing?")) {
+                clear();
+            }
+        }
+    }
+
+    @FXML
+    private void clearButton_MouseEvent(MouseEvent event) {
+        if (yesNoDialog("Are you sure you want to clear every thing?")) {
+            clear();
+        }
+    }
+
+    @FXML
+    private void changeSchedulerButton_KeyboardEvent(KeyEvent event) {
+        if (event.getCode().toString().equals("ENTER")) {
+            if (yesNoDialog("Are you sure you want to change the scheduler, it will clear everything?")) {
+                schedulerSelectDialog();;
+            }
+        }
+    }
+
+    @FXML
+    private void changeSchedulerButton_MouseEvent(MouseEvent event) {
+        if (yesNoDialog("Are you sure you want to change the scheduler, it will clear everything?")) {
+            schedulerSelectDialog();;
+        }
+    }
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         currentScheduler = schedulerType.None;
+        timeSlice = 0;
         currentTime = 0;
         currentXPosition = 0;
-        currentYPosition = 20;
+        currentYPosition = 0;
+        scheduleXPosition = 0;
+        scheduleYPosition = currentXPosition + 20;
         canvasIsEmpty = true;
         newProcess = true;
+        setTextFieldValidation();
+
+        // Listen for TextField text changes
+        timeSlice_textField.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                startOutputSimulation_btn.setDisable(false);
+            }
+        });
+
         schedulerSelectDialog();
+        sceneInitialization();
+    }
+
+    /**
+     * This method initializes scene according to the scheduler
+     */
+    private void sceneInitialization() {
+        if (currentScheduler == schedulerType.None) {
+            addProcess_btn.setDisable(true);
+            outputSimulationGroup.setDisable(true);
+            clear_btn.setDisable(true);
+        } else if (currentScheduler == schedulerType.RoundRobin) {
+            addProcess_btn.setDisable(false);
+            outputSimulationGroup.setDisable(false);
+            startOutputSimulation_btn.setDisable(false);
+            timeSlice_textField.setDisable(false);
+            clear_btn.setDisable(false);
+        } else if ((currentScheduler == schedulerType.Priority_Preemptive_FCFS) || (currentScheduler == schedulerType.Priority_NonPreemptive_FCFS)) {
+            addProcess_btn.setDisable(false);
+            outputSimulationGroup.setDisable(false);
+            startOutputSimulation_btn.setDisable(false);
+            timeSlice_textField.setDisable(true);
+            clear_btn.setDisable(false);
+        } else {
+            addProcess_btn.setDisable(false);
+            outputSimulationGroup.setDisable(false);
+            startOutputSimulation_btn.setDisable(false);
+            timeSlice_textField.setDisable(true);
+            clear_btn.setDisable(false);
+        }
+    }
+
+    private void clear() {
+        GraphicsContext gc = canvas.getGraphicsContext2D();
+        timeSlice = 0;
+        currentTime = 0;
+        currentXPosition = 0;
+        currentYPosition = 0;
+        scheduleXPosition = 0;
+        scheduleYPosition = currentXPosition + 20;
+        canvasIsEmpty = true;
+        newProcess = true;
+        queueInitialize();
+        sceneInitialization();
+        PCB.setCurrentPID(0);
+        gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
+        startOutputSimulation_btn.setDisable(false);
     }
 
     /**
@@ -136,6 +277,20 @@ public class SchedulerSimulationController implements Initializable {
         } else {
             return false;
         }
+    }
+
+    private void setTextFieldValidation() {
+        UnaryOperator<TextFormatter.Change> filter = change -> {
+            String text = change.getText();
+
+            if (text.matches("[0-9]*")) {
+                return change;
+            }
+
+            return null;
+        };
+        TextFormatter<String> textFormatter1 = new TextFormatter<>(filter);
+        timeSlice_textField.setTextFormatter(textFormatter1);
     }
 
     /**
@@ -179,7 +334,7 @@ public class SchedulerSimulationController implements Initializable {
         } else {
             currentScheduler = schedulerType.None;
         }
-        queueInitialize();
+        clear();
     }
 
     private void addProcessDialog() throws IOException {
@@ -190,16 +345,16 @@ public class SchedulerSimulationController implements Initializable {
         if (newProcess == true) {
             processtoAdd = new PCB(true);
         }
-        ctrl.sceneInitilize(myController, processtoAdd);
+        ctrl.sceneInitialization(myController, processtoAdd);
 
         Stage stage = new Stage();
         stage.setScene(new Scene(root1));
-        stage.initStyle(StageStyle.UNDECORATED);
+        stage.initStyle(StageStyle.UTILITY);
         stage.showAndWait();
         if (newProcess == true) {
             /* Add process */
             insertMethodCall(processtoAdd);
-            RoundRobin_ProcessQueue.printQueue();
+            startOutputSimulation_btn.setDisable(false);
         }
     }
 
@@ -209,21 +364,54 @@ public class SchedulerSimulationController implements Initializable {
                 break;
             case FCFS:
                 FCFS_ProcessQueue.insert(process);
+                FCFS_ProcessQueue.printQueue();
                 break;
             case RoundRobin:
                 RoundRobin_ProcessQueue.insert(process);
+                RoundRobin_ProcessQueue.printQueue();
                 break;
             case SJF_Preemptive_FCFS:
                 SJF_Preemptive_FCFS_ProcessQueue.insert(process);
+                SJF_Preemptive_FCFS_ProcessQueue.printQueue();
                 break;
             case SJF_NonPreemptive_FCFS:
                 SJF_NonPreemptive_FCFS_ProcessQueue.insert(process);
+                SJF_NonPreemptive_FCFS_ProcessQueue.printQueue();
                 break;
             case Priority_Preemptive_FCFS:
                 Priority_Preemptive_FCFS_ProcessQueue.insert(process);
+                Priority_Preemptive_FCFS_ProcessQueue.printQueue();
                 break;
             case Priority_NonPreemptive_FCFS:
                 Priority_NonPreemptive_FCFS_ProcessQueue.insert(process);
+                Priority_NonPreemptive_FCFS_ProcessQueue.printQueue();
+                break;
+            default:
+                break;
+        }
+    }
+
+    private void drawMethodCall() {
+        switch (currentScheduler) {
+            case None:
+                break;
+            case FCFS:
+                FCFS_ProcessQueue.DrawGanttChart(myController);
+                break;
+            case RoundRobin:
+                RoundRobin_ProcessQueue.DrawGanttChart(myController);
+                break;
+            case SJF_Preemptive_FCFS:
+                SJF_Preemptive_FCFS_ProcessQueue.DrawGanttChart(myController);
+                break;
+            case SJF_NonPreemptive_FCFS:
+                SJF_NonPreemptive_FCFS_ProcessQueue.DrawGanttChart(myController);
+                break;
+            case Priority_Preemptive_FCFS:
+                Priority_Preemptive_FCFS_ProcessQueue.DrawGanttChart(myController);
+                break;
+            case Priority_NonPreemptive_FCFS:
+                Priority_NonPreemptive_FCFS_ProcessQueue.DrawGanttChart(myController);
                 break;
             default:
                 break;
@@ -293,85 +481,98 @@ public class SchedulerSimulationController implements Initializable {
         }
     }
 
+    private void canvasInitialization() {
+        GraphicsContext gc = canvas.getGraphicsContext2D();
+
+        if (canvasIsEmpty == true) {
+            // Write scheduler method
+            gc.setFill(Color.WHITE);
+            gc.setTextAlign(TextAlignment.LEFT);
+            switch (getCurrentScheduler()) {
+                case FCFS:
+                    gc.fillText("FCFS Scheduler", 20, scheduleYPosition);
+                    break;
+                case RoundRobin:
+                    gc.fillText("Round Robin Scheduler", 20, scheduleYPosition);
+                    break;
+                case SJF_Preemptive_FCFS:
+                    gc.fillText("SJF Preemptive (FCFS) Scheduler", 20, scheduleYPosition);
+                    break;
+                case SJF_NonPreemptive_FCFS:
+                    gc.fillText("SJF NonPreemptive (FCFS) Scheduler", 20, scheduleYPosition);
+                    break;
+                case Priority_Preemptive_FCFS:
+                    gc.fillText("Priority Preemptive (FCFS) Scheduler", 20, scheduleYPosition);
+                    break;
+                case Priority_NonPreemptive_FCFS:
+                    gc.fillText("Priority NonPreemptive (FCFS) Scheduler", 20, scheduleYPosition);
+                    break;
+                default:
+                    break;
+            }
+
+            currentYPosition = scheduleYPosition + 20;
+            // draw begin time point
+            gc.fillRect(40, currentYPosition, 1, 50);
+
+            // write time
+            gc.rotate(45);
+            gc.fillText(Integer.toString(getCurrentTime()), rotatedX(40, (currentYPosition + 50)), rotatedY(40, (currentYPosition + 50)));
+            gc.rotate(-45);
+            currentXPosition = 41;
+
+            canvasIsEmpty = false;
+        }
+    }
+
     public void draw(int duration, int processID, Color color) {
 
-        final int unityTimeWidth = 40;
         GraphicsContext gc = canvas.getGraphicsContext2D();
 
         if (duration <= 0) {
             return;
         }
 
-        if (canvasIsEmpty == true) {
-            // Write scheduler method
-            gc.setFill(Color.WHITE);
-            gc.setTextAlign(TextAlignment.LEFT);
-            if (getCurrentScheduler() == schedulerType.None) {
-                gc.fillText("No Scheduler", 20, currentYPosition);
-            } else if (getCurrentScheduler() == schedulerType.FCFS) {
-                gc.fillText("FCFS Scheduler", 20, currentYPosition);
-            } else if (getCurrentScheduler() == schedulerType.RoundRobin) {
-                gc.fillText("Round Robin Scheduler", 20, currentYPosition);
-            } else if (getCurrentScheduler() == schedulerType.SJF_Preemptive_FCFS) {
-                gc.fillText("SJF Preemptive (FCFS) Scheduler", 20, currentYPosition);
-            } else if (getCurrentScheduler() == schedulerType.SJF_NonPreemptive_FCFS) {
-                gc.fillText("SJF NonPreemptive (FCFS) Scheduler", 20, currentYPosition);
-            } else if (getCurrentScheduler() == schedulerType.Priority_Preemptive_FCFS) {
-                gc.fillText("Priority Preemptive (FCFS) Scheduler", 20, currentYPosition);
-            } else if (getCurrentScheduler() == schedulerType.Priority_NonPreemptive_FCFS) {
-                gc.fillText("Priority NonPreemptive (FCFS) Scheduler", 20, currentYPosition);
-            }
-
-            currentYPosition += 20;
-            // draw begin time point
-            gc.fillRect(40, currentYPosition, 1, 50);
-
-            // write time
-            gc.rotate(45);
-            gc.fillText(Integer.toString(currentTime), rotatedX(40, (currentYPosition + 50)), rotatedY(40, (currentYPosition + 50)));
-            gc.rotate(-45);
-            currentXPosition = 41;
-
-            canvasIsEmpty = false;
-        }
+        canvasInitialization();
 
         int nextPosition = (duration * unityTimeWidth) + currentXPosition;
-        if (currentYPosition == 40 && nextPosition < 8000) {
-            canvas.setWidth(nextPosition + 40);
-        } else {
-            canvas.setWidth(8000 + 40);
+        // Canvas max width 8040
+        // initial Canvas widh 749
+        if (canvas.getWidth() < (8040)) {
+            if (nextPosition >= 749 && nextPosition < 8000) {
+                canvas.setWidth(nextPosition + 40);
+            } else {
+                canvas.setWidth(8040);
+            }
         }
 
         if (nextPosition > 8000) {
             int theRest = duration - ((8000 - currentXPosition) / unityTimeWidth);
-            draw(((8000 - currentXPosition) / unityTimeWidth), 0, Color.WHITE);
+            draw(((8000 - currentXPosition) / unityTimeWidth), processID, color);
             currentXPosition = 40;
             currentYPosition += 100;
             canvas.setHeight(currentYPosition + 100);
-            if (theRest > 0) {
-                draw(theRest, 0, Color.WHITE);
-
+            if (theRest >= 0) {
+                draw(theRest, processID, color);
             }
             return;
         }
-
         currentTime += duration;
 
-        //*********************************
-        //color need to change 
-        //*************************
         // draw process time
-        gc.setFill(Color.AQUA);
-        //gc.fillRect(currentXPosition, (currentYPosition + 10), (duration * unityTimeWidth), 30);
+        gc.setFill(color);
         gc.fillRoundRect(currentXPosition, (currentYPosition + 10), (duration * unityTimeWidth), 30, 20, 20);
 
         // write process id
         gc.setFill(Color.WHITE);
-        //*********************************
-        //pid need to be addad 
-        //*************************
         gc.setTextAlign(TextAlignment.CENTER);
-        gc.fillText(("P" + Integer.toString(1)), (((duration * unityTimeWidth) / 2) + currentXPosition), (currentYPosition + 30));
+        String processText;
+        if (processID == -1) {
+            processText = "Idle";
+        } else {
+            processText = ("P" + Integer.toString(processID));
+        }
+        gc.fillText(processText, (((duration * unityTimeWidth) / 2) + currentXPosition), (currentYPosition + 30));
 
         // draw end time point
         gc.fillRect(nextPosition, currentYPosition, 1, 50);
@@ -379,10 +580,14 @@ public class SchedulerSimulationController implements Initializable {
         // write time
         gc.rotate(45);
         gc.setTextAlign(TextAlignment.LEFT);
-        gc.fillText(Integer.toString(currentTime), rotatedX(nextPosition, (currentYPosition + 50)), rotatedY(nextPosition, (currentYPosition + 50)));
+        gc.fillText(Integer.toString(getCurrentTime()), rotatedX(nextPosition, (currentYPosition + 50)), rotatedY(nextPosition, (currentYPosition + 50)));
         gc.rotate(-45);
 
         currentXPosition = nextPosition + 1;
+    }
+
+    public void drawIdleProcess(int duration) {
+        draw(duration, -1, Color.BLACK);
     }
 
     /**
@@ -440,5 +645,19 @@ public class SchedulerSimulationController implements Initializable {
      */
     public void setNewProcess(boolean newProcess) {
         this.newProcess = newProcess;
+    }
+
+    /**
+     * @return the currentTime
+     */
+    public int getCurrentTime() {
+        return currentTime;
+    }
+
+    /**
+     * @return the timeSlice
+     */
+    public int getTimeSlice() {
+        return timeSlice;
     }
 }

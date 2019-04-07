@@ -52,13 +52,14 @@ public class AddProcessController implements Initializable {
 
     }
 
-    public void sceneInitilize(SchedulerSimulationController ctrl, PCB process) {
+    public void sceneInitialization(SchedulerSimulationController ctrl, PCB process) {
         parentController = ctrl;
         newProcess = process;
         pID_Label.setText(Integer.toString(newProcess.getpID()));
         pColor_Label.setBackground(new Background(new BackgroundFill(newProcess.getColor(), CornerRadii.EMPTY, Insets.EMPTY)));
         setTextFieldValidation();
         currentScheduler = parentController.getCurrentScheduler();
+        parentController.setNewProcess(false);
         if ((currentScheduler == SchedulerSimulationController.schedulerType.FCFS)
                 || (currentScheduler == SchedulerSimulationController.schedulerType.SJF_Preemptive_FCFS)
                 || (currentScheduler == SchedulerSimulationController.schedulerType.SJF_NonPreemptive_FCFS)
