@@ -74,8 +74,6 @@ public class SchedulerSimulationController implements Initializable {
     private int currentTime;
     private int currentXPosition;
     private int currentYPosition;
-    private int scheduleXPosition;
-    private int scheduleYPosition;
     private boolean canvasIsEmpty;
     private int timeSlice;
 
@@ -131,7 +129,7 @@ public class SchedulerSimulationController implements Initializable {
         if (currentScheduler == schedulerType.RoundRobin) {
             String timeSliceText = timeSlice_textField.getText();
             if (timeSliceText.isEmpty()) {
-                errorDialog("Arrival Time text field can't be empty.");
+                errorDialog("Time Slice text field can't be empty.");
                 return;
             } else if (Integer.valueOf(timeSliceText) == 0) {
                 errorDialog("Time Slice can't be 0.");
@@ -194,9 +192,7 @@ public class SchedulerSimulationController implements Initializable {
         timeSlice = 0;
         currentTime = 0;
         currentXPosition = 0;
-        currentYPosition = 0;
-        scheduleXPosition = 0;
-        scheduleYPosition = currentXPosition + 20;
+        currentYPosition = 20;
         canvasIsEmpty = true;
         newProcess = true;
         setTextFieldValidation();
@@ -216,6 +212,7 @@ public class SchedulerSimulationController implements Initializable {
 
     private void tableInitialization() {
         processIDColumn.setCellValueFactory(new PropertyValueFactory<>("pID"));
+
         processColorColumn.setCellValueFactory(new PropertyValueFactory<>("color"));
 
         // Custom rendering of the table cell.
@@ -224,14 +221,10 @@ public class SchedulerSimulationController implements Initializable {
                 @Override
                 protected void updateItem(Color item, boolean empty) {
                     super.updateItem(item, empty);
-                    if (item == null || empty) {
+                    if (getTableRow() == null || empty) {
                         setText(null);
-                        setStyle("");
-                    } else if (item.equals(Color.WHITE) || item.equals(Color.GRAY) ) {
-                        setText(null);
-                        setStyle("");
+                        setBackground(new Background(new BackgroundFill(Color.TRANSPARENT, CornerRadii.EMPTY, Insets.EMPTY)));
                     } else {
-                        System.out.println(item.toString());
                         setTextFill(Color.WHITE);
                         setText(item.toString());
                         setBackground(new Background(new BackgroundFill(item, CornerRadii.EMPTY, Insets.EMPTY)));
@@ -239,9 +232,13 @@ public class SchedulerSimulationController implements Initializable {
                 }
             };
         });
-        arrivalTimeColumn.setCellValueFactory(new PropertyValueFactory<>("arrivalTime"));
-        burstTimeColumn.setCellValueFactory(new PropertyValueFactory<>("burstTime"));
-        priorityColumn.setCellValueFactory(new PropertyValueFactory<>("priority"));
+
+        arrivalTimeColumn.setCellValueFactory(
+                new PropertyValueFactory<>("arrivalTime"));
+        burstTimeColumn.setCellValueFactory(
+                new PropertyValueFactory<>("burstTime"));
+        priorityColumn.setCellValueFactory(
+                new PropertyValueFactory<>("priority"));
 
     }
 
@@ -251,6 +248,7 @@ public class SchedulerSimulationController implements Initializable {
     private void sceneInitialization() {
         if (currentScheduler == schedulerType.None) {
             addProcess_btn.setDisable(true);
+            timeSlice_textField.setText("");
             outputSimulationGroup.setDisable(true);
             clear_btn.setDisable(true);
             processTable.setDisable(true);
@@ -266,6 +264,7 @@ public class SchedulerSimulationController implements Initializable {
             addProcess_btn.setDisable(false);
             outputSimulationGroup.setDisable(false);
             startOutputSimulation_btn.setDisable(false);
+            timeSlice_textField.setText("");
             timeSlice_textField.setDisable(true);
             clear_btn.setDisable(false);
             processTable.setDisable(false);
@@ -274,6 +273,7 @@ public class SchedulerSimulationController implements Initializable {
             addProcess_btn.setDisable(false);
             outputSimulationGroup.setDisable(false);
             startOutputSimulation_btn.setDisable(false);
+            timeSlice_textField.setText("");
             timeSlice_textField.setDisable(true);
             clear_btn.setDisable(false);
             processTable.setDisable(false);
@@ -286,9 +286,7 @@ public class SchedulerSimulationController implements Initializable {
         timeSlice = 0;
         currentTime = 0;
         currentXPosition = 0;
-        currentYPosition = 0;
-        scheduleXPosition = 0;
-        scheduleYPosition = currentXPosition + 20;
+        currentYPosition = 20;
         canvasIsEmpty = true;
         newProcess = true;
         queueInitialize();
@@ -552,28 +550,28 @@ public class SchedulerSimulationController implements Initializable {
             gc.setTextAlign(TextAlignment.LEFT);
             switch (getCurrentScheduler()) {
                 case FCFS:
-                    gc.fillText("FCFS Scheduler", 20, scheduleYPosition);
+                    gc.fillText("FCFS Scheduler", 20, 20);
                     break;
                 case RoundRobin:
-                    gc.fillText("Round Robin Scheduler", 20, scheduleYPosition);
+                    gc.fillText("Round Robin Scheduler", 20, 20);
                     break;
                 case SJF_Preemptive_FCFS:
-                    gc.fillText("SJF Preemptive (FCFS) Scheduler", 20, scheduleYPosition);
+                    gc.fillText("SJF Preemptive (FCFS) Scheduler", 20, 20);
                     break;
                 case SJF_NonPreemptive_FCFS:
-                    gc.fillText("SJF NonPreemptive (FCFS) Scheduler", 20, scheduleYPosition);
+                    gc.fillText("SJF NonPreemptive (FCFS) Scheduler", 20, 20);
                     break;
                 case Priority_Preemptive_FCFS:
-                    gc.fillText("Priority Preemptive (FCFS) Scheduler", 20, scheduleYPosition);
+                    gc.fillText("Priority Preemptive (FCFS) Scheduler", 20, 20);
                     break;
                 case Priority_NonPreemptive_FCFS:
-                    gc.fillText("Priority NonPreemptive (FCFS) Scheduler", 20, scheduleYPosition);
+                    gc.fillText("Priority NonPreemptive (FCFS) Scheduler", 20, 20);
                     break;
                 default:
                     break;
             }
 
-            currentYPosition = scheduleYPosition + 20;
+            currentYPosition = 80;
             // draw begin time point
             gc.fillRect(40, currentYPosition, 1, 50);
 
@@ -658,7 +656,11 @@ public class SchedulerSimulationController implements Initializable {
      * @param avgWaitingTime
      */
     public void writeAvgWaitingTime(double avgWaitingTime) {
+        GraphicsContext gc = canvas.getGraphicsContext2D();
 
+        gc.setFill(Color.WHITE);
+        gc.setTextAlign(TextAlignment.LEFT);
+        gc.fillText("Average waitting time : " + String.format("%.5g%n", avgWaitingTime), 40, 40);
     }
 
     /**
@@ -667,7 +669,11 @@ public class SchedulerSimulationController implements Initializable {
      * @param avgTurnarroundTime
      */
     public void writeAvgTurnarroundTime(double avgTurnarroundTime) {
+        GraphicsContext gc = canvas.getGraphicsContext2D();
 
+        gc.setFill(Color.WHITE);
+        gc.setTextAlign(TextAlignment.LEFT);
+        gc.fillText("Average turnaround time : " + String.format("%.5g%n", avgTurnarroundTime), 40, 60);
     }
 
     private double rotatedX(double x, double y) {
