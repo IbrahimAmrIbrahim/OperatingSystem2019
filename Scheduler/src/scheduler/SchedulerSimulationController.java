@@ -236,6 +236,8 @@ public class SchedulerSimulationController implements Initializable {
         sceneInitialization();
         PCB.setCurrentPID(0);
         gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
+        canvas.setWidth(749);
+        canvas.setHeight(265);
         startOutputSimulation_btn.setDisable(false);
     }
 
