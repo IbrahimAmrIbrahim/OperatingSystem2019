@@ -11,41 +11,42 @@ public class RoundRobin extends Queue implements ReadyQueue {
 
     private int RR_time = 3;// for now the RR period is 10 unit time 
     private int node_number = 0;
-   
-    private int last_arrival_time=0;
+
+    private int last_arrival_time = 0;
     private int run_time = 0;
     // run time must be a factor of 10 like 0 10 20 30 etc
-
+   
     private int waiting_time = 0;
-    private PCB new_pcb= new PCB(false);
 
-    
-    public void set_RR_time(int x)
-    {
-        RR_time=x;
+    public void set_RR_time(int x) {
+        RR_time = x;
     }
-    public void insert(PCB newPCB) {
 
+    public void insert(PCB newPCB) {
+       PCB pcb_dumy = new PCB(false);
+        pcb_dumy.copy(newPCB);
         //==============================//
         // if the time is less than the RR_TIME then just add it in the qq 
-        if (newPCB.getBurstTime() <= RR_time) {
-            enqueue(newPCB);
+        if (pcb_dumy.getBurstTime() <= RR_time) {
+            enqueue(pcb_dumy);
             node_number++;
-          
+
         } //======================================================//
         else {
             System.out.println("flag 1");
-          
-            new_pcb.copy(newPCB);
+
+            PCB new_pcb = new PCB(false);
+            new_pcb.copy(pcb_dumy);
             // while the burst time bigger than zero
             while (new_pcb.getBurstTime() > 0) {
+
                 int new_pcb_time = new_pcb.getBurstTime();
                 PCB next_new = new PCB(false);// fix it
 
                 int put_in;
                 //======================================//
                 if (new_pcb.getBurstTime() > RR_time) {
-                    
+
                     put_in = RR_time;
                 } else {
                     put_in = new_pcb.getBurstTime();
@@ -70,12 +71,12 @@ public class RoundRobin extends Queue implements ReadyQueue {
                 //===========================================//
                 // insert it again  
             }
-            
+
         }
         System.out.println("---------------------");
         newPCB.printPCB();
         System.out.println("the fucken pcb above ");
-        sort(0);
+     
         printQueue();
         time(0);
     }
@@ -84,19 +85,21 @@ public class RoundRobin extends Queue implements ReadyQueue {
     @Override
     public void DrawGanttChart(SchedulerSimulationController ctrl) {
         Node temp = head;
-       
-        int start_time=0;
+        sort(0);
+        int start_time = 0;
         for (int i = 0; i < node_number; i++) {
             //fixed area //
 
             //========================================//
-            if (temp.getPcb().getStartofExec()>start_time)
-            {
-                 ctrl.drawIdleProcess( temp.getPcb().getStartofExec()-start_time);
-               
+            System.out.println("temp.getPcb().getStartofExec() " + temp.getPcb().getStartofExec());
+            System.out.println("temp.getPcb().endofEXec() " + temp.getPcb().getEndofExec());
+            System.out.println("start_time " + start_time);
+            if (temp.getPcb().getStartofExec() > start_time) {
+                ctrl.drawIdleProcess(temp.getPcb().getStartofExec() - start_time);
+
             }
-            ctrl.draw(temp.getPcb().getBurstTime() , temp.getPcb().getPID() , temp.getPcb().getColor());
-             start_time=temp.getPcb().getEndofExec();
+            ctrl.draw(temp.getPcb().getBurstTime(), temp.getPcb().getPID(), temp.getPcb().getColor());
+            start_time = temp.getPcb().getEndofExec();
             temp = temp.getNext();
         }
         ctrl.writeAvgWaitingTime(time(3));
@@ -162,18 +165,11 @@ public class RoundRobin extends Queue implements ReadyQueue {
                 next = temp.getNext();
                 PCB my_pcb = new PCB(false);
                 while (current.getNext() != null) {
-                    System.out.println(  "current "+current.getPcb().getPriority() + " next "+next.getPcb().getPriority());
-                    if (current.getPcb().getArrivalTime() > next.getPcb().getArrivalTime() 
-                            ||
-                            (current.getPcb().getArrivalTime() == next.getPcb().getArrivalTime()
-                            && 
-                            (
-                            current.getPcb().getPID()< next.getPcb().getPID()
-                            &&
-                            current.getPcb().getPriority()<next.getPcb().getPriority()
-                            )
-                            )
-                            ) {
+                    System.out.println("current " + current.getPcb().getPriority() + " next " + next.getPcb().getPriority());
+                    if (current.getPcb().getArrivalTime() > next.getPcb().getArrivalTime()
+                            || (current.getPcb().getArrivalTime() == next.getPcb().getArrivalTime()
+                            && (current.getPcb().getPID() < next.getPcb().getPID()
+                            && current.getPcb().getPriority() < next.getPcb().getPriority()))) {
                         //===============//
 
                         my_pcb.copy(next.getPcb());
@@ -195,6 +191,8 @@ public class RoundRobin extends Queue implements ReadyQueue {
                         current = next;
                         next = next.getNext();
                     }
+                    System.out.println("the sort out ");
+                    printQueue();
                 }
 
             }
@@ -341,7 +339,7 @@ public class RoundRobin extends Queue implements ReadyQueue {
                 break;
 
         }
-     
+
         return final_value;
     }
 }
