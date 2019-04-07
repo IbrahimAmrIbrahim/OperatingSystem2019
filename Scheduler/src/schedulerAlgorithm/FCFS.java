@@ -53,7 +53,7 @@ public class FCFS extends Queue implements ReadyQueue {
             if (ctrl.getCurrentTime() < currNode.getPcb().getArrivalTime()) {
                 ctrl.drawIdleProcess((currNode.getPcb().getArrivalTime() - ctrl.getCurrentTime()));
             }
-            ctrl.draw(currNode.getPcb().getBurstTime(), currNode.getPcb().getpID(), currNode.getPcb().getColor());
+            ctrl.draw(currNode.getPcb().getBurstTime(), currNode.getPcb().getPID(), currNode.getPcb().getColor());
 
             // Go to next node 
             currNode = currNode.getNext();

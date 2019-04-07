@@ -55,7 +55,7 @@ public class AddProcessController implements Initializable {
     public void sceneInitialization(SchedulerSimulationController ctrl, PCB process) {
         parentController = ctrl;
         newProcess = process;
-        pID_Label.setText(Integer.toString(newProcess.getpID()));
+        pID_Label.setText(Integer.toString(newProcess.getPID()));
         pColor_Label.setBackground(new Background(new BackgroundFill(newProcess.getColor(), CornerRadii.EMPTY, Insets.EMPTY)));
         setTextFieldValidation();
         currentScheduler = parentController.getCurrentScheduler();

@@ -28,11 +28,18 @@ import dataStructure.PCB;
 import java.util.function.UnaryOperator;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.geometry.Insets;
 import javafx.scene.Group;
+import javafx.scene.control.TableCell;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
-import javafx.scene.input.InputMethodEvent;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
 import javafx.stage.StageStyle;
 import schedulerAlgorithm.FCFS;
 import schedulerAlgorithm.Priority_NonPreemptive_FCFS;
@@ -42,6 +49,19 @@ import schedulerAlgorithm.SJF_NonPreemptive_FCFS;
 import schedulerAlgorithm.SJF_Preemptive_FCFS;
 
 public class SchedulerSimulationController implements Initializable {
+
+    @FXML
+    private TableView<PCB> processTable;
+    @FXML
+    private TableColumn<PCB, Integer> processIDColumn;
+    @FXML
+    private TableColumn<PCB, Color> processColorColumn;
+    @FXML
+    private TableColumn<PCB, Integer> arrivalTimeColumn;
+    @FXML
+    private TableColumn<PCB, Integer> priorityColumn;
+    @FXML
+    private TableColumn<PCB, Integer> burstTimeColumn;
 
     public enum schedulerType {
         None, FCFS, SJF_Preemptive_FCFS, SJF_NonPreemptive_FCFS, RoundRobin, Priority_Preemptive_FCFS, Priority_NonPreemptive_FCFS
@@ -190,7 +210,39 @@ public class SchedulerSimulationController implements Initializable {
         });
 
         schedulerSelectDialog();
+        tableInitialization();
         sceneInitialization();
+    }
+
+    private void tableInitialization() {
+        processIDColumn.setCellValueFactory(new PropertyValueFactory<>("pID"));
+        processColorColumn.setCellValueFactory(new PropertyValueFactory<>("color"));
+
+        // Custom rendering of the table cell.
+        processColorColumn.setCellFactory(column -> {
+            return new TableCell<PCB, Color>() {
+                @Override
+                protected void updateItem(Color item, boolean empty) {
+                    super.updateItem(item, empty);
+                    if (item == null || empty) {
+                        setText(null);
+                        setStyle("");
+                    } else if (item.equals(Color.WHITE) || item.equals(Color.GRAY) ) {
+                        setText(null);
+                        setStyle("");
+                    } else {
+                        System.out.println(item.toString());
+                        setTextFill(Color.WHITE);
+                        setText(item.toString());
+                        setBackground(new Background(new BackgroundFill(item, CornerRadii.EMPTY, Insets.EMPTY)));
+                    }
+                }
+            };
+        });
+        arrivalTimeColumn.setCellValueFactory(new PropertyValueFactory<>("arrivalTime"));
+        burstTimeColumn.setCellValueFactory(new PropertyValueFactory<>("burstTime"));
+        priorityColumn.setCellValueFactory(new PropertyValueFactory<>("priority"));
+
     }
 
     /**
@@ -201,24 +253,31 @@ public class SchedulerSimulationController implements Initializable {
             addProcess_btn.setDisable(true);
             outputSimulationGroup.setDisable(true);
             clear_btn.setDisable(true);
+            processTable.setDisable(true);
         } else if (currentScheduler == schedulerType.RoundRobin) {
             addProcess_btn.setDisable(false);
             outputSimulationGroup.setDisable(false);
             startOutputSimulation_btn.setDisable(false);
             timeSlice_textField.setDisable(false);
             clear_btn.setDisable(false);
+            processTable.setDisable(false);
+            priorityColumn.setVisible(false);
         } else if ((currentScheduler == schedulerType.Priority_Preemptive_FCFS) || (currentScheduler == schedulerType.Priority_NonPreemptive_FCFS)) {
             addProcess_btn.setDisable(false);
             outputSimulationGroup.setDisable(false);
             startOutputSimulation_btn.setDisable(false);
             timeSlice_textField.setDisable(true);
             clear_btn.setDisable(false);
+            processTable.setDisable(false);
+            priorityColumn.setVisible(true);
         } else {
             addProcess_btn.setDisable(false);
             outputSimulationGroup.setDisable(false);
             startOutputSimulation_btn.setDisable(false);
             timeSlice_textField.setDisable(true);
             clear_btn.setDisable(false);
+            processTable.setDisable(false);
+            priorityColumn.setVisible(false);
         }
     }
 
@@ -356,6 +415,7 @@ public class SchedulerSimulationController implements Initializable {
         if (newProcess == true) {
             /* Add process */
             insertMethodCall(processtoAdd);
+            processTable.getItems().add(processtoAdd);
             startOutputSimulation_btn.setDisable(false);
         }
     }

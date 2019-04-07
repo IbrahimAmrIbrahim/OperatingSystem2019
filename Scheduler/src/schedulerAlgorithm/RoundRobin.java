@@ -214,7 +214,7 @@ public class RoundRobin extends Queue implements ReadyQueue {
                 // check if i have it before loop //
                 for (int j = 0; j < i; j++) {
 
-                    if (current.getPcb().getpID() == header.getPcb().getpID()) {
+                    if (current.getPcb().getPID() == header.getPcb().getPID()) {
 
                         if (time_diff_bool) {
                             time_diff = current.getPcb().getArrivalTime() - header.getPcb().getArrivalTime();

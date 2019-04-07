@@ -22,10 +22,13 @@
          <items>
             <AnchorPane prefHeight="200.0" prefWidth="200.0">
                <children>
-                  <TableView editable="true" layoutX="14.0" prefHeight="200.0" prefWidth="414.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="342.0" AnchorPane.topAnchor="0.0">
+                  <TableView fx:id="processTable" editable="true" layoutX="14.0" prefHeight="200.0" prefWidth="414.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="342.0" AnchorPane.topAnchor="0.0">
                     <columns>
-                      <TableColumn prefWidth="75.0" text="C1" />
-                      <TableColumn prefWidth="75.0" text="C2" />
+                      <TableColumn fx:id="processIDColumn" editable="false" minWidth="1.0" prefWidth="95.0" text="Process ID" />
+                      <TableColumn fx:id="processColorColumn" editable="false" minWidth="1.0" prefWidth="120.0" text="Process Color" />
+                        <TableColumn fx:id="arrivalTimeColumn" editable="false" minWidth="1.0" prefWidth="110.0" text="Arrival Time" />
+                        <TableColumn fx:id="priorityColumn" editable="false" minWidth="1.0" text="Priority" />
+                        <TableColumn fx:id="burstTimeColumn" editable="false" minWidth="1.0" prefWidth="110.0" text="Burst Time" />
                     </columns>
                   </TableView>
                   <Pane layoutX="407.0" prefHeight="265.0" prefWidth="342.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">

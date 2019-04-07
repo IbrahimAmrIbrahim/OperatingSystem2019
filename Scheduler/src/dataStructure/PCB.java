@@ -50,7 +50,7 @@ public class PCB {
      * equal.
      */
     public boolean equals(PCB pcb) {
-        if (this.pID == pcb.getpID()
+        if (this.pID == pcb.getPID()
                 && this.color.equals(pcb.getColor())
                 && this.arrivalTime == pcb.getArrivalTime()
                 && this.burstTime == pcb.getBurstTime()
@@ -66,7 +66,7 @@ public class PCB {
      * @param pcb
      */
     public void copy(PCB pcb) {
-        this.pID = pcb.getpID();
+        this.pID = pcb.getPID();
         this.color = pcb.getColor();
         this.arrivalTime = pcb.getArrivalTime();
         this.burstTime = pcb.getBurstTime();
@@ -100,7 +100,7 @@ public class PCB {
     /**
      * @return the pID
      */
-    public int getpID() {
+    public int getPID() {
         return pID;
     }
 
