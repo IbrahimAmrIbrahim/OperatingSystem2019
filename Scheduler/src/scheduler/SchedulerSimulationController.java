@@ -595,11 +595,11 @@ public class SchedulerSimulationController implements Initializable {
 
         GraphicsContext gc = canvas.getGraphicsContext2D();
 
+        canvasInitialization();
+
         if (duration <= 0) {
             return;
         }
-
-        canvasInitialization();
 
         int nextPosition = (duration * unityTimeWidth) + currentXPosition;
         // Canvas max width 8040
@@ -675,7 +675,6 @@ public class SchedulerSimulationController implements Initializable {
      */
     public void writeAvgTurnarroundTime(double avgTurnarroundTime) {
         GraphicsContext gc = canvas.getGraphicsContext2D();
-
         gc.setFill(Color.WHITE);
         gc.setTextAlign(TextAlignment.LEFT);
         gc.fillText("Average turnaround time : " + String.format("%.5g%n", avgTurnarroundTime), 40, 60);

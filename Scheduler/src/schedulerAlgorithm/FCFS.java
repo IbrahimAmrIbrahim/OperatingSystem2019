@@ -66,7 +66,7 @@ public class FCFS extends Queue implements ReadyQueue {
         }
 
         totalwaitingTime = totalTurnaroundtime - totalBurstTime;
-        ctrl.writeAvgWaitingTime(totalwaitingTime / (double) noofProcesses);
-        ctrl.writeAvgTurnarroundTime(totalTurnaroundtime / (double) noofProcesses);
+        ctrl.writeAvgWaitingTime((totalwaitingTime / (double) noofProcesses));
+        ctrl.writeAvgTurnarroundTime((totalTurnaroundtime / (double) noofProcesses));
     }
 }
