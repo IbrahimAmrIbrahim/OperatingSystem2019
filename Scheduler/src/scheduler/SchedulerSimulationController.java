@@ -109,7 +109,7 @@ public class SchedulerSimulationController implements Initializable {
             if (currentScheduler == schedulerType.RoundRobin) {
                 String timeSliceText = timeSlice_textField.getText();
                 if (timeSliceText.isEmpty()) {
-                    errorDialog("Arrival Time text field can't be empty.");
+                    errorDialog("Time Slice text field can't be empty.");
                     return;
                 } else if (Integer.valueOf(timeSliceText) == 0) {
                     errorDialog("Time Slice can't be 0.");
@@ -119,6 +119,7 @@ public class SchedulerSimulationController implements Initializable {
 
                 }
             }
+            canvasReset();
             drawMethodCall();
         }
     }
@@ -139,6 +140,7 @@ public class SchedulerSimulationController implements Initializable {
 
             }
         }
+        canvasReset();
         drawMethodCall();
     }
 
@@ -281,20 +283,24 @@ public class SchedulerSimulationController implements Initializable {
         }
     }
 
-    private void clear() {
+    private void canvasReset() {
         GraphicsContext gc = canvas.getGraphicsContext2D();
-        timeSlice = 0;
         currentTime = 0;
         currentXPosition = 0;
         currentYPosition = 20;
         canvasIsEmpty = true;
-        newProcess = true;
-        queueInitialize();
-        sceneInitialization();
-        PCB.setCurrentPID(0);
         gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
         canvas.setWidth(749);
         canvas.setHeight(265);
+    }
+
+    private void clear() {
+        timeSlice = 0;
+        newProcess = true;
+        canvasReset();
+        queueInitialize();
+        sceneInitialization();
+        PCB.setCurrentPID(0);
         startOutputSimulation_btn.setDisable(false);
     }
 
@@ -657,7 +663,6 @@ public class SchedulerSimulationController implements Initializable {
      */
     public void writeAvgWaitingTime(double avgWaitingTime) {
         GraphicsContext gc = canvas.getGraphicsContext2D();
-
         gc.setFill(Color.WHITE);
         gc.setTextAlign(TextAlignment.LEFT);
         gc.fillText("Average waitting time : " + String.format("%.5g%n", avgWaitingTime), 40, 40);

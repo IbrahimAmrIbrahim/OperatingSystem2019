@@ -6,11 +6,16 @@ import dataStructure.Queue;
 import scheduler.SchedulerSimulationController;
 
 public class FCFS extends Queue implements ReadyQueue {
-    
+
+    private int totalBurstTime = 0;
+    private int totalwaitingTime = 0;
+    private int totalTurnaroundtime = 0;
+    private int noofProcesses = 0;
+
     @Override
     public void insert(PCB newPCB) {
         Node newNode = new Node(newPCB);
-        
+
         if (head == null) {
             enqueue(newPCB);
         } else if (head == tail) {
@@ -22,7 +27,7 @@ public class FCFS extends Queue implements ReadyQueue {
             }
         } else {
             Node traverse_node = head;
-            
+
             if (newNode.getPcb().getArrivalTime() < traverse_node.getPcb().getArrivalTime()) {
                 newNode.setNext(head);
                 head = newNode;
@@ -41,7 +46,7 @@ public class FCFS extends Queue implements ReadyQueue {
             }
         }
     }
-    
+
     @Override
     public void DrawGanttChart(SchedulerSimulationController ctrl) {
         Node currNode = head;
@@ -53,12 +58,15 @@ public class FCFS extends Queue implements ReadyQueue {
                 ctrl.drawIdleProcess((currNode.getPcb().getArrivalTime() - ctrl.getCurrentTime()));
             }
             ctrl.draw(currNode.getPcb().getBurstTime(), currNode.getPcb().getPID(), currNode.getPcb().getColor());
-
+            noofProcesses++;
             // Go to next node 
+            totalBurstTime += currNode.getPcb().getBurstTime();
+            totalTurnaroundtime += (ctrl.getCurrentTime() - currNode.getPcb().getArrivalTime());
             currNode = currNode.getNext();
         }
-        
-        ctrl.writeAvgWaitingTime(0);
-        ctrl.writeAvgTurnarroundTime(0);
+
+        totalwaitingTime = totalTurnaroundtime - totalBurstTime;
+        ctrl.writeAvgWaitingTime(totalwaitingTime / (double) noofProcesses);
+        ctrl.writeAvgTurnarroundTime(totalTurnaroundtime / (double) noofProcesses);
     }
 }
