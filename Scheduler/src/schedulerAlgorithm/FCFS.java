@@ -3,7 +3,6 @@ package schedulerAlgorithm;
 import dataStructure.Node;
 import dataStructure.PCB;
 import dataStructure.Queue;
-import javafx.scene.paint.Color;
 import scheduler.SchedulerSimulationController;
 
 public class FCFS extends Queue implements ReadyQueue {
@@ -58,5 +57,8 @@ public class FCFS extends Queue implements ReadyQueue {
             // Go to next node 
             currNode = currNode.getNext();
         }
+        
+        ctrl.writeAvgWaitingTime(0);
+        ctrl.writeAvgTurnarroundTime(0);
     }
 }
