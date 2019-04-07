@@ -213,11 +213,11 @@ public class RoundRobin extends Queue implements ReadyQueue {
         int start_time = 0;
         int start_of_exe = 0;
         int time_diff = 0;
-        int number_of_pcb = node_number;
-        int turn_around_time = 0;
-        int avrage_turn_around_time = 0;
-        int waiting_time = 0;
-        int avrage_waiting_time = 0;
+        float number_of_pcb = node_number;
+        float turn_around_time = 0;
+        float avrage_turn_around_time = 0;
+        float waiting_time = 0;
+        float avrage_waiting_time = 0;
         int turn_around_for_process[] = new int[node_number];
         Node current = head;
 
