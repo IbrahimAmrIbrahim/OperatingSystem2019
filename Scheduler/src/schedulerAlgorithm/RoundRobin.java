@@ -70,8 +70,11 @@ public class RoundRobin extends Queue implements ReadyQueue {
                 //===========================================//
                 // insert it again  
             }
+            
         }
-
+        System.out.println("---------------------");
+        newPCB.printPCB();
+        System.out.println("the fucken pcb above ");
         sort(0);
         printQueue();
         time(0);
@@ -200,7 +203,7 @@ public class RoundRobin extends Queue implements ReadyQueue {
 
     }
 
-    public long time(int mode) {
+    public float time(int mode) {
         // i am sure it's sorted 
         // so all i need is to get the first element and it's arrival time is my start xD
 
