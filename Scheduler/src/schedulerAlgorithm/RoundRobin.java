@@ -9,8 +9,11 @@ import scheduler.SchedulerSimulationController;
 public class RoundRobin extends Queue implements ReadyQueue {
     // in my class priority is the finish of the exe 
 
-    private int RR_time = 10;// for now the RR period is 10 unit time 
+    private int RR_time = 3;// for now the RR period is 10 unit time 
     private int node_number = 0;
+    private boolean repete[]= new boolean [1000];
+    int repete_increment=0;
+    private int last_arrival_time=0;
     private int run_time = 0;
     // run time must be a factor of 10 like 0 10 20 30 etc
 
@@ -43,6 +46,7 @@ public class RoundRobin extends Queue implements ReadyQueue {
                 int put_in;
                 //======================================//
                 if (new_pcb.getBurstTime() > RR_time) {
+                    
                     put_in = RR_time;
                 } else {
                     put_in = new_pcb.getBurstTime();
@@ -60,6 +64,7 @@ public class RoundRobin extends Queue implements ReadyQueue {
                 //change the burst time from x to x - RR_time 
                 // example from 15 to 15  - 10 = 5
                 //============================================//
+                new_pcb.setPriority(-1);
                 new_pcb.setBurstTime(new_pcb_time - RR_time);
                 new_pcb.setArrivalTime(new_pcb.getArrivalTime() + RR_time);
 
@@ -92,6 +97,8 @@ public class RoundRobin extends Queue implements ReadyQueue {
              start_time=temp.getPcb().getEndofExec();
             temp = temp.getNext();
         }
+        ctrl.writeAvgWaitingTime(time(3));
+        ctrl.writeAvgTurnarroundTime(time(2));
     }
 
     public void sort2(int mode) {
@@ -153,8 +160,18 @@ public class RoundRobin extends Queue implements ReadyQueue {
                 next = temp.getNext();
                 PCB my_pcb = new PCB(false);
                 while (current.getNext() != null) {
-
-                    if (current.getPcb().getArrivalTime() > next.getPcb().getArrivalTime()) {
+                    System.out.println(  "current "+current.getPcb().getPriority() + " next "+next.getPcb().getPriority());
+                    if (current.getPcb().getArrivalTime() > next.getPcb().getArrivalTime() 
+                            ||
+                            (current.getPcb().getArrivalTime() == next.getPcb().getArrivalTime()
+                            && 
+                            (
+                            current.getPcb().getPID()< next.getPcb().getPID()
+                            &&
+                            current.getPcb().getPriority()<next.getPcb().getPriority()
+                            )
+                            )
+                            ) {
                         //===============//
 
                         my_pcb.copy(next.getPcb());
