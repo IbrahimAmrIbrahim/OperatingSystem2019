@@ -40,6 +40,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
+import javafx.stage.Modality;
 import javafx.stage.StageStyle;
 import schedulerAlgorithm.FCFS;
 import schedulerAlgorithm.Priority_NonPreemptive_FCFS;
@@ -109,7 +110,7 @@ public class SchedulerSimulationController implements Initializable {
             if (currentScheduler == schedulerType.RoundRobin) {
                 String timeSliceText = timeSlice_textField.getText();
                 if (timeSliceText.isEmpty()) {
-                    errorDialog("Arrival Time text field can't be empty.");
+                    errorDialog("Time Slice text field can't be empty.");
                     return;
                 } else if (Integer.valueOf(timeSliceText) == 0) {
                     errorDialog("Time Slice can't be 0.");
@@ -119,6 +120,7 @@ public class SchedulerSimulationController implements Initializable {
 
                 }
             }
+            canvasReset();
             drawMethodCall();
         }
     }
@@ -139,6 +141,7 @@ public class SchedulerSimulationController implements Initializable {
 
             }
         }
+        canvasReset();
         drawMethodCall();
     }
 
@@ -281,20 +284,25 @@ public class SchedulerSimulationController implements Initializable {
         }
     }
 
-    private void clear() {
+    private void canvasReset() {
         GraphicsContext gc = canvas.getGraphicsContext2D();
-        timeSlice = 0;
         currentTime = 0;
         currentXPosition = 0;
         currentYPosition = 20;
         canvasIsEmpty = true;
-        newProcess = true;
-        queueInitialize();
-        sceneInitialization();
-        PCB.setCurrentPID(0);
         gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
         canvas.setWidth(749);
         canvas.setHeight(265);
+    }
+
+    private void clear() {
+        timeSlice = 0;
+        newProcess = true;
+        canvasReset();
+        processTable.getItems().clear();
+        queueInitialize();
+        sceneInitialization();
+        PCB.setCurrentPID(0);
         startOutputSimulation_btn.setDisable(false);
     }
 
@@ -408,6 +416,7 @@ public class SchedulerSimulationController implements Initializable {
 
         Stage stage = new Stage();
         stage.setScene(new Scene(root1));
+        stage.initModality(Modality.APPLICATION_MODAL);
         stage.initStyle(StageStyle.UTILITY);
         stage.showAndWait();
         if (newProcess == true) {
@@ -589,11 +598,11 @@ public class SchedulerSimulationController implements Initializable {
 
         GraphicsContext gc = canvas.getGraphicsContext2D();
 
+        canvasInitialization();
+
         if (duration <= 0) {
             return;
         }
-
-        canvasInitialization();
 
         int nextPosition = (duration * unityTimeWidth) + currentXPosition;
         // Canvas max width 8040
@@ -601,7 +610,7 @@ public class SchedulerSimulationController implements Initializable {
         if (canvas.getWidth() < (8040)) {
             if (nextPosition >= 749 && nextPosition < 8000) {
                 canvas.setWidth(nextPosition + 40);
-            } else {
+            } else if (nextPosition > 8000) {
                 canvas.setWidth(8040);
             }
         }
@@ -657,7 +666,6 @@ public class SchedulerSimulationController implements Initializable {
      */
     public void writeAvgWaitingTime(double avgWaitingTime) {
         GraphicsContext gc = canvas.getGraphicsContext2D();
-
         gc.setFill(Color.WHITE);
         gc.setTextAlign(TextAlignment.LEFT);
         gc.fillText("Average waitting time : " + String.format("%.5g%n", avgWaitingTime), 40, 40);
@@ -670,7 +678,6 @@ public class SchedulerSimulationController implements Initializable {
      */
     public void writeAvgTurnarroundTime(double avgTurnarroundTime) {
         GraphicsContext gc = canvas.getGraphicsContext2D();
-
         gc.setFill(Color.WHITE);
         gc.setTextAlign(TextAlignment.LEFT);
         gc.fillText("Average turnaround time : " + String.format("%.5g%n", avgTurnarroundTime), 40, 60);
