@@ -15,40 +15,40 @@ public class Priority_NonPreemptive_FCFS extends Queue implements ReadyQueue {
 
         Node newNode = new Node(newPCB);
 
-        if (head == null) {
+        if (getHead() == null) {
 
-            head = newNode;
-            tail = newNode;
+            setHead(newNode);
+            setTail(newNode);
 
-        } else if (head == tail) {
-            if ((head.getPcb().getArrivalTime() < newNode.getPcb().getArrivalTime())) {
+        } else if (getHead() == getTail()) {
+            if ((getHead().getPcb().getArrivalTime() < newNode.getPcb().getArrivalTime())) {
                 enqueue(newPCB);
-            } else if ((head.getPcb().getArrivalTime() > newNode.getPcb().getArrivalTime())) {
-                newNode.setNext(head);
-                head = newNode;
+            } else if ((getHead().getPcb().getArrivalTime() > newNode.getPcb().getArrivalTime())) {
+                newNode.setNext(getHead());
+                setHead(newNode);
             } else {
-                if (newNode.getPcb().getPriority() < head.getPcb().getPriority()) {
-                    newNode.setNext(head);
-                    head = newNode;
+                if (newNode.getPcb().getPriority() < getHead().getPcb().getPriority()) {
+                    newNode.setNext(getHead());
+                    setHead(newNode);
                 } else {
                     enqueue(newPCB);
                 }
             }
         } else {
-            Node traverse_node = head;
+            Node traverse_node = getHead();
             if (newNode.getPcb().getArrivalTime() < traverse_node.getPcb().getArrivalTime()) {
-                newNode.setNext(head);
-                head = newNode;
+                newNode.setNext(getHead());
+                setHead(newNode);
                 /////////////////////
             } else if (newNode.getPcb().getArrivalTime() == traverse_node.getPcb().getArrivalTime()) {
                 if (newNode.getPcb().getPriority() < traverse_node.getPcb().getPriority()) {
-                    newNode.setNext(head);
-                    head = newNode;
+                    newNode.setNext(getHead());
+                    setHead(newNode);
                 }
                 /////////////////////
             } else {
                 while (traverse_node.getNext() != null) {
-                    if (traverse_node.getNext().getPcb().getArrivalTime() >= newNode.getPcb().getArrivalTime()) {
+                    if (traverse_node.getNext().getPcb().getArrivalTime() > newNode.getPcb().getArrivalTime()) {
                         newNode.setNext(traverse_node.getNext());
                         traverse_node.setNext(newNode);
                         break;
@@ -76,19 +76,19 @@ public class Priority_NonPreemptive_FCFS extends Queue implements ReadyQueue {
             }
         }
         printQueue();
-        needsPriority.set_head(this.head);
-        needsPriority.set_tail(this.tail);
+        needsPriority.setHead(this.getHead());
+        needsPriority.setTail(this.getTail());
     }
 
     public Queue Sort_Priotity(Queue Q) {
 
-        if (Q.get_head() == Q.get_tail()) {
+        if (Q.getHead() == Q.getTail()) {
             return Q;
         } else {
             boolean Swapped = true;
             while (Swapped == true) {
                 Swapped = false;
-                Node traverse_Node = Q.get_head();
+                Node traverse_Node = Q.getHead();
                 while (traverse_Node.getNext() != null) {
                     if (traverse_Node.getPcb().getPriority() > traverse_Node.getNext().getPcb().getPriority()) {
                         Node temp = traverse_Node;
@@ -103,7 +103,7 @@ public class Priority_NonPreemptive_FCFS extends Queue implements ReadyQueue {
     }
 
     public void Fix_Priority() {
-        Node traverse_Node = needsPriority.get_head();
+        Node traverse_Node = needsPriority.getHead();
         while (traverse_Node.getNext() != null) {
 
             boolean Sort = false;
@@ -120,8 +120,8 @@ public class Priority_NonPreemptive_FCFS extends Queue implements ReadyQueue {
             }
             if (Sort == true) {
                 Queue temp = Sort_Priotity(to_be_sorted_by_priority);
-                traverse_Node = temp.get_tail();
-                Starting_Traverse_Node.setNext(temp.get_head());
+                traverse_Node = temp.getTail();
+                Starting_Traverse_Node.setNext(temp.getHead());
             } else {
                 traverse_Node = traverse_Node.getNext();
             }

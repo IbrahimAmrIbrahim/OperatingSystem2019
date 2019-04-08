@@ -10,18 +10,6 @@ public class Queue{
         tail = null;
     }
 
-    public void set_head(Node head){
-        this.head = head;
-    }
-    public Node get_head(){
-        return head;
-    }
-    public void set_tail(Node tail){
-        this.tail = tail;
-    }
-    public Node get_tail(){
-        return tail;
-    }
     /**
      * enqueue a new node
      * @param newPCB
@@ -56,5 +44,33 @@ public class Queue{
             // Go to next node 
             currNode = currNode.getNext();
         }
+    }
+
+    /**
+     * @return the head
+     */
+    public Node getHead() {
+        return head;
+    }
+
+    /**
+     * @param head the head to set
+     */
+    public void setHead(Node head) {
+        this.head = head;
+    }
+
+    /**
+     * @return the tail
+     */
+    public Node getTail() {
+        return tail;
+    }
+
+    /**
+     * @param tail the tail to set
+     */
+    public void setTail(Node tail) {
+        this.tail = tail;
     }
 }
