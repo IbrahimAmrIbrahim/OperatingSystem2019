@@ -45,4 +45,32 @@ public class Queue{
             currNode = currNode.getNext();
         }
     }
+
+    /**
+     * @return the head
+     */
+    public Node getHead() {
+        return head;
+    }
+
+    /**
+     * @param head the head to set
+     */
+    public void setHead(Node head) {
+        this.head = head;
+    }
+
+    /**
+     * @return the tail
+     */
+    public Node getTail() {
+        return tail;
+    }
+
+    /**
+     * @param tail the tail to set
+     */
+    public void setTail(Node tail) {
+        this.tail = tail;
+    }
 }
