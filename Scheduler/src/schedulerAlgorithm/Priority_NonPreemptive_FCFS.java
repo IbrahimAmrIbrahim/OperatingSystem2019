@@ -91,8 +91,9 @@ public class Priority_NonPreemptive_FCFS extends Queue implements ReadyQueue {
                 Node traverse_Node = Q.getHead();
                 while (traverse_Node.getNext() != null) {
                     if (traverse_Node.getPcb().getPriority() > traverse_Node.getNext().getPcb().getPriority()) {
-                        Node temp = traverse_Node;
-                        traverse_Node.setNext(traverse_Node.getNext().getNext());
+                        PCB temp = new PCB(false);
+                        temp.copy(traverse_Node.getPcb());
+                        traverse_Node.getPcb().copy(traverse_Node.getNext().getPcb());
                         temp.getNext().setNext(temp);
                         Swapped = true;
                     }
