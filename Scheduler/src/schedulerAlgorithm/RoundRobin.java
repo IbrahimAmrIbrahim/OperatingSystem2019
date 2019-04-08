@@ -107,14 +107,16 @@ public class RoundRobin extends Queue implements ReadyQueue {
     }
 
     public void sort2(int mode) {
-
+      int iterator=node_number; 
         if (mode == 0)// arive time 
         {
-
+          
             // bubble sort with node 
             Node temp;
-            for (int i = 0; i < node_number; i++) {
+            boolean fliped=true;
+            for (int i = 0; i < iterator &&fliped; i++,iterator--) {
                 temp = head;
+                fliped=false;
                 Node current;
                 Node next;
                 current = temp;
@@ -154,24 +156,27 @@ public class RoundRobin extends Queue implements ReadyQueue {
 
         if (mode == 0)// arive time 
         {
-
+           
             // bubble sort with node 
             Node temp;
-            for (int i = 0; i < node_number; i++) {
+             int iterator=node_number;
+             boolean flip=true;
+            for (int i = 0; i < iterator && flip; i++,iterator--) {
                 temp = head;
+                flip=false;
                 Node current;
                 Node next;
                 current = temp;
                 next = temp.getNext();
                 PCB my_pcb = new PCB(false);
-                while (current.getNext() != null) {
-                    System.out.println("current " + current.getPcb().getPriority() + " next " + next.getPcb().getPriority());
+                    while (current.getNext() != null ) {
+                  
                     if (current.getPcb().getArrivalTime() > next.getPcb().getArrivalTime()
                             || (current.getPcb().getArrivalTime() == next.getPcb().getArrivalTime()
                             && (current.getPcb().getPID() < next.getPcb().getPID()
                             && current.getPcb().getPriority() < next.getPcb().getPriority()))) {
                         //===============//
-
+                        flip=true;
                         my_pcb.copy(next.getPcb());
 
                         //==================//
