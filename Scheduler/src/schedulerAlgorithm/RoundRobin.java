@@ -3,6 +3,7 @@ package schedulerAlgorithm;
 import dataStructure.PCB;
 import dataStructure.Queue;
 import dataStructure.Node;
+ 
 import javafx.scene.paint.Color;
 import scheduler.SchedulerSimulationController;
 
@@ -11,11 +12,11 @@ public class RoundRobin extends Queue implements ReadyQueue {
 
     private int RR_time = 3;// for now the RR period is 10 unit time 
     private int node_number = 0;
-
+    private Queue my_queue = new Queue();
     private int last_arrival_time = 0;
     private int run_time = 0;
     // run time must be a factor of 10 like 0 10 20 30 etc
-   
+
     private int waiting_time = 0;
 
     public void set_RR_time(int x) {
@@ -23,12 +24,61 @@ public class RoundRobin extends Queue implements ReadyQueue {
     }
 
     public void insert(PCB newPCB) {
-       PCB pcb_dumy = new PCB(false);
+
+        enqueue(newPCB);
+        
+
+    }
+//======================================================//
+
+    public void reinsert(int slice)
+    {
+        Node current;
+        current=head;
+         RR_time=slice;
+       while(current!=null)
+        {
+          
+          insert2(current.getPcb());
+           current=current.getNext();
+            
+        }
+    }
+    // insert done 
+    @Override
+    public void DrawGanttChart(SchedulerSimulationController ctrl) {
+       
+        int slice;
+        slice= ctrl.getTimeSlice();
+        reinsert(slice);
+         Node temp2 = my_queue.getHead();
+        sort(0);
+        int start_time = 0;
+        for (int i = 0; i < node_number; i++) {
+            //fixed area //
+
+            //========================================//
+           
+            if (temp2.getPcb().getStartofExec() > start_time) {
+                ctrl.drawIdleProcess(temp2.getPcb().getStartofExec() - start_time);
+
+            }
+            ctrl.draw(temp2.getPcb().getBurstTime(), temp2.getPcb().getPID(), temp2.getPcb().getColor());
+            start_time = temp2.getPcb().getEndofExec();
+            temp2 = temp2.getNext();
+        }
+       
+        ctrl.writeAvgWaitingTime(time(3));
+        ctrl.writeAvgTurnarroundTime(time(2));
+    }
+
+    public void insert2(PCB newPCB) {
+        PCB pcb_dumy = new PCB(false);
         pcb_dumy.copy(newPCB);
         //==============================//
         // if the time is less than the RR_TIME then just add it in the qq 
         if (pcb_dumy.getBurstTime() <= RR_time) {
-            enqueue(pcb_dumy);
+            my_queue.enqueue(pcb_dumy);
             node_number++;
 
         } //======================================================//
@@ -57,7 +107,7 @@ public class RoundRobin extends Queue implements ReadyQueue {
                 //next_new start copy here
                 next_new.copy(new_pcb);
 
-                enqueue(next_new);
+                my_queue.enqueue(next_new);
 
                 node_number++;
                 //====================================//
@@ -76,47 +126,23 @@ public class RoundRobin extends Queue implements ReadyQueue {
         System.out.println("---------------------");
         newPCB.printPCB();
         System.out.println("the fucken pcb above ");
-     
+
         printQueue();
         time(0);
     }
 
-    // insert done 
-    @Override
-    public void DrawGanttChart(SchedulerSimulationController ctrl) {
-        Node temp = head;
-        sort(0);
-        int start_time = 0;
-        for (int i = 0; i < node_number; i++) {
-            //fixed area //
+    public void sort(int mode) {
 
-            //========================================//
-            System.out.println("temp.getPcb().getStartofExec() " + temp.getPcb().getStartofExec());
-            System.out.println("temp.getPcb().endofEXec() " + temp.getPcb().getEndofExec());
-            System.out.println("start_time " + start_time);
-            if (temp.getPcb().getStartofExec() > start_time) {
-                ctrl.drawIdleProcess(temp.getPcb().getStartofExec() - start_time);
-
-            }
-            ctrl.draw(temp.getPcb().getBurstTime(), temp.getPcb().getPID(), temp.getPcb().getColor());
-            start_time = temp.getPcb().getEndofExec();
-            temp = temp.getNext();
-        }
-        ctrl.writeAvgWaitingTime(time(3));
-        ctrl.writeAvgTurnarroundTime(time(2));
-    }
-
-    public void sort2(int mode) {
-      int iterator=node_number; 
         if (mode == 0)// arive time 
         {
-          
+
             // bubble sort with node 
             Node temp;
-            boolean fliped=true;
-            for (int i = 0; i < iterator &&fliped; i++,iterator--) {
-                temp = head;
-                fliped=false;
+            int iterator = node_number;
+            boolean flip = true;
+            for (int i = 0; i < iterator && flip; i++, iterator--) {
+                temp =my_queue.getHead();
+                flip = false;
                 Node current;
                 Node next;
                 current = temp;
@@ -124,59 +150,12 @@ public class RoundRobin extends Queue implements ReadyQueue {
                 PCB my_pcb = new PCB(false);
                 while (current.getNext() != null) {
 
-                    if (current.getPcb().getArrivalTime() > next.getPcb().getArrivalTime()) {
-                        //===============//
-
-                        current = next;
-                        next.setNext(current);
-
-                        //==================//
-                        //=====================================//
-                        //==============================//
-                        //================================//
-                        current = next;
-
-                        //=====================================//
-                    } else {
-                        //==================================//
-
-                        //==================================//
-                        current = next;
-                        next = next.getNext();
-                    }
-                }
-
-            }
-
-        }
-
-    }
-
-    public void sort(int mode) {
-
-        if (mode == 0)// arive time 
-        {
-           
-            // bubble sort with node 
-            Node temp;
-             int iterator=node_number;
-             boolean flip=true;
-            for (int i = 0; i < iterator && flip; i++,iterator--) {
-                temp = head;
-                flip=false;
-                Node current;
-                Node next;
-                current = temp;
-                next = temp.getNext();
-                PCB my_pcb = new PCB(false);
-                    while (current.getNext() != null ) {
-                  
                     if (current.getPcb().getArrivalTime() > next.getPcb().getArrivalTime()
                             || (current.getPcb().getArrivalTime() == next.getPcb().getArrivalTime()
                             && (current.getPcb().getPID() < next.getPcb().getPID()
                             && current.getPcb().getPriority() < next.getPcb().getPriority()))) {
                         //===============//
-                        flip=true;
+                        flip = true;
                         my_pcb.copy(next.getPcb());
 
                         //==================//
@@ -216,7 +195,7 @@ public class RoundRobin extends Queue implements ReadyQueue {
         run_time = 0;
         int arrival_time = 0;
         int brust_time = 0;
-        int start_time = 0;
+        int ideal_time = 0;
         int start_of_exe = 0;
         int time_diff = 0;
         float number_of_pcb = node_number;
@@ -225,7 +204,7 @@ public class RoundRobin extends Queue implements ReadyQueue {
         float waiting_time = 0;
         float avrage_waiting_time = 0;
         int turn_around_for_process[] = new int[node_number];
-        Node current = head;
+        Node current = my_queue.getHead();
 
         //======================================================//
         for (int i = 0; i < node_number; i++) {
@@ -253,7 +232,7 @@ public class RoundRobin extends Queue implements ReadyQueue {
 
                 //========= fixed area ==========//
                 Node header;
-                header = head;
+                header =my_queue.getHead() ;
                 boolean time_diff_bool = true;
 
                 //======================================//
@@ -329,6 +308,132 @@ public class RoundRobin extends Queue implements ReadyQueue {
         System.out.println(" number_of_pcb = " + number_of_pcb);
         System.out.println(" avrage turn around final = " + avrage_turn_around_time);
 
+        switch (mode) {
+            case 0:
+                final_value = turn_around_time;
+                break;
+            case 1:
+                final_value = waiting_time;
+                break;
+            case 2:
+                final_value = avrage_turn_around_time;
+                break;
+            case 3:
+                final_value = avrage_waiting_time;
+                break;
+
+        }
+
+        return final_value;
+    }
+    
+    
+    
+    
+      public float time2(int mode) {
+        // i am sure it's sorted 
+        // so all i need is to get the first element and it's arrival time is my start xD
+        System.out.println("-------------------------");
+        my_queue.printQueue();
+        //======= fixed area =======//
+        float final_value = 0;
+        int end_of_exe = 0;
+        run_time = 0;
+        int arrival_time = 0;
+        int brust_time = 0;
+        int ideal_time = 0;
+        int start_of_exe = 0;
+       
+        int segma_arrival=0;
+        float number_of_pcb = node_number;
+        float turn_around_time = 0;
+        float avrage_turn_around_time = 0;
+        float waiting_time = 0;
+        float avrage_waiting_time = 0;
+       
+        Node current = my_queue.getHead();
+
+        //======================================================//
+        for (int i = 0; i < node_number; i++) {
+         
+            // fixed area //
+
+            brust_time = current.getPcb().getBurstTime();
+            arrival_time = current.getPcb().getArrivalTime();
+            if(current.getPcb().getPriority()>=0)
+            {   
+                      
+                 segma_arrival+=arrival_time;  
+            }
+            else
+            {
+            number_of_pcb--;    
+            }
+           
+            if (i == 0) {
+
+                //===============================//
+                end_of_exe = brust_time + arrival_time;
+
+                //=============================//
+                start_of_exe = arrival_time;
+                //==========set =============================//
+                current.getPcb().setStartofExec(arrival_time);
+
+                current.getPcb().setEndofExec(end_of_exe);
+
+            } // if not the first time 
+            else {
+               
+                //================set ==========================//
+                current.getPcb().setStartofExec(end_of_exe);// my start is the end of the  first
+                if (arrival_time > end_of_exe) {
+                    ideal_time+=arrival_time- end_of_exe;
+                    current.getPcb().setStartofExec(arrival_time);// my start is the arrival
+                }
+                //=============== fixed area ====================//
+                start_of_exe = current.getPcb().getStartofExec();
+                //==================================//
+                //=====================set ========================//
+                current.getPcb().setEndofExec(start_of_exe + brust_time);
+                //=====================================================//
+                //===============fixed area ====================//
+                end_of_exe = current.getPcb().getEndofExec();
+                //=============================================//
+            }
+
+            // after the if and else 
+            //===================end of the for loop ====================//
+          
+
+            run_time += brust_time;
+
+         
+          
+            current = current.getNext();
+
+        }
+
+        // claclulat turn around time //
+       
+         System.out.println( "end_of_exe "+ end_of_exe);
+         System.out.println( "segma_arrival "+ segma_arrival);
+         System.out.println( "ideal_time "+ ideal_time);
+            turn_around_time =end_of_exe-segma_arrival+ideal_time;
+
+        
+
+        // final area //
+        //=================================//
+       
+        waiting_time += turn_around_time - run_time;
+        //=================================//
+        avrage_turn_around_time = turn_around_time / number_of_pcb;
+        avrage_waiting_time = waiting_time / number_of_pcb;
+        //================================//
+
+        // system out area //
+        
         switch (mode) {
             case 0:
                 final_value = turn_around_time;
