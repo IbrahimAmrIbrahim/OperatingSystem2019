@@ -8,6 +8,8 @@ import scheduler.SchedulerSimulationController;
 
 public class Priority_NonPreemptive_FCFS extends Queue implements ReadyQueue {
 
+    private static Queue needsPriority = new Queue();
+
     @Override
     public void insert(PCB newPCB) {
 
@@ -37,15 +39,24 @@ public class Priority_NonPreemptive_FCFS extends Queue implements ReadyQueue {
             if (newNode.getPcb().getArrivalTime() < traverse_node.getPcb().getArrivalTime()) {
                 newNode.setNext(head);
                 head = newNode;
+                /////////////////////
             } else if (newNode.getPcb().getArrivalTime() == traverse_node.getPcb().getArrivalTime()) {
                 if (newNode.getPcb().getPriority() < traverse_node.getPcb().getPriority()) {
                     newNode.setNext(head);
                     head = newNode;
                 }
+                /////////////////////
             } else {
                 while (traverse_node.getNext() != null) {
+                    if (traverse_node.getNext().getPcb().getArrivalTime() >= newNode.getPcb().getArrivalTime()) {
+                        newNode.setNext(traverse_node.getNext());
+                        traverse_node.setNext(newNode);
+                        break;
+                    }
+                    /*
                     if ((traverse_node.getPcb().getBurstTime() > (newNode.getPcb().getArrivalTime() - traverse_node.getPcb().getArrivalTime()))
                             && (traverse_node.getPcb().getBurstTime() > (traverse_node.getNext().getPcb().getArrivalTime() - traverse_node.getPcb().getArrivalTime()))) {
+                        
                         if (newNode.getPcb().getPriority() < traverse_node.getNext().getPcb().getPriority()) {
                             newNode.setNext(traverse_node.getNext());
                             traverse_node.setNext(newNode);
@@ -56,13 +67,65 @@ public class Priority_NonPreemptive_FCFS extends Queue implements ReadyQueue {
                         newNode.setNext(traverse_node.getNext());
                         traverse_node.setNext(newNode);
                         break;
-                    }
+                    }*/
                     traverse_node = traverse_node.getNext();
                 }
                 if (traverse_node.getNext() == null) {
                     enqueue(newPCB);
                 }
             }
+        }
+        printQueue();
+        needsPriority.set_head(this.head);
+        needsPriority.set_tail(this.tail);
+    }
+
+    public Queue Sort_Priotity(Queue Q) {
+
+        if (Q.get_head() == Q.get_tail()) {
+            return Q;
+        } else {
+            boolean Swapped = true;
+            while (Swapped == true) {
+                Swapped = false;
+                Node traverse_Node = Q.get_head();
+                while (traverse_Node.getNext() != null) {
+                    if (traverse_Node.getPcb().getPriority() > traverse_Node.getNext().getPcb().getPriority()) {
+                        Node temp = traverse_Node;
+                        traverse_Node.setNext(traverse_Node.getNext().getNext());
+                        temp.getNext().setNext(temp);
+                        Swapped = true;
+                    }
+                }
+            }
+            return Q;
+        }
+    }
+
+    public void Fix_Priority() {
+        Node traverse_Node = needsPriority.get_head();
+        while (traverse_Node.getNext() != null) {
+
+            boolean Sort = false;
+            Node Starting_Traverse_Node = traverse_Node;
+            Node Inner_traverse = traverse_Node.getNext();
+            Queue to_be_sorted_by_priority = new Queue();
+
+            while (Inner_traverse.getNext() != null) {
+                if ((Inner_traverse.getPcb().getArrivalTime() - traverse_Node.getPcb().getArrivalTime()) < traverse_Node.getPcb().getBurstTime()) {
+                    traverse_Node = Inner_traverse;
+                    to_be_sorted_by_priority.enqueue(Inner_traverse.getPcb());
+                    Sort = true;
+                }
+            }
+            if (Sort == true) {
+                Queue temp = Sort_Priotity(to_be_sorted_by_priority);
+                traverse_Node = temp.get_tail();
+                Starting_Traverse_Node.setNext(temp.get_head());
+            } else {
+                traverse_Node = traverse_Node.getNext();
+            }
+
         }
     }
 

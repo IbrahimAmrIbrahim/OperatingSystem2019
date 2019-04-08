@@ -10,6 +10,18 @@ public class Queue{
         tail = null;
     }
 
+    public void set_head(Node head){
+        this.head = head;
+    }
+    public Node get_head(){
+        return head;
+    }
+    public void set_tail(Node tail){
+        this.tail = tail;
+    }
+    public Node get_tail(){
+        return tail;
+    }
     /**
      * enqueue a new node
      * @param newPCB
