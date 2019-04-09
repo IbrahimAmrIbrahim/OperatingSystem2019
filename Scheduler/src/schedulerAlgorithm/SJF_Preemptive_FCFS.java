@@ -9,11 +9,18 @@ public class SJF_Preemptive_FCFS extends Queue implements ReadyQueue {
 
     Queue sortedQueue = new Queue();
     int currentTime = 0;
+    int actualTime = 0;
+    int timeShift = 0;
+    private int totalBurstTime = 0;
+    private int totalwaitingTime = 0;
+    private int totalTurnaroundtime = 0;
+    private int noofProcesses = 0;
 
     @Override
     public void insert(PCB newPCB) {
         Node newNode = new Node(newPCB);
-
+        totalBurstTime += newPCB.getBurstTime();
+        noofProcesses++;
         if (head == null) {
             enqueue(newPCB);
         } else {
@@ -45,10 +52,13 @@ public class SJF_Preemptive_FCFS extends Queue implements ReadyQueue {
         while (traverse_node != null) {
             if (traverse_node.getPcb().getEndofExec() == (-1)) {
                 currentTime = traverse_node.getPcb().getArrivalTime();
+                timeShift = currentTime;
                 sort(traverse_node);
+                actualTime += (currentTime - traverse_node.getPcb().getArrivalTime());
             }
             traverse_node = traverse_node.getNext();
         }
+
         traverse_node = sortedQueue.getHead();
 
         while (traverse_node != null) {
@@ -61,6 +71,21 @@ public class SJF_Preemptive_FCFS extends Queue implements ReadyQueue {
             traverse_node = traverse_node.getNext();
         }
 
+        traverse_node = head;
+        while (traverse_node != null) {
+            System.out.println(traverse_node.getPcb().getEndofExec());
+            totalTurnaroundtime += (traverse_node.getPcb().getEndofExec() - traverse_node.getPcb().getArrivalTime());
+            traverse_node = traverse_node.getNext();
+        }
+
+        totalwaitingTime = totalTurnaroundtime - totalBurstTime;
+        ctrl.writeAvgWaitingTime((totalwaitingTime / (double) noofProcesses));
+        ctrl.writeAvgTurnarroundTime((totalTurnaroundtime / (double) noofProcesses));
+
+        System.out.println(totalBurstTime);
+        System.out.println(totalTurnaroundtime);
+        System.out.println(totalwaitingTime);
+        System.out.println(noofProcesses);
         sortedQueue.printQueue();
     }
 
@@ -97,7 +122,7 @@ public class SJF_Preemptive_FCFS extends Queue implements ReadyQueue {
                 remainingTime -= runningTime;
                 currentTime = currentTime + runningTime;
                 if (remainingTime == 0) {
-                    curr.getPcb().setEndofExec(1);
+                    curr.getPcb().setEndofExec(actualTime + (currentTime - timeShift));
                     break;
                 }
             }
@@ -108,7 +133,7 @@ public class SJF_Preemptive_FCFS extends Queue implements ReadyQueue {
             newPCB.setBurstTime(remainingTime);
             sortedQueue.enqueue(newPCB);
             currentTime = currentTime + remainingTime;
-            curr.getPcb().setEndofExec(1);
+            curr.getPcb().setEndofExec(actualTime + (currentTime - timeShift));
         }
     }
 }
