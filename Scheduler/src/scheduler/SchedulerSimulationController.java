@@ -160,7 +160,7 @@ public class SchedulerSimulationController implements Initializable {
     @FXML
     private void clearButton_KeyboardEvent(KeyEvent event) {
         if (event.getCode().toString().equals("ENTER")) {
-            if (yesNoDialog("Are you sure you want to clear every thing?")) {
+            if (yesNoDialog("Are you sure you want to clear everything?")) {
                 clear();
             }
         }
@@ -168,7 +168,7 @@ public class SchedulerSimulationController implements Initializable {
 
     @FXML
     private void clearButton_MouseEvent(MouseEvent event) {
-        if (yesNoDialog("Are you sure you want to clear every thing?")) {
+        if (yesNoDialog("Are you sure you want to clear everything?")) {
             clear();
         }
     }

@@ -91,12 +91,14 @@ public class Priority_NonPreemptive_FCFS extends Queue implements ReadyQueue {
                 Node traverse_Node = Q.getHead();
                 while (traverse_Node.getNext() != null) {
                     if (traverse_Node.getPcb().getPriority() > traverse_Node.getNext().getPcb().getPriority()) {
+                        System.out.println("Swappe happened");
                         PCB temp = new PCB(false);
                         temp.copy(traverse_Node.getPcb());
                         traverse_Node.getPcb().copy(traverse_Node.getNext().getPcb());
                         traverse_Node.getNext().getPcb().copy(temp);
                         Swapped = true;
                     }
+                    traverse_Node = traverse_Node.getNext();
                 }
             }
             return Q;
@@ -112,10 +114,10 @@ public class Priority_NonPreemptive_FCFS extends Queue implements ReadyQueue {
             Node Inner_traverse = traverse_Node.getNext();
             Queue to_be_sorted_by_priority = new Queue();
 
-            while (Inner_traverse.getNext() != null) {
+            while (Inner_traverse != null) {
                 System.out.println("2While");
 
-                if ((Inner_traverse.getPcb().getArrivalTime() - traverse_Node.getPcb().getArrivalTime()) < traverse_Node.getPcb().getBurstTime()) {
+                if ((Inner_traverse.getPcb().getArrivalTime() - Starting_Traverse_Node.getPcb().getArrivalTime()) < Starting_Traverse_Node.getPcb().getBurstTime()) {
                     traverse_Node = Inner_traverse;
                     to_be_sorted_by_priority.enqueue(Inner_traverse.getPcb());
                     Sort = true;
@@ -130,10 +132,10 @@ public class Priority_NonPreemptive_FCFS extends Queue implements ReadyQueue {
             } else {
                 traverse_Node = traverse_Node.getNext();
             }
-            
+
         }
         needsPriority.printQueue();
-        
+
     }
 
     @Override
