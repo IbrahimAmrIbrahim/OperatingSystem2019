@@ -5,6 +5,11 @@ public class Node {
     private PCB pcb;
     private Node next;
 
+    public Node(){
+        this.pcb = null;
+        next = null;
+    }
+    
     public Node(PCB newPCB) {
         this.pcb = newPCB;
         next = null;
