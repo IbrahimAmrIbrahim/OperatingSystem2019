@@ -81,7 +81,7 @@ public class Priority_NonPreemptive_FCFS extends Queue implements ReadyQueue {
     }
 
     public Queue Sort_Priotity(Queue Q) {
-
+        System.out.println("SORT Called");
         if (Q.getHead() == Q.getTail()) {
             return Q;
         } else {
@@ -94,7 +94,7 @@ public class Priority_NonPreemptive_FCFS extends Queue implements ReadyQueue {
                         PCB temp = new PCB(false);
                         temp.copy(traverse_Node.getPcb());
                         traverse_Node.getPcb().copy(traverse_Node.getNext().getPcb());
-                        temp.getNext().setNext(temp);
+                        traverse_Node.getNext().getPcb().copy(temp);
                         Swapped = true;
                     }
                 }
@@ -106,31 +106,38 @@ public class Priority_NonPreemptive_FCFS extends Queue implements ReadyQueue {
     public void Fix_Priority() {
         Node traverse_Node = needsPriority.getHead();
         while (traverse_Node.getNext() != null) {
-
+            System.out.println("1While");
             boolean Sort = false;
             Node Starting_Traverse_Node = traverse_Node;
             Node Inner_traverse = traverse_Node.getNext();
             Queue to_be_sorted_by_priority = new Queue();
 
             while (Inner_traverse.getNext() != null) {
+                System.out.println("2While");
+
                 if ((Inner_traverse.getPcb().getArrivalTime() - traverse_Node.getPcb().getArrivalTime()) < traverse_Node.getPcb().getBurstTime()) {
                     traverse_Node = Inner_traverse;
                     to_be_sorted_by_priority.enqueue(Inner_traverse.getPcb());
                     Sort = true;
                 }
+                Inner_traverse = Inner_traverse.getNext();
             }
             if (Sort == true) {
+                System.out.println("True Sort");
                 Queue temp = Sort_Priotity(to_be_sorted_by_priority);
                 traverse_Node = temp.getTail();
                 Starting_Traverse_Node.setNext(temp.getHead());
             } else {
                 traverse_Node = traverse_Node.getNext();
             }
-
+            
         }
+        needsPriority.printQueue();
+        
     }
 
     @Override
     public void DrawGanttChart(SchedulerSimulationController ctrl) {
+        Fix_Priority();
     }
 }
