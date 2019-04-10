@@ -8,22 +8,25 @@ import scheduler.SchedulerSimulationController;
 public class SJF_NonPreemptive_FCFS extends Queue implements ReadyQueue {
 
     @Override
-    public void insert(PCB newPCB) {
+        public void insert(PCB newPCB) {
         Node newNo = new Node(newPCB);
         Node ptr=head;
-        Node pre_ptr=ptr;
-        int flag=0,bru_T;
-        bru_T = ptr.getPcb().getBurstTime();
+        Node pre_ptr=head;
+        int flag=0;
+        int bru_T;
+        
         
         if (head == null) {
             head = newNo;
             tail = newNo;
+            newNo.setNext(null);
         }
         
         else if(head==tail){
             if(head.getPcb().getArrivalTime() == newNo.getPcb().getArrivalTime()){
                 if(head.getPcb().getBurstTime() <= newNo.getPcb().getBurstTime()){
                     enqueue(newPCB);
+                    tail.setNext(null);
                 }
                 else{
                     newNo.setNext(head);
@@ -32,14 +35,15 @@ public class SJF_NonPreemptive_FCFS extends Queue implements ReadyQueue {
             }
             else if(head.getPcb().getArrivalTime() < newNo.getPcb().getArrivalTime()){
                 enqueue(newPCB);
+                tail.setNext(null);
             }
             else{
                 newNo.setNext(head);
                 head=newNo;
             }
         }
-        ///////////////////
         else{
+            bru_T = ptr.getPcb().getBurstTime();
             while(ptr.getNext() !=null){
                 if(ptr.getPcb().getArrivalTime() == newNo.getPcb().getArrivalTime()){
                     if(ptr.getPcb().getBurstTime()<=newNo.getPcb().getBurstTime()){
@@ -66,38 +70,31 @@ public class SJF_NonPreemptive_FCFS extends Queue implements ReadyQueue {
                        if(newNo.getPcb().getBurstTime() < ptr.getPcb().getBurstTime()){
                            newNo.setNext(ptr);
                            pre_ptr.setNext(newNo);
-                           flag=1;
-                           ptr=head;
                            break;
                        }
                        else{
                             newNo.setNext(ptr.getNext());
                             ptr.setNext(newNo);
-                            flag=1;
-                            ptr=head;
                             break;
                        }
                    }
                    else{
                         newNo.setNext(ptr);
                         pre_ptr.setNext(newNo);
-                        flag=1;
-                        ptr=head;
                         break;
                    }
                 }
                 pre_ptr=ptr;
                 if(ptr.getNext() == null){
                     enqueue(newPCB);
+                    tail.setNext(null);
                     flag=1;
                 }
                 ptr=ptr.getNext();
                 bru_T = bru_T + ptr.getPcb().getBurstTime();
             }
         }
-        
     }
-
     @Override
     public void DrawGanttChart(SchedulerSimulationController ctrl) {
     }
