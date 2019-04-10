@@ -18,13 +18,6 @@ public class FCFS extends Queue implements ReadyQueue {
 
         if (head == null) {
             enqueue(newPCB);
-        } else if (head == tail) {
-            if (newNode.getPcb().getArrivalTime() < head.getPcb().getArrivalTime()) {
-                newNode.setNext(head);
-                head = newNode;
-            } else {
-                enqueue(newPCB);
-            }
         } else {
             Node traverse_node = head;
 

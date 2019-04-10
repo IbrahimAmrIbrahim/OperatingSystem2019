@@ -25,6 +25,9 @@ import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 
 import dataStructure.PCB;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.Scanner;
 import java.util.function.UnaryOperator;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -40,6 +43,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
+import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.StageStyle;
 import schedulerAlgorithm.FCFS;
@@ -160,7 +164,7 @@ public class SchedulerSimulationController implements Initializable {
     @FXML
     private void clearButton_KeyboardEvent(KeyEvent event) {
         if (event.getCode().toString().equals("ENTER")) {
-            if (yesNoDialog("Are you sure you want to clear every thing?")) {
+            if (yesNoDialog("Are you sure you want to clear everything?")) {
                 clear();
             }
         }
@@ -168,7 +172,7 @@ public class SchedulerSimulationController implements Initializable {
 
     @FXML
     private void clearButton_MouseEvent(MouseEvent event) {
-        if (yesNoDialog("Are you sure you want to clear every thing?")) {
+        if (yesNoDialog("Are you sure you want to clear everything?")) {
             clear();
         }
     }
@@ -187,6 +191,18 @@ public class SchedulerSimulationController implements Initializable {
         if (yesNoDialog("Are you sure you want to change the scheduler, it will clear everything?")) {
             schedulerSelectDialog();;
         }
+    }
+
+    @FXML
+    private void loadFromFileButton_KeyboardEvent(KeyEvent event) throws FileNotFoundException {
+        if (event.getCode().toString().equals("ENTER")) {
+            loadProcessesFromFile();
+        }
+    }
+
+    @FXML
+    private void loadFromFileButton_MouseEvent(MouseEvent event) throws FileNotFoundException {
+        loadProcessesFromFile();
     }
 
     @Override
@@ -346,6 +362,15 @@ public class SchedulerSimulationController implements Initializable {
         }
     }
 
+    private void alertDialog(String msg) {
+        Alert alert = new Alert(AlertType.INFORMATION);
+        alert.setTitle("Information Dialog");
+        alert.setHeaderText(null);
+        alert.setContentText(msg);
+
+        alert.showAndWait();
+    }
+
     private void setTextFieldValidation() {
         UnaryOperator<TextFormatter.Change> filter = change -> {
             String text = change.getText();
@@ -358,6 +383,55 @@ public class SchedulerSimulationController implements Initializable {
         };
         TextFormatter<String> textFormatter1 = new TextFormatter<>(filter);
         timeSlice_textField.setTextFormatter(textFormatter1);
+    }
+
+    private void loadProcessesFromFile() throws FileNotFoundException {
+        alertDialog("The text file must contain each process in a separate line and each process must be in the format (ArrivalTime BurstTime Priority).\n"
+                + "Priority is optional.\n"
+                + "Warning : If the priority is not specified and the scheduler is the priority scheduler it will be taken zero.");
+
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Open Source File");
+        fileChooser.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter("Text file", "*.txt")
+        );
+        fileChooser.setInitialDirectory(
+                new File(System.getProperty("user.dir"))
+        );
+        File file = fileChooser.showOpenDialog(canvas.getScene().getWindow());
+        if (file != null) {
+            Scanner scanner = new Scanner(file);
+            while (scanner.hasNextLine()) {
+                Scanner line = new Scanner(scanner.nextLine());
+                if (newProcess == true) {
+                    processtoAdd = new PCB(true);
+                    newProcess = false;
+                }
+
+                for (int i = 0; line.hasNextInt(); i++) {
+                    switch (i) {
+                        case 0:
+                            processtoAdd.setArrivalTime(line.nextInt());
+                            newProcess = true;
+                            break;
+                        case 1:
+                            processtoAdd.setBurstTime(line.nextInt());
+                            newProcess = true;
+                            break;
+                        case 2:
+                            processtoAdd.setPriority(line.nextInt());
+                            newProcess = true;
+                            break;
+                    }
+                }
+                if (newProcess == true) {
+                    insertMethodCall(processtoAdd);
+                    processTable.getItems().add(processtoAdd);
+                    startOutputSimulation_btn.setDisable(false);
+                }
+            }
+            scanner.close();
+        }
     }
 
     /**
@@ -594,6 +668,12 @@ public class SchedulerSimulationController implements Initializable {
         }
     }
 
+    /**
+     *This method draws the gantt chart of the process.
+     * @param duration
+     * @param processID
+     * @param color
+     */
     public void draw(int duration, int processID, Color color) {
 
         GraphicsContext gc = canvas.getGraphicsContext2D();
@@ -655,6 +735,11 @@ public class SchedulerSimulationController implements Initializable {
         currentXPosition = nextPosition + 1;
     }
 
+    /**
+     * This method draws the idle duration of the processor.
+     *
+     * @param duration
+     */
     public void drawIdleProcess(int duration) {
         draw(duration, -1, Color.BLACK);
     }
