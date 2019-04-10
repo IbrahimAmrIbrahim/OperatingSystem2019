@@ -8,7 +8,7 @@ import scheduler.SchedulerSimulationController;
 public class SJF_NonPreemptive_FCFS extends Queue implements ReadyQueue {
 
     @Override
-       public void insert(PCB newPCB) {
+        public void insert(PCB newPCB) {
         Node newNo = new Node(newPCB);
         Node ptr=head;
         Node pre_ptr=head;
@@ -19,12 +19,14 @@ public class SJF_NonPreemptive_FCFS extends Queue implements ReadyQueue {
         if (head == null) {
             head = newNo;
             tail = newNo;
+            newNo.setNext(null);
         }
         
         else if(head==tail){
             if(head.getPcb().getArrivalTime() == newNo.getPcb().getArrivalTime()){
                 if(head.getPcb().getBurstTime() <= newNo.getPcb().getBurstTime()){
                     enqueue(newPCB);
+                    tail.setNext(null);
                 }
                 else{
                     newNo.setNext(head);
@@ -33,6 +35,7 @@ public class SJF_NonPreemptive_FCFS extends Queue implements ReadyQueue {
             }
             else if(head.getPcb().getArrivalTime() < newNo.getPcb().getArrivalTime()){
                 enqueue(newPCB);
+                tail.setNext(null);
             }
             else{
                 newNo.setNext(head);
@@ -84,6 +87,7 @@ public class SJF_NonPreemptive_FCFS extends Queue implements ReadyQueue {
                 pre_ptr=ptr;
                 if(ptr.getNext() == null){
                     enqueue(newPCB);
+                    tail.setNext(null);
                     flag=1;
                 }
                 ptr=ptr.getNext();
@@ -91,7 +95,6 @@ public class SJF_NonPreemptive_FCFS extends Queue implements ReadyQueue {
             }
         }
     }
-
     @Override
     public void DrawGanttChart(SchedulerSimulationController ctrl) {
     }
