@@ -79,6 +79,7 @@ public class RoundRobin extends Queue implements ReadyQueue {
         int start = pcb_dumy.getArrivalTime();
         int end = pcb_dumy.getArrivalTime() + RR_time;
         pcb_dumy.copy(newPCB);
+        pcb_dumy.setPriority(0);
         //==============================//
         // if the time is less than the RR_TIME then just add it in the qq 
         if (pcb_dumy.getBurstTime() <= RR_time) {
