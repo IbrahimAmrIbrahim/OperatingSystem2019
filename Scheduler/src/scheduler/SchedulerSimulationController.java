@@ -67,6 +67,8 @@ public class SchedulerSimulationController implements Initializable {
     private TableColumn<PCB, Integer> priorityColumn;
     @FXML
     private TableColumn<PCB, Integer> burstTimeColumn;
+    @FXML
+    private Button loadFromFile_btn;
 
     public enum schedulerType {
         None, FCFS, SJF_Preemptive_FCFS, SJF_NonPreemptive_FCFS, RoundRobin, Priority_Preemptive_FCFS, Priority_NonPreemptive_FCFS
@@ -266,20 +268,25 @@ public class SchedulerSimulationController implements Initializable {
      */
     private void sceneInitialization() {
         if (currentScheduler == schedulerType.None) {
+            loadFromFile_btn.setDisable(true);
             addProcess_btn.setDisable(true);
-            timeSlice_textField.setText("");
             outputSimulationGroup.setDisable(true);
+            timeSlice_textField.setText("");
+            timeSlice_textField.setDisable(true);
             clear_btn.setDisable(true);
             processTable.setDisable(true);
         } else if (currentScheduler == schedulerType.RoundRobin) {
+            loadFromFile_btn.setDisable(false);
             addProcess_btn.setDisable(false);
             outputSimulationGroup.setDisable(false);
             startOutputSimulation_btn.setDisable(false);
+            timeSlice_textField.setText("");
             timeSlice_textField.setDisable(false);
             clear_btn.setDisable(false);
             processTable.setDisable(false);
             priorityColumn.setVisible(false);
         } else if ((currentScheduler == schedulerType.Priority_Preemptive_FCFS) || (currentScheduler == schedulerType.Priority_NonPreemptive_FCFS)) {
+            loadFromFile_btn.setDisable(false);
             addProcess_btn.setDisable(false);
             outputSimulationGroup.setDisable(false);
             startOutputSimulation_btn.setDisable(false);
@@ -289,6 +296,7 @@ public class SchedulerSimulationController implements Initializable {
             processTable.setDisable(false);
             priorityColumn.setVisible(true);
         } else {
+            loadFromFile_btn.setDisable(false);
             addProcess_btn.setDisable(false);
             outputSimulationGroup.setDisable(false);
             startOutputSimulation_btn.setDisable(false);
@@ -669,7 +677,8 @@ public class SchedulerSimulationController implements Initializable {
     }
 
     /**
-     *This method draws the gantt chart of the process.
+     * This method draws the gantt chart of the process.
+     *
      * @param duration
      * @param processID
      * @param color
