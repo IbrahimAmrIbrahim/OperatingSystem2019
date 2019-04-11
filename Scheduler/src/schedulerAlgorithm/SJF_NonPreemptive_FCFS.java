@@ -8,12 +8,11 @@ import scheduler.SchedulerSimulationController;
 public class SJF_NonPreemptive_FCFS extends Queue implements ReadyQueue {
 
     @Override
-    public void insert(PCB newPCB) {
+     public void insert(PCB newPCB) {
         Node newNo = new Node(newPCB);
         Node ptr=head;
         Node pre_ptr=head;
-        int flag=0;
-        int bru_T=0;
+        int bru_T;
         
         
         if (head == null) {
@@ -43,7 +42,13 @@ public class SJF_NonPreemptive_FCFS extends Queue implements ReadyQueue {
             }
         }
         else{
-           while(flag==0){
+            if(ptr.getPcb().getArrivalTime()==0){
+                bru_T=0;
+            }
+            else{
+                bru_T=ptr.getPcb().getArrivalTime();
+            }
+           while(ptr!=null){
                 if(newNo.getPcb().getArrivalTime()<= bru_T){
                    if(ptr.getPcb().getArrivalTime()<= newNo.getPcb().getArrivalTime()){
                        if(newNo.getPcb().getBurstTime() < ptr.getPcb().getBurstTime()){
@@ -67,16 +72,22 @@ public class SJF_NonPreemptive_FCFS extends Queue implements ReadyQueue {
                        }
                    }
                    else{
-                        newNo.setNext(ptr.getNext());
-                        ptr.setNext(newNo);
-                        break;
+                        if(ptr==head){
+                            newNo.setNext(ptr);
+                            head=newNo;
+                            break;
+                        }
+                        else{
+                            newNo.setNext(ptr);
+                            pre_ptr.setNext(newNo);
+                            break;
+                        }
                    }
                 }
                 pre_ptr=ptr;
                 if(ptr.getNext() == null){
                     enqueue(newPCB);
                     tail.setNext(null);
-                    flag=1;
                 }
                 bru_T = bru_T + ptr.getPcb().getBurstTime();
                 ptr=ptr.getNext();
