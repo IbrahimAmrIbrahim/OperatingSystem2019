@@ -29,6 +29,11 @@ public class Queue {
         }
     }
 
+    /**
+     * this method dequeues from the queue.
+     *
+     * @return dequeued PCB.
+     */
     public PCB dequeue() {
         PCB temp;
         if (head == null) {

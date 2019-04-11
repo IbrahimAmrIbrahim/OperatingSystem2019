@@ -73,7 +73,7 @@ public class FCFS extends Queue implements ReadyQueue {
     public void delete(PCB pcb) {
         if (head.getPcb().equals(pcb)) {
             head = head.getNext();
-            if (head == tail) {
+            if (head == null) {
                 tail = null;
             }
         } else {
@@ -92,5 +92,4 @@ public class FCFS extends Queue implements ReadyQueue {
             }
         }
     }
-
 }

@@ -62,7 +62,7 @@ import schedulerAlgorithm.SJF_NonPreemptive_FCFS;
 import schedulerAlgorithm.SJF_Preemptive_FCFS;
 
 public class SchedulerSimulationController implements Initializable {
-    
+
     @FXML
     private TableView<PCB> processTable;
     @FXML
@@ -77,33 +77,32 @@ public class SchedulerSimulationController implements Initializable {
     private TableColumn<PCB, Integer> burstTimeColumn;
     @FXML
     private Button loadFromFile_btn;
-    
+
     public enum schedulerType {
         None, FCFS, SJF_Preemptive_FCFS, SJF_NonPreemptive_FCFS, RoundRobin, Priority_Preemptive_FCFS, Priority_NonPreemptive_FCFS
     };
-    
+
     private schedulerType currentScheduler;
     private SchedulerSimulationController myController;
-    
+
     final private int unityTimeWidth = 40;
     private int currentTime;
     private int currentXPosition;
     private int currentYPosition;
     private boolean canvasIsEmpty;
     private int timeSlice;
-    
+
     private boolean newProcess;
     protected boolean editProcess;
     private PCB processtoAdd;
 
-    //private ObservableList<PCB> data = FXCollections.observableArrayList();
     private FCFS FCFS_ProcessQueue;
     private RoundRobin RoundRobin_ProcessQueue;
     private SJF_Preemptive_FCFS SJF_Preemptive_FCFS_ProcessQueue;
     private SJF_NonPreemptive_FCFS SJF_NonPreemptive_FCFS_ProcessQueue;
     private Priority_Preemptive_FCFS Priority_Preemptive_FCFS_ProcessQueue;
     private Priority_NonPreemptive_FCFS Priority_NonPreemptive_FCFS_ProcessQueue;
-    
+
     @FXML
     private Button startOutputSimulation_btn;
     @FXML
@@ -116,7 +115,7 @@ public class SchedulerSimulationController implements Initializable {
     private Button clear_btn;
     @FXML
     private TextField timeSlice_textField;
-    
+
     @FXML
     private void startOutputSimulationButton_KeyboardEvent(KeyEvent event) {
         if (event.getCode().toString().equals("ENTER")) {
@@ -131,14 +130,14 @@ public class SchedulerSimulationController implements Initializable {
                     return;
                 } else {
                     timeSlice = Integer.valueOf(timeSliceText);
-                    
+
                 }
             }
             canvasReset();
             drawMethodCall();
         }
     }
-    
+
     @FXML
     private void startOutputSimulationButton_MouseEvent(MouseEvent event) {
         startOutputSimulation_btn.setDisable(true);
@@ -152,25 +151,25 @@ public class SchedulerSimulationController implements Initializable {
                 return;
             } else {
                 timeSlice = Integer.valueOf(timeSliceText);
-                
+
             }
         }
         canvasReset();
         drawMethodCall();
     }
-    
+
     @FXML
     private void addNewProcessButton_KeyboardEvent(KeyEvent event) throws IOException {
         if (event.getCode().toString().equals("ENTER")) {
             addProcessDialog();
         }
     }
-    
+
     @FXML
     private void addNewProcessButton_MouseEvent(MouseEvent event) throws IOException {
         addProcessDialog();
     }
-    
+
     @FXML
     private void clearButton_KeyboardEvent(KeyEvent event) {
         if (event.getCode().toString().equals("ENTER")) {
@@ -179,14 +178,14 @@ public class SchedulerSimulationController implements Initializable {
             }
         }
     }
-    
+
     @FXML
     private void clearButton_MouseEvent(MouseEvent event) {
         if (yesNoDialog("Are you sure you want to clear everything?")) {
             clear();
         }
     }
-    
+
     @FXML
     private void changeSchedulerButton_KeyboardEvent(KeyEvent event) {
         if (event.getCode().toString().equals("ENTER")) {
@@ -195,26 +194,26 @@ public class SchedulerSimulationController implements Initializable {
             }
         }
     }
-    
+
     @FXML
     private void changeSchedulerButton_MouseEvent(MouseEvent event) {
         if (yesNoDialog("Are you sure you want to change the scheduler, it will clear everything?")) {
             schedulerSelectDialog();;
         }
     }
-    
+
     @FXML
     private void loadFromFileButton_KeyboardEvent(KeyEvent event) throws FileNotFoundException {
         if (event.getCode().toString().equals("ENTER")) {
             loadProcessesFromFile();
         }
     }
-    
+
     @FXML
     private void loadFromFileButton_MouseEvent(MouseEvent event) throws FileNotFoundException {
         loadProcessesFromFile();
     }
-    
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         currentScheduler = schedulerType.None;
@@ -234,12 +233,12 @@ public class SchedulerSimulationController implements Initializable {
                 startOutputSimulation_btn.setDisable(false);
             }
         });
-        
+
         schedulerSelectDialog();
         tableInitialization();
         sceneInitialization();
     }
-    
+
     private void tableInitialization() {
         processIDColumn.setCellValueFactory(new PropertyValueFactory<>("pID"));
         processColorColumn.setCellValueFactory(new PropertyValueFactory<>("color"));
@@ -261,11 +260,11 @@ public class SchedulerSimulationController implements Initializable {
                 }
             };
         });
-        
+
         arrivalTimeColumn.setCellValueFactory(new PropertyValueFactory<>("arrivalTime"));
         burstTimeColumn.setCellValueFactory(new PropertyValueFactory<>("burstTime"));
         priorityColumn.setCellValueFactory(new PropertyValueFactory<>("priority"));
-        
+
         processTable.setRowFactory(new Callback<TableView<PCB>, TableRow<PCB>>() {
             @Override
             public TableRow<PCB> call(TableView<PCB> tableView) {
@@ -273,7 +272,7 @@ public class SchedulerSimulationController implements Initializable {
                 final MenuItem editMenuItem = new MenuItem("Edit");
                 final MenuItem removeMenuItem = new MenuItem("Delete");
                 final TableRow<PCB> row = new TableRow<>();
-                
+
                 editMenuItem.setOnAction(new EventHandler<ActionEvent>() {
                     @Override
                     public void handle(ActionEvent event) {
@@ -287,7 +286,7 @@ public class SchedulerSimulationController implements Initializable {
                     }
                 });
                 contextMenu.getItems().add(editMenuItem);
-                
+
                 removeMenuItem.setOnAction(new EventHandler<ActionEvent>() {
                     @Override
                     public void handle(ActionEvent event) {
@@ -355,7 +354,7 @@ public class SchedulerSimulationController implements Initializable {
             priorityColumn.setVisible(false);
         }
     }
-    
+
     private void canvasReset() {
         GraphicsContext gc = canvas.getGraphicsContext2D();
         currentTime = 0;
@@ -366,7 +365,7 @@ public class SchedulerSimulationController implements Initializable {
         canvas.setWidth(749);
         canvas.setHeight(265);
     }
-    
+
     private void clear() {
         timeSlice = 0;
         newProcess = true;
@@ -389,7 +388,7 @@ public class SchedulerSimulationController implements Initializable {
         alert.setTitle("Error Dialog");
         alert.setHeaderText(null);
         alert.setContentText(msg);
-        
+
         alert.showAndWait();
     }
 
@@ -404,49 +403,49 @@ public class SchedulerSimulationController implements Initializable {
         alert.setTitle("Confirmation Dialog");
         alert.setHeaderText(null);
         alert.setContentText(msg);
-        
+
         ButtonType buttonTypeYes = new ButtonType("Yes");
         ButtonType buttonTypeNo = new ButtonType("No");
-        
+
         alert.getButtonTypes().setAll(buttonTypeYes, buttonTypeNo);
-        
+
         Optional<ButtonType> result = alert.showAndWait();
-        
+
         if (result.get() == buttonTypeYes) {
             return true;
         } else {
             return false;
         }
     }
-    
+
     private void alertDialog(String msg) {
         Alert alert = new Alert(AlertType.INFORMATION);
         alert.setTitle("Information Dialog");
         alert.setHeaderText(null);
         alert.setContentText(msg);
-        
+
         alert.showAndWait();
     }
-    
+
     private void setTextFieldValidation() {
         UnaryOperator<TextFormatter.Change> filter = change -> {
             String text = change.getText();
-            
+
             if (text.matches("[0-9]*")) {
                 return change;
             }
-            
+
             return null;
         };
         TextFormatter<String> textFormatter1 = new TextFormatter<>(filter);
         timeSlice_textField.setTextFormatter(textFormatter1);
     }
-    
+
     private void loadProcessesFromFile() throws FileNotFoundException {
         alertDialog("The text file must contain each process in a separate line and each process must be in the format (ArrivalTime BurstTime Priority).\n"
                 + "Priority is optional.\n"
                 + "Warning : If the priority is not specified and the scheduler is the priority scheduler it will be taken zero.");
-        
+
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Open Source File");
         fileChooser.getExtensionFilters().addAll(
@@ -464,7 +463,7 @@ public class SchedulerSimulationController implements Initializable {
                     processtoAdd = new PCB(true);
                     newProcess = false;
                 }
-                
+
                 for (int i = 0; line.hasNextInt(); i++) {
                     switch (i) {
                         case 0:
@@ -504,14 +503,14 @@ public class SchedulerSimulationController implements Initializable {
         choices.add("SJF NonPreemptive (FCFS)");
         choices.add("Priority Preemptive (FCFS)");
         choices.add("Priority NonPreemptive (FCFS)");
-        
+
         ChoiceDialog<String> dialog = new ChoiceDialog<>("Choose a scheduler", choices);
         dialog.setTitle("Choice Dialog");
         dialog.setHeaderText(null);
         dialog.setContentText("Choose a scheduler:");
-        
+
         Optional<String> result = dialog.showAndWait();
-        
+
         if (result.isPresent()) {
             String ans = result.get();
             if (ans.equals("FCFS")) {
@@ -534,17 +533,17 @@ public class SchedulerSimulationController implements Initializable {
         }
         clear();
     }
-    
+
     private void addProcessDialog() throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("AddProcess.fxml"));
         Parent root1 = (Parent) fxmlLoader.load();
-        
+
         AddProcessController ctrl = fxmlLoader.getController();
         if (newProcess == true) {
             processtoAdd = new PCB(true);
         }
         ctrl.sceneInitialization(myController, processtoAdd, false);
-        
+
         Stage stage = new Stage();
         stage.setScene(new Scene(root1));
         stage.initModality(Modality.APPLICATION_MODAL);
@@ -552,20 +551,20 @@ public class SchedulerSimulationController implements Initializable {
         stage.showAndWait();
         if (newProcess == true) {
             /* Add process */
-            insertMethodCall(processtoAdd);
             processTable.getItems().add(processtoAdd);
+            insertMethodCall(processtoAdd);
             startOutputSimulation_btn.setDisable(false);
         }
     }
-    
+
     private void editProcessDialog(PCB process) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("AddProcess.fxml"));
         Parent root1 = (Parent) fxmlLoader.load();
-        
+
         AddProcessController ctrl = fxmlLoader.getController();
-        
+
         ctrl.sceneInitialization(myController, process, true);
-        
+
         Stage stage = new Stage();
         stage.setScene(new Scene(root1));
         stage.initModality(Modality.APPLICATION_MODAL);
@@ -578,7 +577,7 @@ public class SchedulerSimulationController implements Initializable {
             startOutputSimulation_btn.setDisable(false);
         }
     }
-    
+
     private void insertMethodCall(PCB process) {
         switch (currentScheduler) {
             case None:
@@ -611,7 +610,7 @@ public class SchedulerSimulationController implements Initializable {
                 break;
         }
     }
-    
+
     private void editMethodCall(PCB process) {
         switch (currentScheduler) {
             case None:
@@ -644,7 +643,7 @@ public class SchedulerSimulationController implements Initializable {
                 break;
         }
     }
-    
+
     private void drawMethodCall() {
         switch (currentScheduler) {
             case None:
@@ -671,7 +670,7 @@ public class SchedulerSimulationController implements Initializable {
                 break;
         }
     }
-    
+
     private void deleteMethodCall(PCB process) {
         switch (currentScheduler) {
             case None:
@@ -699,7 +698,7 @@ public class SchedulerSimulationController implements Initializable {
         }
         startOutputSimulation_btn.setDisable(false);
     }
-    
+
     private void queueInitialize() {
         switch (currentScheduler) {
             case None:
@@ -762,10 +761,10 @@ public class SchedulerSimulationController implements Initializable {
                 break;
         }
     }
-    
+
     private void canvasInitialization() {
         GraphicsContext gc = canvas.getGraphicsContext2D();
-        
+
         if (canvasIsEmpty == true) {
             // Write scheduler method
             gc.setFill(Color.WHITE);
@@ -792,7 +791,7 @@ public class SchedulerSimulationController implements Initializable {
                 default:
                     break;
             }
-            
+
             currentYPosition = 80;
             // draw begin time point
             gc.fillRect(40, currentYPosition, 1, 50);
@@ -802,7 +801,7 @@ public class SchedulerSimulationController implements Initializable {
             gc.fillText(Integer.toString(getCurrentTime()), rotatedX(40, (currentYPosition + 50)), rotatedY(40, (currentYPosition + 50)));
             gc.rotate(-45);
             currentXPosition = 41;
-            
+
             canvasIsEmpty = false;
         }
     }
@@ -815,15 +814,15 @@ public class SchedulerSimulationController implements Initializable {
      * @param color
      */
     public void draw(int duration, int processID, Color color) {
-        
+
         GraphicsContext gc = canvas.getGraphicsContext2D();
-        
+
         canvasInitialization();
-        
+
         if (duration <= 0) {
             return;
         }
-        
+
         int nextPosition = (duration * unityTimeWidth) + currentXPosition;
         // Canvas max width 8040
         // initial Canvas widh 749
@@ -834,7 +833,7 @@ public class SchedulerSimulationController implements Initializable {
                 canvas.setWidth(8040);
             }
         }
-        
+
         if (nextPosition > 8000) {
             int theRest = duration - ((8000 - currentXPosition) / unityTimeWidth);
             draw(((8000 - currentXPosition) / unityTimeWidth), processID, color);
@@ -871,7 +870,7 @@ public class SchedulerSimulationController implements Initializable {
         gc.setTextAlign(TextAlignment.LEFT);
         gc.fillText(Integer.toString(getCurrentTime()), rotatedX(nextPosition, (currentYPosition + 50)), rotatedY(nextPosition, (currentYPosition + 50)));
         gc.rotate(-45);
-        
+
         currentXPosition = nextPosition + 1;
     }
 
@@ -907,7 +906,7 @@ public class SchedulerSimulationController implements Initializable {
         gc.setTextAlign(TextAlignment.LEFT);
         gc.fillText("Average turnaround time : " + String.format("%.5g%n", avgTurnarroundTime), 40, 60);
     }
-    
+
     private double rotatedX(double x, double y) {
         // to center the text
         x -= 5;
@@ -916,7 +915,7 @@ public class SchedulerSimulationController implements Initializable {
         double seta = Math.atan2(y, x);
         return (r * Math.cos(seta - (0.25 * Math.PI)));
     }
-    
+
     private double rotatedY(double x, double y) {
         // to center the text
         x -= 5;
