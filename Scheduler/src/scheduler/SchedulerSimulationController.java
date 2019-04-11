@@ -29,12 +29,18 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
 import java.util.function.UnaryOperator;
+import javafx.beans.binding.Bindings;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Group;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
@@ -46,6 +52,7 @@ import javafx.scene.layout.CornerRadii;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.StageStyle;
+import javafx.util.Callback;
 import schedulerAlgorithm.FCFS;
 import schedulerAlgorithm.Priority_NonPreemptive_FCFS;
 import schedulerAlgorithm.Priority_Preemptive_FCFS;
@@ -254,13 +261,36 @@ public class SchedulerSimulationController implements Initializable {
             };
         });
 
-        arrivalTimeColumn.setCellValueFactory(
-                new PropertyValueFactory<>("arrivalTime"));
-        burstTimeColumn.setCellValueFactory(
-                new PropertyValueFactory<>("burstTime"));
-        priorityColumn.setCellValueFactory(
-                new PropertyValueFactory<>("priority"));
+        arrivalTimeColumn.setCellValueFactory(new PropertyValueFactory<>("arrivalTime"));
+        burstTimeColumn.setCellValueFactory(new PropertyValueFactory<>("burstTime"));
+        priorityColumn.setCellValueFactory(new PropertyValueFactory<>("priority"));
 
+        processTable.setRowFactory(new Callback<TableView<PCB>, TableRow<PCB>>() {
+            @Override
+            public TableRow<PCB> call(TableView<PCB> tableView) {
+                final ContextMenu contextMenu = new ContextMenu();
+                final MenuItem removeMenuItem = new MenuItem("Delete");
+                final TableRow<PCB> row = new TableRow<>();
+
+                removeMenuItem.setOnAction(new EventHandler<ActionEvent>() {
+                    @Override
+                    public void handle(ActionEvent event) {
+                        int index = row.getIndex();
+                        PCB processtodelete = processTable.getItems().get(index);
+                        processTable.getItems().remove(row.getItem());
+                        deleteMethodCall(processtodelete);
+                    }
+                });
+                contextMenu.getItems().add(removeMenuItem);
+                // Set context menu on row, but use a binding to make it only show for non-empty rows:  
+                row.contextMenuProperty().bind(
+                        Bindings.when(row.emptyProperty())
+                                .then((ContextMenu) null)
+                                .otherwise(contextMenu)
+                );
+                return row;
+            }
+        });
     }
 
     /**
@@ -567,6 +597,34 @@ public class SchedulerSimulationController implements Initializable {
             default:
                 break;
         }
+    }
+
+    private void deleteMethodCall(PCB process) {
+        switch (currentScheduler) {
+            case None:
+                break;
+            case FCFS:
+                FCFS_ProcessQueue.delete(process);
+                break;
+            case RoundRobin:
+                RoundRobin_ProcessQueue.delete(process);
+                break;
+            case SJF_Preemptive_FCFS:
+                SJF_Preemptive_FCFS_ProcessQueue.delete(process);
+                break;
+            case SJF_NonPreemptive_FCFS:
+                SJF_NonPreemptive_FCFS_ProcessQueue.delete(process);
+                break;
+            case Priority_Preemptive_FCFS:
+                Priority_Preemptive_FCFS_ProcessQueue.delete(process);
+                break;
+            case Priority_NonPreemptive_FCFS:
+                Priority_NonPreemptive_FCFS_ProcessQueue.delete(process);
+                break;
+            default:
+                break;
+        }
+        startOutputSimulation_btn.setDisable(false);
     }
 
     private void queueInitialize() {

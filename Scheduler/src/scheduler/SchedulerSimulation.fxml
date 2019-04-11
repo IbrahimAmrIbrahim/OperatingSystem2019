@@ -22,10 +22,10 @@
          <items>
             <AnchorPane prefHeight="200.0" prefWidth="200.0">
                <children>
-                  <TableView fx:id="processTable" editable="true" layoutX="14.0" prefHeight="67.0" prefWidth="407.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="342.0" AnchorPane.topAnchor="0.0">
+                  <TableView fx:id="processTable" layoutX="14.0" prefHeight="67.0" prefWidth="407.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="342.0" AnchorPane.topAnchor="0.0">
                     <columns>
-                      <TableColumn fx:id="processIDColumn" minWidth="1.0" prefWidth="95.0" text="Process ID" />
-                      <TableColumn fx:id="processColorColumn" minWidth="1.0" prefWidth="120.0" text="Process Color" />
+                      <TableColumn fx:id="processIDColumn" editable="false" minWidth="1.0" prefWidth="95.0" text="Process ID" />
+                      <TableColumn fx:id="processColorColumn" editable="false" minWidth="1.0" prefWidth="120.0" text="Process Color" />
                         <TableColumn fx:id="arrivalTimeColumn" editable="false" minWidth="1.0" prefWidth="110.0" text="Arrival Time" />
                         <TableColumn fx:id="priorityColumn" editable="false" minWidth="1.0" text="Priority" />
                         <TableColumn fx:id="burstTimeColumn" editable="false" minWidth="1.0" prefWidth="110.0" text="Burst Time" />

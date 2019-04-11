@@ -1,6 +1,6 @@
 package dataStructure;
 
-public class Queue{
+public class Queue {
 
     protected Node head;
     protected Node tail;
@@ -12,6 +12,7 @@ public class Queue{
 
     /**
      * enqueue a new node
+     *
      * @param newPCB
      */
     public void enqueue(PCB newPCB) {
@@ -25,6 +26,26 @@ public class Queue{
         } else {
             tail.setNext(newNode);
             tail = newNode;
+        }
+    }
+
+    /**
+     * This method deletes the given PCB from Queue.
+     *
+     * @param pcb
+     */
+    public void delete(PCB pcb) {
+        if (head.getPcb().equals(pcb)) {
+            head = head.getNext();
+        } else {
+            Node traverseNode = head;
+            while (traverseNode.getNext() != null) {
+                if (traverseNode.getNext().getPcb().equals(pcb)) {
+                    traverseNode.setNext(traverseNode.getNext().getNext());
+                    break;
+                }
+                traverseNode = traverseNode.getNext();
+            }
         }
     }
 
