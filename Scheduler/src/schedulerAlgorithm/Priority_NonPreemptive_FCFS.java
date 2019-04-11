@@ -7,23 +7,23 @@ import dataStructure.Queue;
 import scheduler.SchedulerSimulationController;
 
 public class Priority_NonPreemptive_FCFS extends Queue implements ReadyQueue {
-    
-    private static Queue needsPriority = new Queue();
+
+    private Queue needsPriority = new Queue();
     private int totalBurstTime = 0;
     private int totalwaitingTime = 0;
     private int totalTurnaroundtime = 0;
     private int noofProcesses = 0;
-    
+
     @Override
     public void insert(PCB newPCB) {
-        
+
         Node newNode = new Node(newPCB);
-        
+
         if (getHead() == null) {
-            
+
             setHead(newNode);
             setTail(newNode);
-            
+
         } else if (getHead() == getTail()) {
             if ((getHead().getPcb().getArrivalTime() < newNode.getPcb().getArrivalTime())) {
                 enqueue(newPCB);
@@ -83,7 +83,7 @@ public class Priority_NonPreemptive_FCFS extends Queue implements ReadyQueue {
 //        needsPriority.setHead(this.getHead());
 //        needsPriority.setTail(this.getTail());
     }
-    
+
     public Queue Sort_Priotity(Queue Q, int ParentArrival, int ParentBurst) {
         System.out.println("SORT Called");
         if (Q.getHead() == Q.getTail()) {
@@ -105,10 +105,10 @@ public class Priority_NonPreemptive_FCFS extends Queue implements ReadyQueue {
                     traverse_Node = traverse_Node.getNext();
                 }
             }
-            
+
             Node Traversing_Yet_Again = Q.getHead();
             int offset = ParentArrival + ParentBurst;
-            
+
             while (Traversing_Yet_Again.getNext() != null) {
                 offset += Traversing_Yet_Again.getPcb().getBurstTime();
                 Traversing_Yet_Again = Traversing_Yet_Again.getNext();
@@ -117,7 +117,7 @@ public class Priority_NonPreemptive_FCFS extends Queue implements ReadyQueue {
             return Q;
         }
     }
-    
+
     public void Fix_Priority() {
         Node traverse_Node = needsPriority.getHead();
         while (traverse_Node.getNext() != null) {
@@ -126,10 +126,10 @@ public class Priority_NonPreemptive_FCFS extends Queue implements ReadyQueue {
             Node Starting_Traverse_Node = traverse_Node;
             Node Inner_traverse = traverse_Node.getNext();
             Queue to_be_sorted_by_priority = new Queue();
-            
+
             while (Inner_traverse != null) {
                 System.out.println("2While");
-                
+
                 if ((Inner_traverse.getPcb().getArrivalTime() - Starting_Traverse_Node.getPcb().getArrivalTime()) <= Starting_Traverse_Node.getPcb().getBurstTime()) {
                     System.out.println("Enqueued");
                     traverse_Node = Inner_traverse;
@@ -148,15 +148,16 @@ public class Priority_NonPreemptive_FCFS extends Queue implements ReadyQueue {
             } else {
                 traverse_Node = traverse_Node.getNext();
             }
-            
+
         }
         needsPriority.printQueue();
-        
+
     }
-    
+
     @Override
     public void DrawGanttChart(SchedulerSimulationController ctrl) {
-       Node Traversal_PCB = this.getHead();
+        prepare();
+        Node Traversal_PCB = this.getHead();
         while (Traversal_PCB != null) {
             PCB temp = new PCB(false);
             temp.copy(Traversal_PCB.getPcb());
@@ -179,19 +180,48 @@ public class Priority_NonPreemptive_FCFS extends Queue implements ReadyQueue {
             totalTurnaroundtime += (ctrl.getCurrentTime() - currNode.getPcb().getArrivalTime());
             currNode = currNode.getNext();
         }
-        
+
         totalwaitingTime = totalTurnaroundtime - totalBurstTime;
         ctrl.writeAvgWaitingTime((totalwaitingTime / (double) noofProcesses));
         ctrl.writeAvgTurnarroundTime((totalTurnaroundtime / (double) noofProcesses));
     }
-    
-    @Override
-    public void edit(PCB PCB) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+
+    private void prepare() {
+        needsPriority = new Queue();
+        noofProcesses = 0;
+        totalBurstTime = 0;
+        totalwaitingTime = 0;
+        totalTurnaroundtime = 0;
     }
-    
+
+    @Override
+    public void edit(PCB pcb) {
+        delete(pcb);
+        insert(pcb);
+
+    }
+
     @Override
     public void delete(PCB pcb) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if (head.getPcb().equals(pcb)) {
+            head = head.getNext();
+            if (head == null) {
+                tail = null;
+            }
+        } else {
+            Node traverseNode = head;
+            while (traverseNode.getNext() != null) {
+                if (traverseNode.getNext().getPcb().equals(pcb)) {
+                    if (traverseNode.getNext().getNext() == null) {
+                        traverseNode.setNext(null);
+                        tail = traverseNode;
+                    } else {
+                        traverseNode.setNext(traverseNode.getNext().getNext());
+                    }
+                    break;
+                }
+                traverseNode = traverseNode.getNext();
+            }
+        }
     }
 }
