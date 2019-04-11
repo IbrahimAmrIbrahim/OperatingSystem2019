@@ -18,7 +18,6 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ChoiceDialog;
-import javafx.scene.control.ToggleGroup;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.text.TextAlignment;
@@ -109,8 +108,6 @@ public class SchedulerSimulationController implements Initializable {
     private Button startOutputSimulation_btn;
     @FXML
     private Button addProcess_btn;
-    @FXML
-    private ToggleGroup Simulation_Method;
     @FXML
     private Canvas canvas;
     @FXML

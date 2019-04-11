@@ -4,15 +4,11 @@
 <?import javafx.scene.Group?>
 <?import javafx.scene.canvas.Canvas?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.ScrollPane?>
-<?import javafx.scene.control.Slider?>
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.Pane?>
 
@@ -31,33 +27,18 @@
                         <TableColumn fx:id="burstTimeColumn" editable="false" minWidth="1.0" prefWidth="110.0" text="Burst Time" />
                     </columns>
                   </TableView>
-                  <Pane layoutX="407.0" prefHeight="265.0" prefWidth="342.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                  <Pane layoutX="407.0" prefHeight="167.0" prefWidth="342.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                      <children>
-                        <RadioButton layoutX="11.0" layoutY="8.0" mnemonicParsing="false" selected="true" text="Output Simulation">
-                           <toggleGroup>
-                              <ToggleGroup fx:id="Simulation_Method" />
-                           </toggleGroup>
-                        </RadioButton>
-                        <RadioButton disable="true" layoutX="14.0" layoutY="84.0" mnemonicParsing="false" text="Real time Simulation" toggleGroup="$Simulation_Method" />
-                        <Group fx:id="outputSimulationGroup" layoutX="33.0" layoutY="35.0">
+                        <Group fx:id="outputSimulationGroup" layoutX="22.0" layoutY="21.0">
                            <children>
                               <TextField fx:id="timeSlice_textField" disable="true" promptText="Time Slice" />
                               <Button fx:id="startOutputSimulation_btn" layoutX="207.0" mnemonicParsing="false" onKeyPressed="#startOutputSimulationButton_KeyboardEvent" onMouseClicked="#startOutputSimulationButton_MouseEvent" prefHeight="31.0" prefWidth="88.0" text="Start" />
                            </children>
                         </Group>
-                        <Group disable="true" layoutX="21.0" layoutY="106.0">
-                           <children>
-                              <Label layoutX="23.0" layoutY="2.0" text="Speed" />
-                              <Slider blockIncrement="25.0" layoutX="83.0" layoutY="4.0" max="200.0" min="25.0" prefHeight="17.0" prefWidth="206.0" value="100.0" />
-                              <Button layoutX="22.0" layoutY="37.0" mnemonicParsing="false" text="Start" />
-                              <Button layoutX="134.0" layoutY="37.0" mnemonicParsing="false" text="Pause" />
-                              <Button layoutX="256.0" layoutY="37.0" mnemonicParsing="false" text="Stop" />
-                           </children>
-                        </Group>
-                        <Button fx:id="addProcess_btn" layoutX="22.0" layoutY="193.0" mnemonicParsing="false" onKeyPressed="#addNewProcessButton_KeyboardEvent" onMouseClicked="#addNewProcessButton_MouseEvent" prefHeight="31.0" prefWidth="140.0" text="Add new process" />
-                        <Button fx:id="loadFromFile_btn" layoutX="181.0" layoutY="193.0" mnemonicParsing="false" onKeyPressed="#loadFromFileButton_KeyboardEvent" onMouseClicked="#loadFromFileButton_MouseEvent" prefHeight="31.0" prefWidth="140.0" text="Load from file" />
-                        <Button fx:id="clear_btn" layoutX="22.0" layoutY="229.0" mnemonicParsing="false" onKeyPressed="#clearButton_KeyboardEvent" onMouseClicked="#clearButton_MouseEvent" prefHeight="31.0" prefWidth="140.0" text="Clear" />
-                        <Button layoutX="181.0" layoutY="229.0" mnemonicParsing="false" onKeyPressed="#changeSchedulerButton_KeyboardEvent" onMouseClicked="#changeSchedulerButton_MouseEvent" text="Change Scheduler" />
+                        <Button fx:id="addProcess_btn" layoutX="22.0" layoutY="77.0" mnemonicParsing="false" onKeyPressed="#addNewProcessButton_KeyboardEvent" onMouseClicked="#addNewProcessButton_MouseEvent" prefHeight="31.0" prefWidth="140.0" text="Add new process" />
+                        <Button fx:id="loadFromFile_btn" layoutX="181.0" layoutY="77.0" mnemonicParsing="false" onKeyPressed="#loadFromFileButton_KeyboardEvent" onMouseClicked="#loadFromFileButton_MouseEvent" prefHeight="31.0" prefWidth="140.0" text="Load from file" />
+                        <Button fx:id="clear_btn" layoutX="22.0" layoutY="125.0" mnemonicParsing="false" onKeyPressed="#clearButton_KeyboardEvent" onMouseClicked="#clearButton_MouseEvent" prefHeight="31.0" prefWidth="140.0" text="Clear" />
+                        <Button layoutX="181.0" layoutY="125.0" mnemonicParsing="false" onKeyPressed="#changeSchedulerButton_KeyboardEvent" onMouseClicked="#changeSchedulerButton_MouseEvent" text="Change Scheduler" />
                      </children>
                   </Pane>
                </children>
