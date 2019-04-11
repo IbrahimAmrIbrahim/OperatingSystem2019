@@ -40,6 +40,7 @@ public class AddProcessController implements Initializable {
     @FXML
     private Label PriorityIndication_Label;
 
+    private boolean edit_new;
     private PCB newProcess;
     private SchedulerSimulationController parentController;
     private SchedulerSimulationController.schedulerType currentScheduler;
@@ -52,14 +53,24 @@ public class AddProcessController implements Initializable {
 
     }
 
-    public void sceneInitialization(SchedulerSimulationController ctrl, PCB process) {
+    public void sceneInitialization(SchedulerSimulationController ctrl, PCB process, boolean isEdit) {
         parentController = ctrl;
         newProcess = process;
         pID_Label.setText(Integer.toString(newProcess.getPID()));
         pColor_Label.setBackground(new Background(new BackgroundFill(newProcess.getColor(), CornerRadii.EMPTY, Insets.EMPTY)));
+        if (isEdit == true) {
+            arrivalTime_Text.setText(Integer.toString(newProcess.getArrivalTime()));
+            burstTime_Text.setText(Integer.toString(newProcess.getBurstTime()));
+            priority_Text.setText(Integer.toString(newProcess.getPriority()));
+            addProcee_btn.setText("Edit");
+            parentController.setEditProcess(false);
+        } else {
+            addProcee_btn.setText("Add");
+            parentController.setNewProcess(false);
+        }
         setTextFieldValidation();
         currentScheduler = parentController.getCurrentScheduler();
-        parentController.setNewProcess(false);
+        edit_new = isEdit;
         if ((currentScheduler == SchedulerSimulationController.schedulerType.FCFS)
                 || (currentScheduler == SchedulerSimulationController.schedulerType.SJF_Preemptive_FCFS)
                 || (currentScheduler == SchedulerSimulationController.schedulerType.SJF_NonPreemptive_FCFS)
@@ -138,20 +149,33 @@ public class AddProcessController implements Initializable {
 
         newProcess.setArrivalTime(Integer.valueOf(arrivalTime_Text.getText()));
         newProcess.setBurstTime(Integer.valueOf(burstTime_Text.getText()));
-        parentController.setNewProcess(true);
+        if (edit_new) {
+            parentController.setEditProcess(true);
+        } else {
+            parentController.setNewProcess(true);
+        }
         sceneClose();
     }
 
     @FXML
     private void cancelBuotton_MouseEvent(MouseEvent event) {
-        parentController.setNewProcess(false);
+        if (edit_new) {
+            parentController.setEditProcess(false);
+        } else {
+            parentController.setNewProcess(false);
+        }
         sceneClose();
     }
 
     @FXML
-    private void cancelBuotton_KeyboardEvent(KeyEvent event) {
+    private void cancelBuotton_KeyboardEvent(KeyEvent event
+    ) {
         if (event.getCode().toString().equals("ENTER")) {
-            parentController.setNewProcess(false);
+            if (edit_new) {
+                parentController.setEditProcess(false);
+            } else {
+                parentController.setNewProcess(false);
+            }
             sceneClose();
         }
     }

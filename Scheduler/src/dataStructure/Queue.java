@@ -30,26 +30,6 @@ public class Queue {
     }
 
     /**
-     * This method deletes the given PCB from Queue.
-     *
-     * @param pcb
-     */
-    public void delete(PCB pcb) {
-        if (head.getPcb().equals(pcb)) {
-            head = head.getNext();
-        } else {
-            Node traverseNode = head;
-            while (traverseNode.getNext() != null) {
-                if (traverseNode.getNext().getPcb().equals(pcb)) {
-                    traverseNode.setNext(traverseNode.getNext().getNext());
-                    break;
-                }
-                traverseNode = traverseNode.getNext();
-            }
-        }
-    }
-
-    /**
      * For debugging only. This method prints the queue in the console window.
      */
     public void printQueue() {

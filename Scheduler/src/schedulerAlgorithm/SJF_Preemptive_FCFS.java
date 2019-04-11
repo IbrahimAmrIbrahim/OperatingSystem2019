@@ -139,4 +139,14 @@ public class SJF_Preemptive_FCFS extends Queue implements ReadyQueue {
             curr.getPcb().setEndofExec(currentTime);
         }
     }
+
+    @Override
+    public void edit(PCB PCB) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void delete(PCB pcb) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }

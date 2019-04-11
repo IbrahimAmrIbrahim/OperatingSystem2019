@@ -62,4 +62,35 @@ public class FCFS extends Queue implements ReadyQueue {
         ctrl.writeAvgWaitingTime((totalwaitingTime / (double) noofProcesses));
         ctrl.writeAvgTurnarroundTime((totalTurnaroundtime / (double) noofProcesses));
     }
+
+    @Override
+    public void edit(PCB pcb) {
+        delete(pcb);
+        insert(pcb);
+    }
+
+    @Override
+    public void delete(PCB pcb) {
+        if (head.getPcb().equals(pcb)) {
+            head = head.getNext();
+            if (head == tail) {
+                tail = null;
+            }
+        } else {
+            Node traverseNode = head;
+            while (traverseNode.getNext() != null) {
+                if (traverseNode.getNext().getPcb().equals(pcb)) {
+                    if (traverseNode.getNext().getNext() == null) {
+                        traverseNode.setNext(null);
+                        tail = traverseNode;
+                    } else {
+                        traverseNode.setNext(traverseNode.getNext().getNext());
+                    }
+                    break;
+                }
+                traverseNode = traverseNode.getNext();
+            }
+        }
+    }
+
 }
