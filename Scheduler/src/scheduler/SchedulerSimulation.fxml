@@ -22,10 +22,10 @@
          <items>
             <AnchorPane prefHeight="200.0" prefWidth="200.0">
                <children>
-                  <TableView fx:id="processTable" editable="true" layoutX="14.0" prefHeight="67.0" prefWidth="407.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="342.0" AnchorPane.topAnchor="0.0">
+                  <TableView fx:id="processTable" layoutX="14.0" prefHeight="67.0" prefWidth="407.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="342.0" AnchorPane.topAnchor="0.0">
                     <columns>
-                      <TableColumn fx:id="processIDColumn" minWidth="1.0" prefWidth="95.0" text="Process ID" />
-                      <TableColumn fx:id="processColorColumn" minWidth="1.0" prefWidth="120.0" text="Process Color" />
+                      <TableColumn fx:id="processIDColumn" editable="false" minWidth="1.0" prefWidth="95.0" text="Process ID" />
+                      <TableColumn fx:id="processColorColumn" editable="false" minWidth="1.0" prefWidth="120.0" text="Process Color" />
                         <TableColumn fx:id="arrivalTimeColumn" editable="false" minWidth="1.0" prefWidth="110.0" text="Arrival Time" />
                         <TableColumn fx:id="priorityColumn" editable="false" minWidth="1.0" text="Priority" />
                         <TableColumn fx:id="burstTimeColumn" editable="false" minWidth="1.0" prefWidth="110.0" text="Burst Time" />
@@ -54,10 +54,10 @@
                               <Button layoutX="256.0" layoutY="37.0" mnemonicParsing="false" text="Stop" />
                            </children>
                         </Group>
-                        <Button fx:id="addProcess_btn" layoutX="26.0" layoutY="193.0" mnemonicParsing="false" onKeyPressed="#addNewProcessButton_KeyboardEvent" onMouseClicked="#addNewProcessButton_MouseEvent" prefHeight="31.0" prefWidth="140.0" text="Add new process" />
-                        <Button layoutX="185.0" layoutY="193.0" mnemonicParsing="false" onKeyPressed="#loadFromFileButton_KeyboardEvent" onMouseClicked="#loadFromFileButton_MouseEvent" prefHeight="31.0" prefWidth="140.0" text="Load from file" />
-                        <Button fx:id="clear_btn" layoutX="26.0" layoutY="229.0" mnemonicParsing="false" onKeyPressed="#clearButton_KeyboardEvent" onMouseClicked="#clearButton_MouseEvent" prefHeight="31.0" prefWidth="140.0" text="Clear" />
-                        <Button layoutX="185.0" layoutY="229.0" mnemonicParsing="false" onKeyPressed="#changeSchedulerButton_KeyboardEvent" onMouseClicked="#changeSchedulerButton_MouseEvent" text="Change Scheduler" />
+                        <Button fx:id="addProcess_btn" layoutX="22.0" layoutY="193.0" mnemonicParsing="false" onKeyPressed="#addNewProcessButton_KeyboardEvent" onMouseClicked="#addNewProcessButton_MouseEvent" prefHeight="31.0" prefWidth="140.0" text="Add new process" />
+                        <Button fx:id="loadFromFile_btn" layoutX="181.0" layoutY="193.0" mnemonicParsing="false" onKeyPressed="#loadFromFileButton_KeyboardEvent" onMouseClicked="#loadFromFileButton_MouseEvent" prefHeight="31.0" prefWidth="140.0" text="Load from file" />
+                        <Button fx:id="clear_btn" layoutX="22.0" layoutY="229.0" mnemonicParsing="false" onKeyPressed="#clearButton_KeyboardEvent" onMouseClicked="#clearButton_MouseEvent" prefHeight="31.0" prefWidth="140.0" text="Clear" />
+                        <Button layoutX="181.0" layoutY="229.0" mnemonicParsing="false" onKeyPressed="#changeSchedulerButton_KeyboardEvent" onMouseClicked="#changeSchedulerButton_MouseEvent" text="Change Scheduler" />
                      </children>
                   </Pane>
                </children>

@@ -1,6 +1,6 @@
 package dataStructure;
 
-public class Queue{
+public class Queue {
 
     protected Node head;
     protected Node tail;
@@ -12,6 +12,7 @@ public class Queue{
 
     /**
      * enqueue a new node
+     *
      * @param newPCB
      */
     public void enqueue(PCB newPCB) {

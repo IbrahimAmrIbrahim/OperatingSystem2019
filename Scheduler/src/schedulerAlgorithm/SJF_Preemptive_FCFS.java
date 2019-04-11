@@ -7,10 +7,8 @@ import scheduler.SchedulerSimulationController;
 
 public class SJF_Preemptive_FCFS extends Queue implements ReadyQueue {
 
-    Queue sortedQueue = new Queue();
+    Queue sortedQueue;
     int currentTime = 0;
-    int actualTime = 0;
-    int timeShift = 0;
     private int totalBurstTime = 0;
     private int totalwaitingTime = 0;
     private int totalTurnaroundtime = 0;
@@ -48,19 +46,19 @@ public class SJF_Preemptive_FCFS extends Queue implements ReadyQueue {
     @Override
     public void DrawGanttChart(SchedulerSimulationController ctrl) {
         prepare();
+
         Node traverse_node = head;
         while (traverse_node != null) {
             if (traverse_node.getPcb().getEndofExec() == (-1)) {
-                currentTime = traverse_node.getPcb().getArrivalTime();
-                timeShift = currentTime;
+                if (traverse_node.getPcb().getArrivalTime() > currentTime) {
+                    currentTime = traverse_node.getPcb().getArrivalTime();
+                }
                 sort(traverse_node);
-                actualTime += (currentTime - traverse_node.getPcb().getArrivalTime());
             }
             traverse_node = traverse_node.getNext();
         }
 
         traverse_node = sortedQueue.getHead();
-
         while (traverse_node != null) {
             // Print the data at current node
             if (ctrl.getCurrentTime() < traverse_node.getPcb().getArrivalTime()) {
@@ -73,7 +71,6 @@ public class SJF_Preemptive_FCFS extends Queue implements ReadyQueue {
 
         traverse_node = head;
         while (traverse_node != null) {
-            System.out.println(traverse_node.getPcb().getEndofExec());
             totalTurnaroundtime += (traverse_node.getPcb().getEndofExec() - traverse_node.getPcb().getArrivalTime());
             traverse_node = traverse_node.getNext();
         }
@@ -81,15 +78,13 @@ public class SJF_Preemptive_FCFS extends Queue implements ReadyQueue {
         totalwaitingTime = totalTurnaroundtime - totalBurstTime;
         ctrl.writeAvgWaitingTime((totalwaitingTime / (double) noofProcesses));
         ctrl.writeAvgTurnarroundTime((totalTurnaroundtime / (double) noofProcesses));
-
-        System.out.println(totalBurstTime);
-        System.out.println(totalTurnaroundtime);
-        System.out.println(totalwaitingTime);
-        System.out.println(noofProcesses);
-        sortedQueue.printQueue();
     }
 
     private void prepare() {
+        sortedQueue = new Queue();
+        totalwaitingTime = 0;
+        totalTurnaroundtime = 0;
+        currentTime = 0;
         Node traverse_node = head;
         while (traverse_node != null) {
             traverse_node.getPcb().setEndofExec((-1));
@@ -111,29 +106,47 @@ public class SJF_Preemptive_FCFS extends Queue implements ReadyQueue {
                 }
                 traverse_node = traverse_node.getNext();
             } else {
-                newPCB = new PCB(false);
-                newPCB.copy(curr.getPcb());
                 runningTime = traverse_node.getPcb().getArrivalTime() - currentTime;
                 if (runningTime > remainingTime) {
                     runningTime = remainingTime;
                 }
-                newPCB.setBurstTime(runningTime);
-                sortedQueue.enqueue(newPCB);
+                if ((sortedQueue.getTail() != null) && (sortedQueue.getTail().getPcb().getPID() == curr.getPcb().getPID())) {
+                    sortedQueue.getTail().getPcb().setBurstTime(sortedQueue.getTail().getPcb().getBurstTime() + runningTime);
+                } else {
+                    newPCB = new PCB(false);
+                    newPCB.copy(curr.getPcb());
+                    newPCB.setBurstTime(runningTime);
+                    sortedQueue.enqueue(newPCB);
+                }
                 remainingTime -= runningTime;
                 currentTime = currentTime + runningTime;
                 if (remainingTime == 0) {
-                    curr.getPcb().setEndofExec(actualTime + (currentTime - timeShift));
+                    curr.getPcb().setEndofExec(currentTime);
                     break;
                 }
             }
         }
         if (remainingTime > 0) {
-            newPCB = new PCB(false);
-            newPCB.copy(curr.getPcb());
-            newPCB.setBurstTime(remainingTime);
-            sortedQueue.enqueue(newPCB);
+            if ((sortedQueue.getTail() != null) && (sortedQueue.getTail().getPcb().getPID() == curr.getPcb().getPID())) {
+                sortedQueue.getTail().getPcb().setBurstTime(sortedQueue.getTail().getPcb().getBurstTime() + remainingTime);
+            } else {
+                newPCB = new PCB(false);
+                newPCB.copy(curr.getPcb());
+                newPCB.setBurstTime(remainingTime);
+                sortedQueue.enqueue(newPCB);
+            }
             currentTime = currentTime + remainingTime;
-            curr.getPcb().setEndofExec(actualTime + (currentTime - timeShift));
+            curr.getPcb().setEndofExec(currentTime);
         }
+    }
+
+    @Override
+    public void edit(PCB PCB) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void delete(PCB pcb) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }
