@@ -7,23 +7,23 @@ import dataStructure.Queue;
 import scheduler.SchedulerSimulationController;
 
 public class Priority_NonPreemptive_FCFS extends Queue implements ReadyQueue {
-
+    
     private static Queue needsPriority = new Queue();
     private int totalBurstTime = 0;
     private int totalwaitingTime = 0;
     private int totalTurnaroundtime = 0;
     private int noofProcesses = 0;
-
+    
     @Override
     public void insert(PCB newPCB) {
-
+        
         Node newNode = new Node(newPCB);
-
+        
         if (getHead() == null) {
-
+            
             setHead(newNode);
             setTail(newNode);
-
+            
         } else if (getHead() == getTail()) {
             if ((getHead().getPcb().getArrivalTime() < newNode.getPcb().getArrivalTime())) {
                 enqueue(newPCB);
@@ -80,10 +80,10 @@ public class Priority_NonPreemptive_FCFS extends Queue implements ReadyQueue {
             }
         }
         printQueue();
-        needsPriority.setHead(this.getHead());
-        needsPriority.setTail(this.getTail());
+//        needsPriority.setHead(this.getHead());
+//        needsPriority.setTail(this.getTail());
     }
-
+    
     public Queue Sort_Priotity(Queue Q, int ParentArrival, int ParentBurst) {
         System.out.println("SORT Called");
         if (Q.getHead() == Q.getTail()) {
@@ -109,7 +109,7 @@ public class Priority_NonPreemptive_FCFS extends Queue implements ReadyQueue {
             Node Traversing_Yet_Again = Q.getHead();
             int offset = ParentArrival + ParentBurst;
             
-            while(Traversing_Yet_Again.getNext() != null){
+            while (Traversing_Yet_Again.getNext() != null) {
                 offset += Traversing_Yet_Again.getPcb().getBurstTime();
                 Traversing_Yet_Again = Traversing_Yet_Again.getNext();
             }
@@ -117,7 +117,7 @@ public class Priority_NonPreemptive_FCFS extends Queue implements ReadyQueue {
             return Q;
         }
     }
-
+    
     public void Fix_Priority() {
         Node traverse_Node = needsPriority.getHead();
         while (traverse_Node.getNext() != null) {
@@ -126,10 +126,10 @@ public class Priority_NonPreemptive_FCFS extends Queue implements ReadyQueue {
             Node Starting_Traverse_Node = traverse_Node;
             Node Inner_traverse = traverse_Node.getNext();
             Queue to_be_sorted_by_priority = new Queue();
-
+            
             while (Inner_traverse != null) {
                 System.out.println("2While");
-
+                
                 if ((Inner_traverse.getPcb().getArrivalTime() - Starting_Traverse_Node.getPcb().getArrivalTime()) <= Starting_Traverse_Node.getPcb().getBurstTime()) {
                     System.out.println("Enqueued");
                     traverse_Node = Inner_traverse;
@@ -148,16 +148,23 @@ public class Priority_NonPreemptive_FCFS extends Queue implements ReadyQueue {
             } else {
                 traverse_Node = traverse_Node.getNext();
             }
-
+            
         }
         needsPriority.printQueue();
-
+        
     }
-
+    
     @Override
     public void DrawGanttChart(SchedulerSimulationController ctrl) {
+       Node Traversal_PCB = this.getHead();
+        while (Traversal_PCB != null) {
+            PCB temp = new PCB(false);
+            temp.copy(Traversal_PCB.getPcb());
+            needsPriority.enqueue(temp);
+            Traversal_PCB = Traversal_PCB.getNext();
+        }
         Fix_Priority();
-        Node currNode = head;
+        Node currNode = needsPriority.getHead();
 
         // Traverse through the LinkedList 
         while (currNode != null) {
@@ -172,17 +179,17 @@ public class Priority_NonPreemptive_FCFS extends Queue implements ReadyQueue {
             totalTurnaroundtime += (ctrl.getCurrentTime() - currNode.getPcb().getArrivalTime());
             currNode = currNode.getNext();
         }
-
+        
         totalwaitingTime = totalTurnaroundtime - totalBurstTime;
         ctrl.writeAvgWaitingTime((totalwaitingTime / (double) noofProcesses));
         ctrl.writeAvgTurnarroundTime((totalTurnaroundtime / (double) noofProcesses));
     }
-
+    
     @Override
     public void edit(PCB PCB) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-
+    
     @Override
     public void delete(PCB pcb) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
