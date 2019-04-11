@@ -177,4 +177,14 @@ public class Priority_NonPreemptive_FCFS extends Queue implements ReadyQueue {
         ctrl.writeAvgWaitingTime((totalwaitingTime / (double) noofProcesses));
         ctrl.writeAvgTurnarroundTime((totalTurnaroundtime / (double) noofProcesses));
     }
+
+    @Override
+    public void edit(PCB PCB) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void delete(PCB pcb) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }

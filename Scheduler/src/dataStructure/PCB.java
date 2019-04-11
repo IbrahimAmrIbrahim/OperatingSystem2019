@@ -85,7 +85,7 @@ public class PCB {
      */
     private Color randomColor() {
         Color newColor;
-        newColor = Color.hsb(randomNo(0, 360), randomNo(0.6, 1), randomNo(0.5, 1));
+        newColor = Color.hsb(randomNo(0, 360), randomNo(0.6, 1), randomNo(0.6, 1));
         return newColor;
     }
 
