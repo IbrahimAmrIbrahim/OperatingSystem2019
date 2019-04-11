@@ -42,6 +42,8 @@ public class FCFS extends Queue implements ReadyQueue {
 
     @Override
     public void DrawGanttChart(SchedulerSimulationController ctrl) {
+        prepare();
+        
         Node currNode = head;
 
         // Traverse through the LinkedList 
@@ -57,10 +59,16 @@ public class FCFS extends Queue implements ReadyQueue {
             totalTurnaroundtime += (ctrl.getCurrentTime() - currNode.getPcb().getArrivalTime());
             currNode = currNode.getNext();
         }
-
         totalwaitingTime = totalTurnaroundtime - totalBurstTime;
         ctrl.writeAvgWaitingTime((totalwaitingTime / (double) noofProcesses));
         ctrl.writeAvgTurnarroundTime((totalTurnaroundtime / (double) noofProcesses));
+    }
+
+    private void prepare() {
+        noofProcesses = 0;
+        totalBurstTime = 0;
+        totalwaitingTime = 0;
+        totalTurnaroundtime = 0;
     }
 
     @Override
