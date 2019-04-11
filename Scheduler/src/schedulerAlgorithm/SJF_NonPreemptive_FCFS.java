@@ -8,12 +8,12 @@ import scheduler.SchedulerSimulationController;
 public class SJF_NonPreemptive_FCFS extends Queue implements ReadyQueue {
 
     @Override
-        public void insert(PCB newPCB) {
+    public void insert(PCB newPCB) {
         Node newNo = new Node(newPCB);
         Node ptr=head;
         Node pre_ptr=head;
         int flag=0;
-        int bru_T;
+        int bru_T=0;
         
         
         if (head == null) {
@@ -43,44 +43,32 @@ public class SJF_NonPreemptive_FCFS extends Queue implements ReadyQueue {
             }
         }
         else{
-            bru_T = ptr.getPcb().getBurstTime();
-            while(ptr.getNext() !=null){
-                if(ptr.getPcb().getArrivalTime() == newNo.getPcb().getArrivalTime()){
-                    if(ptr.getPcb().getBurstTime()<=newNo.getPcb().getBurstTime()){
-                        newNo.setNext(ptr.getNext());
-                        ptr.setNext(newNo);
-                        flag=1;
-                        ptr=head;
-                        break;
-                    }
-                    else{
-                        newNo.setNext(ptr);
-                        pre_ptr.setNext(newNo);
-                        flag=1;
-                        ptr=head;
-                        break;
-                    }
-                }
-                pre_ptr=ptr;
-                ptr=ptr.getNext();
-            }
-            while(flag==0){
+           while(flag==0){
                 if(newNo.getPcb().getArrivalTime()<= bru_T){
-                   if(ptr.getPcb().getArrivalTime()<= bru_T){
+                   if(ptr.getPcb().getArrivalTime()<= newNo.getPcb().getArrivalTime()){
                        if(newNo.getPcb().getBurstTime() < ptr.getPcb().getBurstTime()){
-                           newNo.setNext(ptr);
                            pre_ptr.setNext(newNo);
+                           newNo.setNext(ptr);
+                           break;
+                       }
+                       else if(newNo.getPcb().getBurstTime() == ptr.getPcb().getBurstTime()){
+                           newNo.setNext(ptr.getNext());
+                           ptr.setNext(newNo);
                            break;
                        }
                        else{
-                            newNo.setNext(ptr.getNext());
-                            ptr.setNext(newNo);
+                           while(newNo.getPcb().getBurstTime() >= ptr.getPcb().getBurstTime()){
+                               pre_ptr=ptr;
+                               ptr=ptr.getNext();
+                           }
+                            newNo.setNext(pre_ptr.getNext());
+                            pre_ptr.setNext(newNo);
                             break;
                        }
                    }
                    else{
-                        newNo.setNext(ptr);
-                        pre_ptr.setNext(newNo);
+                        newNo.setNext(ptr.getNext());
+                        ptr.setNext(newNo);
                         break;
                    }
                 }
@@ -90,12 +78,14 @@ public class SJF_NonPreemptive_FCFS extends Queue implements ReadyQueue {
                     tail.setNext(null);
                     flag=1;
                 }
-                ptr=ptr.getNext();
                 bru_T = bru_T + ptr.getPcb().getBurstTime();
+                ptr=ptr.getNext();
             }
         }
     }
+
     @Override
     public void DrawGanttChart(SchedulerSimulationController ctrl) {
     }
 }
+
