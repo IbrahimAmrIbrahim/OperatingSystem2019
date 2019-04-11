@@ -30,16 +30,6 @@ public class Node {
     }
 
     /**
-     * This method copy the Node which given in the parameter to the current Node.
-     *
-     * @param node
-     */
-    public void copy(Node node) {
-        this.pcb.copy(node.getPcb());
-        this.next = node.getNext();
-    }
-
-    /**
      * for debugging only. it prints in the console window;
      */
     public void printNode() {
