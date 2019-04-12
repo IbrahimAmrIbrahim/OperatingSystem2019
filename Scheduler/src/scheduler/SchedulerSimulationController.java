@@ -669,6 +669,7 @@ public class SchedulerSimulationController implements Initializable {
             default:
                 break;
         }
+        startOutputSimulation_btn.setDisable(false);
     }
 
     private void deleteMethodCall(PCB process) {
