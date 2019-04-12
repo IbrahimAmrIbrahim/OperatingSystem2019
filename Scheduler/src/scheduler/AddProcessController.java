@@ -55,6 +55,7 @@ public class AddProcessController implements Initializable {
 
     public void sceneInitialization(SchedulerSimulationController ctrl, PCB process, boolean isEdit) {
         parentController = ctrl;
+        edit_new = isEdit;
         newProcess = process;
         pID_Label.setText(Integer.toString(newProcess.getPID()));
         pColor_Label.setBackground(new Background(new BackgroundFill(newProcess.getColor(), CornerRadii.EMPTY, Insets.EMPTY)));
@@ -70,7 +71,6 @@ public class AddProcessController implements Initializable {
         }
         setTextFieldValidation();
         currentScheduler = parentController.getCurrentScheduler();
-        edit_new = isEdit;
         if ((currentScheduler == SchedulerSimulationController.schedulerType.FCFS)
                 || (currentScheduler == SchedulerSimulationController.schedulerType.SJF_Preemptive_FCFS)
                 || (currentScheduler == SchedulerSimulationController.schedulerType.SJF_NonPreemptive_FCFS)

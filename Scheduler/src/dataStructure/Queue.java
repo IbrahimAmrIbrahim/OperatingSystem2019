@@ -30,6 +30,26 @@ public class Queue {
     }
 
     /**
+     * this method dequeues from the queue.
+     *
+     * @return dequeued PCB.
+     */
+    public PCB dequeue() {
+        PCB temp;
+        if (head == null) {
+            temp = null;
+        } else if (head == tail) {
+            temp = head.getPcb();
+            head = null;
+            tail = null;
+        } else {
+            temp = head.getPcb();
+            head = head.getNext();
+        }
+        return temp;
+    }
+
+    /**
      * For debugging only. This method prints the queue in the console window.
      */
     public void printQueue() {

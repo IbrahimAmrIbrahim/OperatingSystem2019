@@ -16,15 +16,14 @@ public interface ReadyQueue {
     /**
      * This method edits the given process in the ready queue.
      *
-     * @param PCB
+     * @param pcb
      */
-    void edit(PCB PCB);
+    void edit(PCB pcb);
 
     /**
      * This method deletes the given process from the ready queue.
      *
      * @param pcb
-     * @return
      */
     void delete(PCB pcb);
 

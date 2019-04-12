@@ -8,7 +8,11 @@ import scheduler.SchedulerSimulationController;
 
 public class Priority_NonPreemptive_FCFS extends Queue implements ReadyQueue {
 
-    private static Queue needsPriority = new Queue();
+    private Queue needsPriority = new Queue();
+    private int totalBurstTime = 0;
+    private int totalwaitingTime = 0;
+    private int totalTurnaroundtime = 0;
+    private int noofProcesses = 0;
 
     @Override
     public void insert(PCB newPCB) {
@@ -76,11 +80,11 @@ public class Priority_NonPreemptive_FCFS extends Queue implements ReadyQueue {
             }
         }
         printQueue();
-        needsPriority.setHead(this.getHead());
-        needsPriority.setTail(this.getTail());
+//        needsPriority.setHead(this.getHead());
+//        needsPriority.setTail(this.getTail());
     }
 
-    public Queue Sort_Priotity(Queue Q) {
+    public Queue Sort_Priotity(Queue Q, int ParentArrival, int ParentBurst) {
         System.out.println("SORT Called");
         if (Q.getHead() == Q.getTail()) {
             return Q;
@@ -91,7 +95,7 @@ public class Priority_NonPreemptive_FCFS extends Queue implements ReadyQueue {
                 Node traverse_Node = Q.getHead();
                 while (traverse_Node.getNext() != null) {
                     if (traverse_Node.getPcb().getPriority() > traverse_Node.getNext().getPcb().getPriority()) {
-                        System.out.println("Swappe happened");
+                        System.out.println("Swap happened");
                         PCB temp = new PCB(false);
                         temp.copy(traverse_Node.getPcb());
                         traverse_Node.getPcb().copy(traverse_Node.getNext().getPcb());
@@ -101,6 +105,15 @@ public class Priority_NonPreemptive_FCFS extends Queue implements ReadyQueue {
                     traverse_Node = traverse_Node.getNext();
                 }
             }
+
+            Node Traversing_Yet_Again = Q.getHead();
+            int offset = ParentArrival + ParentBurst;
+
+            while (Traversing_Yet_Again.getNext() != null) {
+                offset += Traversing_Yet_Again.getPcb().getBurstTime();
+                Traversing_Yet_Again = Traversing_Yet_Again.getNext();
+            }
+            Q.getTail().getPcb().setArrivalTime(offset);
             return Q;
         }
     }
@@ -117,17 +130,20 @@ public class Priority_NonPreemptive_FCFS extends Queue implements ReadyQueue {
             while (Inner_traverse != null) {
                 System.out.println("2While");
 
-                if ((Inner_traverse.getPcb().getArrivalTime() - Starting_Traverse_Node.getPcb().getArrivalTime()) < Starting_Traverse_Node.getPcb().getBurstTime()) {
+                if ((Inner_traverse.getPcb().getArrivalTime() - Starting_Traverse_Node.getPcb().getArrivalTime()) <= Starting_Traverse_Node.getPcb().getBurstTime()) {
+                    System.out.println("Enqueued");
                     traverse_Node = Inner_traverse;
                     to_be_sorted_by_priority.enqueue(Inner_traverse.getPcb());
                     Sort = true;
                 }
                 Inner_traverse = Inner_traverse.getNext();
+//                if ((Inner_traverse.getPcb().getArrivalTime() - Starting_Traverse_Node.getPcb().getArrivalTime()) > Starting_Traverse_Node.getPcb().getBurstTime())
+//                    break;
             }
             if (Sort == true) {
                 System.out.println("True Sort");
-                Queue temp = Sort_Priotity(to_be_sorted_by_priority);
-                traverse_Node = temp.getTail();
+                Queue temp = Sort_Priotity(to_be_sorted_by_priority, Starting_Traverse_Node.getPcb().getArrivalTime(), Starting_Traverse_Node.getPcb().getBurstTime());
+                temp.getTail().setNext(traverse_Node.getNext());
                 Starting_Traverse_Node.setNext(temp.getHead());
             } else {
                 traverse_Node = traverse_Node.getNext();
@@ -140,16 +156,72 @@ public class Priority_NonPreemptive_FCFS extends Queue implements ReadyQueue {
 
     @Override
     public void DrawGanttChart(SchedulerSimulationController ctrl) {
+        prepare();
+        Node Traversal_PCB = this.getHead();
+        while (Traversal_PCB != null) {
+            PCB temp = new PCB(false);
+            temp.copy(Traversal_PCB.getPcb());
+            needsPriority.enqueue(temp);
+            Traversal_PCB = Traversal_PCB.getNext();
+        }
         Fix_Priority();
+        Node currNode = needsPriority.getHead();
+
+        // Traverse through the LinkedList 
+        while (currNode != null) {
+            // Print the data at current node
+            if (ctrl.getCurrentTime() < currNode.getPcb().getArrivalTime()) {
+                ctrl.drawIdleProcess((currNode.getPcb().getArrivalTime() - ctrl.getCurrentTime()));
+            }
+            ctrl.draw(currNode.getPcb().getBurstTime(), currNode.getPcb().getPID(), currNode.getPcb().getColor());
+            noofProcesses++;
+            // Go to next node 
+            totalBurstTime += currNode.getPcb().getBurstTime();
+            totalTurnaroundtime += (ctrl.getCurrentTime() - currNode.getPcb().getArrivalTime());
+            currNode = currNode.getNext();
+        }
+
+        totalwaitingTime = totalTurnaroundtime - totalBurstTime;
+        ctrl.writeAvgWaitingTime((totalwaitingTime / (double) noofProcesses));
+        ctrl.writeAvgTurnarroundTime((totalTurnaroundtime / (double) noofProcesses));
+    }
+
+    private void prepare() {
+        needsPriority = new Queue();
+        noofProcesses = 0;
+        totalBurstTime = 0;
+        totalwaitingTime = 0;
+        totalTurnaroundtime = 0;
     }
 
     @Override
-    public void edit(PCB PCB) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void edit(PCB pcb) {
+        delete(pcb);
+        insert(pcb);
+
     }
 
     @Override
     public void delete(PCB pcb) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if (head.getPcb().equals(pcb)) {
+            head = head.getNext();
+            if (head == null) {
+                tail = null;
+            }
+        } else {
+            Node traverseNode = head;
+            while (traverseNode.getNext() != null) {
+                if (traverseNode.getNext().getPcb().equals(pcb)) {
+                    if (traverseNode.getNext().getNext() == null) {
+                        traverseNode.setNext(null);
+                        tail = traverseNode;
+                    } else {
+                        traverseNode.setNext(traverseNode.getNext().getNext());
+                    }
+                    break;
+                }
+                traverseNode = traverseNode.getNext();
+            }
+        }
     }
 }
