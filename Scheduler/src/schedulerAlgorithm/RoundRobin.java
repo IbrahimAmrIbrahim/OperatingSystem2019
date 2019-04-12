@@ -100,12 +100,12 @@ public class RoundRobin extends Queue implements ReadyQueue {
         sort_arrival(0);
         
         insert_on_final_queue();
-        System.out.println("====== final ========");
+        
         final_queue.printQueue();
-        sort(0);
-        sort_2(0);
-
-        time_confg();
+        //sort(0);
+        //sort_2(0);
+        time_calculating();
+        //time_confg();
         Node temp2 = final_queue.getHead();
         int start_time = 0;
         for (int i = 0; i < node_number_2; i++) {
@@ -581,6 +581,47 @@ public class RoundRobin extends Queue implements ReadyQueue {
     }
 
     // claclulat turn around time //
+    
+    
+    // -------------------------------------..
+    
+    void time_calculating()
+    {
+        int node_number=tail.getPcb().getPID() + 1;
+        int total_brust=0;
+        float turn_around_for_proces[]= new float[node_number];
+         Node current_queue;
+         current_queue=head;
+        for(int n=0;n<node_number;n++){
+            
+           
+            Node current_final;
+            current_final=final_queue.getHead();
+        for(int i=0;i<node_number_2;i++)
+        {
+            if (current_queue.getPcb().getPID()==current_final.getPcb().getPID())
+            {
+                turn_around_for_proces[n] = current_final.getPcb().getEndofExec()-current_queue.getPcb().getArrivalTime();
+            }
+            current_final=current_final.getNext();
+            
+            
+        }
+        current_queue=current_queue.getNext();
+         }
+        
+        Node current=head;
+        float total_turn_around=0;
+        for(int i=0;i<node_number;i++)
+        {
+            total_brust+=current.getPcb().getBurstTime();
+            total_turn_around+=turn_around_for_proces[i];
+            current=current.getNext();
+        }
+        turn_around_avr=total_turn_around/node_number;
+        waiting_avr= (total_turn_around-total_brust)/node_number;
+        
+    }
 //==============================================================================//
     // to get the round robin time 
     public void time_confg() {
