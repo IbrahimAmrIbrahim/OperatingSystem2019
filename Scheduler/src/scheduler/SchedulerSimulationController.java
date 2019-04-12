@@ -84,7 +84,7 @@ public class SchedulerSimulationController implements Initializable {
     @FXML
     private Button exportToFile_btn;
     @FXML
-    private Label schedulerIndecation_label;
+    private Label schedulerIndication_label;
 
     public enum schedulerType {
         None, FCFS, SJF_Preemptive_FCFS, SJF_NonPreemptive_FCFS, RoundRobin, Priority_Preemptive_FCFS, Priority_NonPreemptive_FCFS
@@ -621,29 +621,29 @@ public class SchedulerSimulationController implements Initializable {
             String ans = result.get();
             if (ans.equals("FCFS")) {
                 currentScheduler = schedulerType.FCFS;
-                schedulerIndecation_label.setText("Scheduler : FCFS");
+                schedulerIndication_label.setText("Scheduler : FCFS");
             } else if (ans.equals("Round Robin")) {
                 currentScheduler = schedulerType.RoundRobin;
-                schedulerIndecation_label.setText("Scheduler : RoundRobin");
+                schedulerIndication_label.setText("Scheduler : RoundRobin");
             } else if (ans.equals("SJF Preemptive (FCFS)")) {
                 currentScheduler = schedulerType.SJF_Preemptive_FCFS;
-                schedulerIndecation_label.setText("Scheduler : SJF Preemptive (FCFS)");
+                schedulerIndication_label.setText("Scheduler : SJF Preemptive (FCFS)");
             } else if (ans.equals("SJF NonPreemptive (FCFS)")) {
                 currentScheduler = schedulerType.SJF_NonPreemptive_FCFS;
-                schedulerIndecation_label.setText("Scheduler : SJF NonPreemptive (FCFS)");
+                schedulerIndication_label.setText("Scheduler : SJF NonPreemptive (FCFS)");
             } else if (ans.equals("Priority Preemptive (FCFS)")) {
                 currentScheduler = schedulerType.Priority_Preemptive_FCFS;
-                schedulerIndecation_label.setText("Scheduler : Priority Preemptive (FCFS)");
+                schedulerIndication_label.setText("Scheduler : Priority Preemptive (FCFS)");
             } else if (ans.equals("Priority NonPreemptive (FCFS)")) {
                 currentScheduler = schedulerType.Priority_NonPreemptive_FCFS;
-                schedulerIndecation_label.setText("Scheduler : Priority NonPreemptive (FCFS)");
+                schedulerIndication_label.setText("Scheduler : Priority NonPreemptive (FCFS)");
             } else {
                 currentScheduler = schedulerType.None;
-                schedulerIndecation_label.setText("");
+                schedulerIndication_label.setText("");
             }
         } else {
             currentScheduler = schedulerType.None;
-            schedulerIndecation_label.setText("");
+            schedulerIndication_label.setText("");
         }
         clear();
     }

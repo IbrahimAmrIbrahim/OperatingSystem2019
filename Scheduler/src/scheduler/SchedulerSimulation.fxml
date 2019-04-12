@@ -30,7 +30,7 @@
                   </TableView>
                   <Pane layoutX="407.0" prefHeight="238.0" prefWidth="342.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                      <children>
-                        <Label fx:id="schedulerIndecation_label" layoutX="22.0" layoutY="14.0" />
+                        <Label fx:id="schedulerIndication_label" layoutX="22.0" layoutY="14.0" />
                         <Group fx:id="outputSimulationGroup" layoutX="22.0" layoutY="50.0">
                            <children>
                               <TextField fx:id="timeSlice_textField" disable="true" prefHeight="31.0" prefWidth="194.0" promptText="Time Slice" />
