@@ -1,5 +1,6 @@
 package scheduler;
 
+import dataStructure.Node;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -24,8 +25,10 @@ import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 
 import dataStructure.PCB;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.util.Scanner;
 import java.util.function.UnaryOperator;
 import java.util.logging.Level;
@@ -77,6 +80,8 @@ public class SchedulerSimulationController implements Initializable {
     private TableColumn<PCB, Integer> burstTimeColumn;
     @FXML
     private Button loadFromFile_btn;
+    @FXML
+    private Button exportToFile_btn;
 
     public enum schedulerType {
         None, FCFS, SJF_Preemptive_FCFS, SJF_NonPreemptive_FCFS, RoundRobin, Priority_Preemptive_FCFS, Priority_NonPreemptive_FCFS
@@ -115,6 +120,18 @@ public class SchedulerSimulationController implements Initializable {
     private Button clear_btn;
     @FXML
     private TextField timeSlice_textField;
+
+    @FXML
+    private void exportToFileButton_KeyboardEvent(KeyEvent event) throws FileNotFoundException, IOException {
+        if (event.getCode().toString().equals("ENTER")) {
+            SaveProcessesFromFile();
+        }
+    }
+
+    @FXML
+    private void eportToFileButton_MouseEvent(MouseEvent event) throws FileNotFoundException, IOException {
+        SaveProcessesFromFile();
+    }
 
     @FXML
     private void startOutputSimulationButton_KeyboardEvent(KeyEvent event) {
@@ -316,6 +333,7 @@ public class SchedulerSimulationController implements Initializable {
     private void sceneInitialization() {
         if (currentScheduler == schedulerType.None) {
             loadFromFile_btn.setDisable(true);
+            exportToFile_btn.setDisable(true);
             addProcess_btn.setDisable(true);
             outputSimulationGroup.setDisable(true);
             timeSlice_textField.setText("");
@@ -324,6 +342,7 @@ public class SchedulerSimulationController implements Initializable {
             processTable.setDisable(true);
         } else if (currentScheduler == schedulerType.RoundRobin) {
             loadFromFile_btn.setDisable(false);
+            exportToFile_btn.setDisable(false);
             addProcess_btn.setDisable(false);
             outputSimulationGroup.setDisable(false);
             startOutputSimulation_btn.setDisable(false);
@@ -334,6 +353,7 @@ public class SchedulerSimulationController implements Initializable {
             priorityColumn.setVisible(false);
         } else if ((currentScheduler == schedulerType.Priority_Preemptive_FCFS) || (currentScheduler == schedulerType.Priority_NonPreemptive_FCFS)) {
             loadFromFile_btn.setDisable(false);
+            exportToFile_btn.setDisable(false);
             addProcess_btn.setDisable(false);
             outputSimulationGroup.setDisable(false);
             startOutputSimulation_btn.setDisable(false);
@@ -344,6 +364,7 @@ public class SchedulerSimulationController implements Initializable {
             priorityColumn.setVisible(true);
         } else {
             loadFromFile_btn.setDisable(false);
+            exportToFile_btn.setDisable(false);
             addProcess_btn.setDisable(false);
             outputSimulationGroup.setDisable(false);
             startOutputSimulation_btn.setDisable(false);
@@ -490,6 +511,88 @@ public class SchedulerSimulationController implements Initializable {
         }
     }
 
+    private void SaveProcessesFromFile() throws FileNotFoundException, IOException {
+
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Save File");
+        fileChooser.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter("Text file", "*.txt")
+        );
+        fileChooser.setInitialDirectory(
+                new File(System.getProperty("user.dir"))
+        );
+        File file = fileChooser.showSaveDialog(canvas.getScene().getWindow());
+        if (file != null) {
+            FileWriter fileWriter = new FileWriter(file);
+            BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
+            Node traverseNode;
+
+            switch (currentScheduler) {
+                case None:
+                    break;
+                case FCFS:
+                    traverseNode = FCFS_ProcessQueue.getHead();
+                    while (traverseNode != null) {
+                        bufferedWriter.write(Integer.toString(traverseNode.getPcb().getArrivalTime())
+                                + "\t" + Integer.toString(traverseNode.getPcb().getBurstTime()));
+                        bufferedWriter.newLine();
+                        traverseNode = traverseNode.getNext();
+                    }
+                    break;
+                case RoundRobin:
+                    traverseNode = RoundRobin_ProcessQueue.getHead();
+                    while (traverseNode != null) {
+                        bufferedWriter.write(Integer.toString(traverseNode.getPcb().getArrivalTime())
+                                + "\t" + Integer.toString(traverseNode.getPcb().getBurstTime()));
+                        bufferedWriter.newLine();
+                        traverseNode = traverseNode.getNext();
+                    }
+                    break;
+                case SJF_Preemptive_FCFS:
+                    traverseNode = SJF_Preemptive_FCFS_ProcessQueue.getHead();
+                    while (traverseNode != null) {
+                        bufferedWriter.write(Integer.toString(traverseNode.getPcb().getArrivalTime())
+                                + "\t" + Integer.toString(traverseNode.getPcb().getBurstTime()));
+                        bufferedWriter.newLine();
+                        traverseNode = traverseNode.getNext();
+                    }
+                    break;
+                case SJF_NonPreemptive_FCFS:
+                    traverseNode = SJF_NonPreemptive_FCFS_ProcessQueue.getHead();
+                    while (traverseNode != null) {
+                        bufferedWriter.write(Integer.toString(traverseNode.getPcb().getArrivalTime())
+                                + "\t" + Integer.toString(traverseNode.getPcb().getBurstTime()));
+                        bufferedWriter.newLine();
+                        traverseNode = traverseNode.getNext();
+                    }
+                    break;
+                case Priority_Preemptive_FCFS:
+                    traverseNode = Priority_Preemptive_FCFS_ProcessQueue.getHead();
+                    while (traverseNode != null) {
+                        bufferedWriter.write(Integer.toString(traverseNode.getPcb().getArrivalTime())
+                                + "\t" + Integer.toString(traverseNode.getPcb().getBurstTime())
+                                + "\t" + Integer.toString(traverseNode.getPcb().getPriority()));
+                        bufferedWriter.newLine();
+                        traverseNode = traverseNode.getNext();
+                    }
+                    break;
+                case Priority_NonPreemptive_FCFS:
+                    traverseNode = Priority_NonPreemptive_FCFS_ProcessQueue.getHead();
+                    while (traverseNode != null) {
+                        bufferedWriter.write(Integer.toString(traverseNode.getPcb().getArrivalTime())
+                                + "\t" + Integer.toString(traverseNode.getPcb().getBurstTime())
+                                + "\t" + Integer.toString(traverseNode.getPcb().getPriority()));
+                        bufferedWriter.newLine();
+                        traverseNode = traverseNode.getNext();
+                    }
+                    break;
+                default:
+                    break;
+            }
+            bufferedWriter.close();
+        }
+    }
+
     /**
      * For Open a scheduler picker.
      */
@@ -584,27 +687,21 @@ public class SchedulerSimulationController implements Initializable {
                 break;
             case FCFS:
                 FCFS_ProcessQueue.insert(process);
-                FCFS_ProcessQueue.printQueue();
                 break;
             case RoundRobin:
                 RoundRobin_ProcessQueue.insert(process);
-                RoundRobin_ProcessQueue.printQueue();
                 break;
             case SJF_Preemptive_FCFS:
                 SJF_Preemptive_FCFS_ProcessQueue.insert(process);
-                SJF_Preemptive_FCFS_ProcessQueue.printQueue();
                 break;
             case SJF_NonPreemptive_FCFS:
                 SJF_NonPreemptive_FCFS_ProcessQueue.insert(process);
-                SJF_NonPreemptive_FCFS_ProcessQueue.printQueue();
                 break;
             case Priority_Preemptive_FCFS:
                 Priority_Preemptive_FCFS_ProcessQueue.insert(process);
-                Priority_Preemptive_FCFS_ProcessQueue.printQueue();
                 break;
             case Priority_NonPreemptive_FCFS:
                 Priority_NonPreemptive_FCFS_ProcessQueue.insert(process);
-                Priority_NonPreemptive_FCFS_ProcessQueue.printQueue();
                 break;
             default:
                 break;
@@ -617,27 +714,21 @@ public class SchedulerSimulationController implements Initializable {
                 break;
             case FCFS:
                 FCFS_ProcessQueue.edit(process);
-                FCFS_ProcessQueue.printQueue();
                 break;
             case RoundRobin:
                 RoundRobin_ProcessQueue.edit(process);
-                RoundRobin_ProcessQueue.printQueue();
                 break;
             case SJF_Preemptive_FCFS:
                 SJF_Preemptive_FCFS_ProcessQueue.edit(process);
-                SJF_Preemptive_FCFS_ProcessQueue.printQueue();
                 break;
             case SJF_NonPreemptive_FCFS:
                 SJF_NonPreemptive_FCFS_ProcessQueue.edit(process);
-                SJF_NonPreemptive_FCFS_ProcessQueue.printQueue();
                 break;
             case Priority_Preemptive_FCFS:
                 Priority_Preemptive_FCFS_ProcessQueue.edit(process);
-                Priority_Preemptive_FCFS_ProcessQueue.printQueue();
                 break;
             case Priority_NonPreemptive_FCFS:
                 Priority_NonPreemptive_FCFS_ProcessQueue.edit(process);
-                Priority_NonPreemptive_FCFS_ProcessQueue.printQueue();
                 break;
             default:
                 break;

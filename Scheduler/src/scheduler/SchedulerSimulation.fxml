@@ -27,7 +27,7 @@
                         <TableColumn fx:id="burstTimeColumn" editable="false" minWidth="1.0" prefWidth="110.0" text="Burst Time" />
                     </columns>
                   </TableView>
-                  <Pane layoutX="407.0" prefHeight="167.0" prefWidth="342.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                  <Pane layoutX="407.0" prefHeight="208.0" prefWidth="342.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                      <children>
                         <Group fx:id="outputSimulationGroup" layoutX="22.0" layoutY="21.0">
                            <children>
@@ -38,7 +38,8 @@
                         <Button fx:id="addProcess_btn" layoutX="22.0" layoutY="77.0" mnemonicParsing="false" onKeyPressed="#addNewProcessButton_KeyboardEvent" onMouseClicked="#addNewProcessButton_MouseEvent" prefHeight="31.0" prefWidth="140.0" text="Add new process" />
                         <Button fx:id="loadFromFile_btn" layoutX="181.0" layoutY="77.0" mnemonicParsing="false" onKeyPressed="#loadFromFileButton_KeyboardEvent" onMouseClicked="#loadFromFileButton_MouseEvent" prefHeight="31.0" prefWidth="140.0" text="Load from file" />
                         <Button fx:id="clear_btn" layoutX="22.0" layoutY="125.0" mnemonicParsing="false" onKeyPressed="#clearButton_KeyboardEvent" onMouseClicked="#clearButton_MouseEvent" prefHeight="31.0" prefWidth="140.0" text="Clear" />
-                        <Button layoutX="181.0" layoutY="125.0" mnemonicParsing="false" onKeyPressed="#changeSchedulerButton_KeyboardEvent" onMouseClicked="#changeSchedulerButton_MouseEvent" text="Change Scheduler" />
+                        <Button fx:id="exportToFile_btn" layoutX="181.0" layoutY="125.0" mnemonicParsing="false" onKeyPressed="#exportToFileButton_KeyboardEvent" onMouseClicked="#eportToFileButton_MouseEvent" prefHeight="31.0" prefWidth="140.0" text="Export to file" />
+                        <Button layoutX="101.0" layoutY="170.0" mnemonicParsing="false" onKeyPressed="#changeSchedulerButton_KeyboardEvent" onMouseClicked="#changeSchedulerButton_MouseEvent" text="Change Scheduler" />
                      </children>
                   </Pane>
                </children>
