@@ -13,19 +13,21 @@ public class RoundRobin extends Queue implements ReadyQueue {
 //================ private area ================================================//
     private int RR_time = 3;// for now the RR period is 10 unit time 
     private int node_number = 0;
+    private int node_number_2 = 0;
     private Node start_copy = new Node();
     private boolean first_time_use = true;
     private int run_time = 0;
     private float turn_around_avr = 0;
     private float waiting_avr = 0;
     private Queue my_queue = new Queue();
+    private Queue final_queue = new Queue();
 //==============================================================================//
 
     public void set_RR_time(int x) {
         RR_time = x;
     }
 //==============================================================================//
-
+// main insert  
     public void insert(PCB newPCB) {
 
         enqueue(newPCB);
@@ -62,9 +64,30 @@ public class RoundRobin extends Queue implements ReadyQueue {
         }
 
     }
+
+    //===================re insert 2 can change slice time 
+    public void reinsert2(int slice) {
+        RR_time = slice;
+        my_queue.setHead(null);
+        my_queue.setTail(null);
+        node_number = 0;
+        node_number_2=0;
+        final_queue.setHead(null);
+        final_queue.setTail(null);
+        Node current;
+        current = head;
+
+        while (current != null) {
+
+            insert_method_2(current.getPcb());// now on my_queue is the process 
+            current = current.getNext();
+
+        }
+
+    } //====================//
+
 //==============================================================================//
     // insert done 
-
     @Override
     public void DrawGanttChart(SchedulerSimulationController ctrl) {
 
@@ -72,14 +95,20 @@ public class RoundRobin extends Queue implements ReadyQueue {
         //===================================//
         int slice;
         slice = ctrl.getTimeSlice();
-        reinsert(slice);
-        Node temp2 = my_queue.getHead();
+        set_RR_time(slice);
+        reinsert2(slice);
+        sort_arrival(0);
+        
+        insert_on_final_queue();
+        System.out.println("====== final ========");
+        final_queue.printQueue();
         sort(0);
         sort_2(0);
 
         time_confg();
+        Node temp2 = final_queue.getHead();
         int start_time = 0;
-        for (int i = 0; i < node_number; i++) {
+        for (int i = 0; i < node_number_2; i++) {
             //fixed area //
 
             //========================================//
@@ -87,7 +116,7 @@ public class RoundRobin extends Queue implements ReadyQueue {
                 ctrl.drawIdleProcess(temp2.getPcb().getStartofExec() - start_time);
 
             }
-            ctrl.draw(temp2.getPcb().getBurstTime(), temp2.getPcb().getPID(), temp2.getPcb().getColor());
+             ctrl.draw(temp2.getPcb().getBurstTime(), temp2.getPcb().getPID(), temp2.getPcb().getColor());
             start_time = temp2.getPcb().getEndofExec();
             temp2 = temp2.getNext();
         }
@@ -97,7 +126,179 @@ public class RoundRobin extends Queue implements ReadyQueue {
 
     }
 //==============================================================================//
+    // insert for second algorthm
+      public void insert_method_2(PCB newPCB) {
 
+        PCB pcb_dumy = new PCB(false);
+
+        pcb_dumy.copy(newPCB);
+        pcb_dumy.setPriority(0);// all input got proprtiy of 0
+        //======================================================================//
+        // if the duration is less than or equal the quantim just push it 
+
+        pcb_dumy.setStartofExec(pcb_dumy.getArrivalTime());// set start of the exe is the arrival time 
+        pcb_dumy.setEndofExec(pcb_dumy.getArrivalTime() + pcb_dumy.getBurstTime());// set the end is the arrival + brust
+        my_queue.enqueue(pcb_dumy);// enqueue it
+        node_number++;//node number ++
+
+    }
+    //============================================================================//
+      public void inset_on_final(PCB newPCB) {
+
+        PCB pcb_dumy = new PCB(false);
+
+        pcb_dumy.copy(newPCB);
+        pcb_dumy.setPriority(0);// all input got proprtiy of 0
+        //======================================================================//
+        // if the duration is less than or equal the quantim just push it 
+        pcb_dumy.setStartofExec(newPCB.getStartofExec());
+        pcb_dumy.setEndofExec(newPCB.getEndofExec());
+        final_queue.enqueue(pcb_dumy);// enqueue it
+        node_number_2++;//node number ++
+
+    }
+    
+    //============================================================================//
+    public void insert_on_final_queue()
+    {
+        // it's sorted on arrival 
+        int run_time=0;
+       
+      
+          // loop on them all 
+          int i=node_number;
+        Node current=my_queue.getHead();
+        Node prev=my_queue.getHead();
+        while(current!=null && node_number!=0)
+        {//if node_number==0 that mean there is no elemebts
+            // if i will go inside the queue 
+           //current now is the first in the array
+            PCB new_pcb= new PCB(false);
+            new_pcb.copy(current.getPcb()); // new pcb = current now 
+            if (current.getPcb().getArrivalTime()<=run_time)
+            {
+                
+                // the copy
+                
+                
+                new_pcb.setStartofExec(run_time);// set the start first 
+               // check do i need to push it back ?
+                if(current.getPcb().getBurstTime()>RR_time)
+                {
+                    
+                   int new_brust =current.getPcb().getBurstTime()-RR_time;
+                   new_pcb.setBurstTime(RR_time);
+                   new_pcb.setEndofExec(new_pcb.getStartofExec()+new_pcb.getBurstTime());
+                   // insert this in final_queue 
+                   inset_on_final(new_pcb);
+                   
+                   Node next=current.getNext();
+                   // push back in my_queue 
+                   
+                   
+                   current.getPcb().setBurstTime(new_brust); 
+                   while(next!=null)
+                   {
+                  // the next node 
+                   PCB swap_pcb=new PCB(false);
+                   swap_pcb.copy(current.getPcb());
+              
+                   
+                   //==========================//
+                    
+                    
+                    current.getPcb().copy(next.getPcb());
+                    next.getPcb().copy(swap_pcb);
+                    // this will move the current node to the end 
+                   current = next;
+                    next = current.getNext();
+                   }
+                                    
+                }
+                // if it's equal or less no need to push back
+                else if (new_pcb.getBurstTime()<=RR_time)
+                {
+                    Queue trade = new Queue();
+                      new_pcb.setBurstTime(new_pcb.getBurstTime());
+                      new_pcb.setEndofExec(new_pcb.getStartofExec()+new_pcb.getBurstTime());
+                      //insert it in final_queue 
+                      // delete it from my_queue by making the head point at the next
+                      // and node number is less by 1 now
+                    
+                      inset_on_final(new_pcb);
+                      // push back in my_queue 
+                      Node next=current.getNext();
+                   while(current.getNext()!=null)
+                   {
+                  // the next node 
+                   
+                   PCB swap_pcb=new PCB(false);
+                   
+                   //==========================
+                    swap_pcb.copy(new_pcb);
+                    current.getPcb().copy(next.getPcb());
+                    next.getPcb().copy(swap_pcb);
+                    // this will move the current node to the end 
+                    prev=current;
+                    current = current.getNext();
+                    next = current.getNext();
+                   }
+                   node_number--;
+                   Node current_2=my_queue.getHead();
+                           
+                   for(int j=0;j<node_number;j++ )
+                   {
+                       PCB dumy=new PCB(false);
+                       dumy.copy(current_2.getPcb());
+                       trade.enqueue(dumy);
+                       
+                       current_2=current_2.getNext();
+                   }
+                   
+                   for(int s=0;s<node_number+1;s++){
+                       my_queue.dequeue();
+                   }
+                   Node current_3=trade.getHead();
+                   while(current_3!=null)
+                   {
+                        PCB dumy_2=new PCB(false);
+                       dumy_2.copy(current_3.getPcb());
+                       my_queue.enqueue(dumy_2);
+                      
+                       current_3=current_3.getNext();
+                       
+                   }
+                  
+                 
+                }
+              
+                run_time=new_pcb.getEndofExec();// the run time equal to run of the exe
+                current=my_queue.getHead();
+                i=node_number;
+                continue;// exit the loop to insert new one 
+            }
+            
+            
+            // if i am not qualified to start then shall it be someone else 
+            current=current.getNext();
+            i--;// to make sure that you searched in all the queue
+            // if i==0
+            if(i==0)
+            {
+                // no process is in the queue in the run time i need to be in ideal case process 
+                run_time=my_queue.getHead().getPcb().getArrivalTime();// and it's the time of the first arrival in my_queue
+                current=my_queue.getHead();// point at the first agaian
+                i=node_number;// re set the iterator
+                
+            }
+                    
+        }
+      
+
+
+    }
+    //=======================================================================//
+// inset RR with fair rounds 
     public void insert2(PCB newPCB) {
 
         PCB pcb_dumy = new PCB(false);
@@ -119,13 +320,13 @@ public class RoundRobin extends Queue implements ReadyQueue {
             new_pcb.copy(pcb_dumy);// copy the old
             // while the burst time bigger than zero
             while (new_pcb.getBurstTime() > 0) {
-                
+
                 int new_pcb_time = new_pcb.getBurstTime();
                 PCB next_new = new PCB(false);// fix it
                 int put_in;// the duartion in the brust time 
                 //======================================//
                 if (new_pcb.getBurstTime() > RR_time) {
-                   // the brust time is biger than the quantim
+                    // the brust time is biger than the quantim
                     put_in = RR_time;// the duration of this process equal to the quantim
                 } else {
                     put_in = new_pcb.getBurstTime();// the duration of this process equal to it's brust time
@@ -145,7 +346,13 @@ public class RoundRobin extends Queue implements ReadyQueue {
                 //change the burst time from x to x - RR_time 
                 // example from 15 to 15  - 10 = 5
                 //============================================//
-                new_pcb.setPriority(new_pcb.getPriority() - 1);// the next copy gor priority = -1 + it's priority
+
+                // modified 
+                //  new_pcb.setPriority(new_pcb.getPriority() - 1);
+                //
+                //
+                new_pcb.setPriority(new_pcb.getPriority() - 1);
+               
                 new_pcb.setBurstTime(new_pcb_time - RR_time);// the brust time equal to the old time ( the real brust - the quantim)
                 new_pcb.setArrivalTime(new_pcb.getArrivalTime() + RR_time);// the new arrival = to the old arrival + the put in
                 // but right now the arrival is arrival + RR_time ?
@@ -158,16 +365,16 @@ public class RoundRobin extends Queue implements ReadyQueue {
         }
 
     }
-//==============================================================================//
+    //==============================================================================//
     // sort on arrival time 
-
-    public void sort(int mode) {
+    // sort on arrive time only
+    public void sort_arrival(int mode) {
         // puble sort on arrival time only 
         for (int i = 0; i < node_number; i++) {
             Node current = my_queue.getHead();
             Node next = current.getNext();
             PCB drifter = new PCB(false);
-        //===============================================//
+            //===============================================//
             while (next != null) {
                 int start_current = current.getPcb().getStartofExec();
                 int end_current = current.getPcb().getStartofExec() + RR_time;
@@ -192,10 +399,69 @@ public class RoundRobin extends Queue implements ReadyQueue {
 
                     next.getPcb().setEndofExec(end_current);
 
+                }
+                else if (current_arrival == next_arrival
+                        &&
+                        current.getPcb().getPID()>next.getPcb().getPID()
+                        ) {
+
+                    drifter.copy(current.getPcb());
+                    current.getPcb().copy(next.getPcb());
+
+                    current.getPcb().setStartofExec(start_next);
+                    current.getPcb().setEndofExec(end_next);
+
+                    next.getPcb().copy(drifter);
+                    next.getPcb().setStartofExec(start_current);
+
+                    next.getPcb().setEndofExec(end_current);
+
+                }
+
+                current = current.getNext();
+                next = current.getNext();
+            }
+
+        }
+    }
+//==============================================================================//
+    // sort on arrival time 
+    // round robin with fair 
+    public void sort(int mode) {
+        // puble sort on arrival time only 
+        for (int i = 0; i < node_number; i++) {
+            Node current = my_queue.getHead();
+            Node next = current.getNext();
+            PCB drifter = new PCB(false);
+            //===============================================//
+            while (next != null) {
+                int start_current = current.getPcb().getStartofExec();
+                int end_current = current.getPcb().getStartofExec() + current.getPcb().getBurstTime();
+                int start_next = next.getPcb().getStartofExec();
+                int end_next = next.getPcb().getStartofExec() + next.getPcb().getBurstTime();
+
+                // iterate till the end 
+                int current_arrival = current.getPcb().getArrivalTime();
+                int next_arrival = next.getPcb().getArrivalTime();
+
+                //first case normal case done 
+                if (current_arrival > next_arrival) {
+
+                    drifter.copy(current.getPcb());
+                    current.getPcb().copy(next.getPcb());
+
+                    current.getPcb().setStartofExec(start_next);
+                    current.getPcb().setEndofExec(end_next);
+
+                    next.getPcb().copy(drifter);
+                    next.getPcb().setStartofExec(start_current);
+
+                    next.getPcb().setEndofExec(end_current);
+
                 } // if i have a redudnt  p0 p0' p1 at same time 
                 else if (next_arrival == current_arrival
                         && current.getPcb().getPriority() < next.getPcb().getPriority()) {
-
+                    // modify   && current.getPcb().getPriority() < next.getPcb().getPriority()) {
                     // trade //
                     drifter.copy(current.getPcb());
                     current.getPcb().copy(next.getPcb());
@@ -217,7 +483,7 @@ public class RoundRobin extends Queue implements ReadyQueue {
 
                 } else if (next_arrival == current_arrival
                         && current.getPcb().getPriority() < 0 && next.getPcb().getPriority() < 0) {
-
+                    //
                 }
                 //if i have p0 p0' p1 
 
@@ -229,11 +495,14 @@ public class RoundRobin extends Queue implements ReadyQueue {
     }
 //==============================================================================//
     // sort on arrival and the priortiy 
-
+// malnash d3wa beha 
     public void sort_2(int mode) {
-
+        System.out.println("==========");
+        System.out.println(RR_time);
+        my_queue.printQueue();
         // i am sure it's sorted  on arrival
         // so all i need is to get the first element and it's arrival time is my start xD
+        // issue 
         //======= fixed area =======//
         for (int i = 0; i < node_number; i++) {
             int run = 0;
@@ -268,8 +537,13 @@ public class RoundRobin extends Queue implements ReadyQueue {
                 int current_arrival = current.getPcb().getArrivalTime();
                 int next_arrival = next.getPcb().getArrivalTime();
 
-                if (current_arrival < next_arrival && current.getPcb().getPriority() < next.getPcb().getPriority()) {
+                //==============modif  ===================//
+                if (next.getPcb().getPID() == current.getPcb().getPID()) {
+                    next.getPcb().setPriority(next.getPcb().getPriority() - 1);
+                } //================================================================================//
+                else if (current_arrival < next_arrival && current.getPcb().getPriority() < next.getPcb().getPriority()) {
                     if (run > next_arrival) {
+                        // modified  if (run > next_arrival) {
                         // trade //
                         drifter.copy(current.getPcb());
                         current.getPcb().copy(next.getPcb());
@@ -301,6 +575,9 @@ public class RoundRobin extends Queue implements ReadyQueue {
             }
 
         }
+        System.out.println("===after =======");
+        System.out.println(RR_time);
+        my_queue.printQueue();
     }
 
     // claclulat turn around time //
