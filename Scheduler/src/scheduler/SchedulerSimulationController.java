@@ -12,8 +12,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
@@ -43,6 +41,7 @@ import javafx.scene.Group;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
@@ -54,6 +53,9 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
+import javafx.scene.layout.Pane;
+import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.StageStyle;
@@ -85,6 +87,8 @@ public class SchedulerSimulationController implements Initializable {
     private Button exportToFile_btn;
     @FXML
     private Label schedulerIndication_label;
+    @FXML
+    private ScrollPane scrollPane;
 
     public enum schedulerType {
         None, FCFS, SJF_Preemptive_FCFS, SJF_NonPreemptive_FCFS, RoundRobin, Priority_Preemptive_FCFS, Priority_NonPreemptive_FCFS
@@ -111,12 +115,12 @@ public class SchedulerSimulationController implements Initializable {
     private Priority_Preemptive_FCFS Priority_Preemptive_FCFS_ProcessQueue;
     private Priority_NonPreemptive_FCFS Priority_NonPreemptive_FCFS_ProcessQueue;
 
+    private Pane canvas;
+
     @FXML
     private Button startOutputSimulation_btn;
     @FXML
     private Button addProcess_btn;
-    @FXML
-    private Canvas canvas;
     @FXML
     private Group outputSimulationGroup;
     @FXML
@@ -254,6 +258,9 @@ public class SchedulerSimulationController implements Initializable {
             }
         });
 
+        canvas = new Pane();
+        scrollPane.setContent(canvas);
+
         schedulerSelectDialog();
         tableInitialization();
         sceneInitialization();
@@ -380,14 +387,13 @@ public class SchedulerSimulationController implements Initializable {
     }
 
     private void canvasReset() {
-        GraphicsContext gc = canvas.getGraphicsContext2D();
         currentTime = 0;
         currentXPosition = 0;
         currentYPosition = 20;
         canvasIsEmpty = true;
-        gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
-        canvas.setWidth(749);
-        canvas.setHeight(265);
+        canvas.getChildren().clear();
+        canvas.setPrefWidth(749);
+        canvas.setPrefHeight(265);
     }
 
     private void clear() {
@@ -478,7 +484,7 @@ public class SchedulerSimulationController implements Initializable {
         fileChooser.setInitialDirectory(
                 new File(System.getProperty("user.dir"))
         );
-        File file = fileChooser.showOpenDialog(canvas.getScene().getWindow());
+        File file = fileChooser.showOpenDialog(scrollPane.getScene().getWindow());
         if (file != null) {
             Scanner scanner = new Scanner(file);
             while (scanner.hasNextLine()) {
@@ -524,7 +530,7 @@ public class SchedulerSimulationController implements Initializable {
         fileChooser.setInitialDirectory(
                 new File(System.getProperty("user.dir"))
         );
-        File file = fileChooser.showSaveDialog(canvas.getScene().getWindow());
+        File file = fileChooser.showSaveDialog(scrollPane.getScene().getWindow());
         if (file != null) {
             FileWriter fileWriter = new FileWriter(file);
             BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
@@ -866,43 +872,57 @@ public class SchedulerSimulationController implements Initializable {
     }
 
     private void canvasInitialization() {
-        GraphicsContext gc = canvas.getGraphicsContext2D();
 
         if (canvasIsEmpty == true) {
             // Write scheduler method
-            gc.setFill(Color.WHITE);
-            gc.setTextAlign(TextAlignment.LEFT);
+            Text text;
+            Rectangle rectangle;
+
+            text = new Text();
+            text.setFill(Color.WHITE);
+            text.setTextAlignment(TextAlignment.LEFT);
             switch (getCurrentScheduler()) {
                 case FCFS:
-                    gc.fillText("FCFS Scheduler", 20, 20);
+                    text.setText("FCFS Scheduler");
                     break;
                 case RoundRobin:
-                    gc.fillText("Round Robin Scheduler", 20, 20);
+                    text.setText("Round Robin Scheduler");
                     break;
                 case SJF_Preemptive_FCFS:
-                    gc.fillText("SJF Preemptive (FCFS) Scheduler", 20, 20);
+                    text.setText("SJF Preemptive (FCFS) Scheduler");
                     break;
                 case SJF_NonPreemptive_FCFS:
-                    gc.fillText("SJF NonPreemptive (FCFS) Scheduler", 20, 20);
+                    text.setText("SJF NonPreemptive (FCFS) Scheduler");
                     break;
                 case Priority_Preemptive_FCFS:
-                    gc.fillText("Priority Preemptive (FCFS) Scheduler", 20, 20);
+                    text.setText("Priority Preemptive (FCFS) Scheduler");
                     break;
                 case Priority_NonPreemptive_FCFS:
-                    gc.fillText("Priority NonPreemptive (FCFS) Scheduler", 20, 20);
+                    text.setText("Priority NonPreemptive (FCFS) Scheduler");
                     break;
                 default:
                     break;
             }
-
+            text.setX(20);
+            text.setY(20);
+            canvas.getChildren().add(text);
             currentYPosition = 80;
             // draw begin time point
-            gc.fillRect(40, currentYPosition, 1, 50);
+            rectangle = new Rectangle(1, 50, Color.WHITE);
+            rectangle.relocate(40, currentYPosition);
+            canvas.getChildren().add(rectangle);
 
             // write time
-            gc.rotate(45);
-            gc.fillText(Integer.toString(getCurrentTime()), rotatedX(40, (currentYPosition + 50)), rotatedY(40, (currentYPosition + 50)));
-            gc.rotate(-45);
+            text = new Text();
+            text.setFill(Color.WHITE);
+            text.setTextAlignment(TextAlignment.LEFT);
+            text.setRotate(45);
+            text.setText(Integer.toString(getCurrentTime()));
+
+            text.setX(40);
+            text.setY((currentYPosition + 65));
+            canvas.getChildren().add(text);
+
             currentXPosition = 41;
 
             canvasIsEmpty = false;
@@ -917,8 +937,8 @@ public class SchedulerSimulationController implements Initializable {
      * @param color
      */
     public void draw(int duration, int processID, Color color) {
-
-        GraphicsContext gc = canvas.getGraphicsContext2D();
+        Text text;
+        Rectangle rectangle;
 
         canvasInitialization();
 
@@ -927,52 +947,49 @@ public class SchedulerSimulationController implements Initializable {
         }
 
         int nextPosition = (duration * unityTimeWidth) + currentXPosition;
-        // Canvas max width 8040
-        // initial Canvas widh 749
-        if (canvas.getWidth() < (8040)) {
-            if (nextPosition >= 749 && nextPosition < 8000) {
-                canvas.setWidth(nextPosition + 40);
-            } else if (nextPosition > 8000) {
-                canvas.setWidth(8040);
-            }
-        }
+        canvas.setPrefWidth(nextPosition + 40);
 
-        if (nextPosition > 8000) {
-            int theRest = duration - ((8000 - currentXPosition) / unityTimeWidth);
-            draw(((8000 - currentXPosition) / unityTimeWidth), processID, color);
-            currentXPosition = 40;
-            currentYPosition += 100;
-            canvas.setHeight(currentYPosition + 100);
-            if (theRest >= 0) {
-                draw(theRest, processID, color);
-            }
-            return;
-        }
         currentTime += duration;
 
         // draw process time
-        gc.setFill(color);
-        gc.fillRoundRect(currentXPosition, (currentYPosition + 10), (duration * unityTimeWidth), 30, 20, 20);
+        rectangle = new Rectangle((duration * unityTimeWidth), 30, color);
+        rectangle.relocate(currentXPosition, (currentYPosition + 10));
+        rectangle.setArcWidth(20);
+        rectangle.setArcHeight(20);
+        canvas.getChildren().add(rectangle);
 
         // write process id
-        gc.setFill(Color.WHITE);
-        gc.setTextAlign(TextAlignment.CENTER);
+        text = new Text();
+        text.setFill(Color.WHITE);
+        text.setTextAlignment(TextAlignment.CENTER);
+
         String processText;
         if (processID == -1) {
             processText = "Idle";
         } else {
             processText = ("P" + Integer.toString(processID));
         }
-        gc.fillText(processText, (((duration * unityTimeWidth) / 2) + currentXPosition), (currentYPosition + 30));
+
+        text.setText(processText);
+        text.setX((((duration * unityTimeWidth) / 2) + currentXPosition) - (text.getLayoutBounds().getWidth() / 2));
+        text.setY((currentYPosition + 30));
+        canvas.getChildren().add(text);
 
         // draw end time point
-        gc.fillRect(nextPosition, currentYPosition, 1, 50);
+        rectangle = new Rectangle(1, 50, Color.WHITE);
+        rectangle.relocate(nextPosition, currentYPosition);
+        canvas.getChildren().add(rectangle);
 
         // write time
-        gc.rotate(45);
-        gc.setTextAlign(TextAlignment.LEFT);
-        gc.fillText(Integer.toString(getCurrentTime()), rotatedX(nextPosition, (currentYPosition + 50)), rotatedY(nextPosition, (currentYPosition + 50)));
-        gc.rotate(-45);
+        text = new Text();
+        text.setFill(Color.WHITE);
+        text.setTextAlignment(TextAlignment.LEFT);
+        text.setRotate(45);
+        text.setText(Integer.toString(getCurrentTime()));
+
+        text.setX((nextPosition));
+        text.setY((currentYPosition + 65));
+        canvas.getChildren().add(text);
 
         currentXPosition = nextPosition + 1;
     }
@@ -992,10 +1009,13 @@ public class SchedulerSimulationController implements Initializable {
      * @param avgWaitingTime
      */
     public void writeAvgWaitingTime(double avgWaitingTime) {
-        GraphicsContext gc = canvas.getGraphicsContext2D();
-        gc.setFill(Color.WHITE);
-        gc.setTextAlign(TextAlignment.LEFT);
-        gc.fillText("Average waitting time : " + String.format("%.5g%n", avgWaitingTime), 40, 40);
+        Text text = new Text();
+        text.setFill(Color.WHITE);
+        text.setTextAlignment(TextAlignment.LEFT);
+        text.setText("Average waitting time : " + String.format("%.5g%n", avgWaitingTime));
+        text.setX(40);
+        text.setY(40);
+        canvas.getChildren().add(text);
     }
 
     /**
@@ -1004,28 +1024,13 @@ public class SchedulerSimulationController implements Initializable {
      * @param avgTurnarroundTime
      */
     public void writeAvgTurnarroundTime(double avgTurnarroundTime) {
-        GraphicsContext gc = canvas.getGraphicsContext2D();
-        gc.setFill(Color.WHITE);
-        gc.setTextAlign(TextAlignment.LEFT);
-        gc.fillText("Average turnaround time : " + String.format("%.5g%n", avgTurnarroundTime), 40, 60);
-    }
-
-    private double rotatedX(double x, double y) {
-        // to center the text
-        x -= 5;
-        y += 10;
-        double r = Math.sqrt((x * x) + (y * y));
-        double seta = Math.atan2(y, x);
-        return (r * Math.cos(seta - (0.25 * Math.PI)));
-    }
-
-    private double rotatedY(double x, double y) {
-        // to center the text
-        x -= 5;
-        y += 10;
-        double r = Math.sqrt((x * x) + (y * y));
-        double seta = Math.atan2(y, x);
-        return (r * Math.sin(seta - (0.25 * Math.PI)));
+        Text text = new Text();
+        text.setFill(Color.WHITE);
+        text.setTextAlignment(TextAlignment.LEFT);
+        text.setText("Average turnaround time : " + String.format("%.5g%n", avgTurnarroundTime));
+        text.setX(40);
+        text.setY(60);
+        canvas.getChildren().add(text);
     }
 
     /**

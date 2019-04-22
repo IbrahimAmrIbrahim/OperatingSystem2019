@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.Cursor?>
 <?import javafx.scene.Group?>
-<?import javafx.scene.canvas.Canvas?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
@@ -46,14 +44,7 @@
                   </Pane>
                </children>
             </AnchorPane>
-            <ScrollPane pannable="true" prefHeight="241.0" prefWidth="732.0" style="-fx-background: Black;">
-               <content>
-                  <Canvas fx:id="canvas" height="265.0" width="749.0">
-                     <cursor>
-                        <Cursor fx:constant="HAND" />
-                     </cursor></Canvas>
-               </content>
-            </ScrollPane>
+            <ScrollPane fx:id="scrollPane" pannable="true" prefHeight="241.0" prefWidth="732.0" style="-fx-background: Black;" />
          </items>
       </SplitPane>
    </children>
