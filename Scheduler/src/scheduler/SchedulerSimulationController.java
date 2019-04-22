@@ -19,7 +19,6 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.ChoiceDialog;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
-import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 
 import dataStructure.PCB;
@@ -56,6 +55,7 @@ import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
+import javafx.scene.transform.Transform;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.StageStyle;
@@ -103,6 +103,7 @@ public class SchedulerSimulationController implements Initializable {
     private int currentYPosition;
     private boolean canvasIsEmpty;
     private int timeSlice;
+    private double zoomFactor;
 
     private boolean newProcess;
     protected boolean editProcess;
@@ -127,6 +128,22 @@ public class SchedulerSimulationController implements Initializable {
     private Button clear_btn;
     @FXML
     private TextField timeSlice_textField;
+
+    @FXML
+    private void zoomOut(MouseEvent event) {
+        zoomFactor *= 0.625;
+        canvas.setPrefWidth(canvas.getPrefWidth()* 0.625);
+        canvas.setPrefHeight(canvas.getPrefHeight()* 0.625);
+        canvas.getTransforms().add(Transform.scale(0.625, 0.625));
+    }
+
+    @FXML
+    private void zoomIn(MouseEvent event) {
+        zoomFactor *= 1.6;
+        canvas.setPrefWidth(canvas.getPrefWidth() * 1.6);
+        canvas.setPrefHeight(canvas.getPrefHeight()* 1.6);
+        canvas.getTransforms().add(Transform.scale(1.6, 1.6));
+    }
 
     @FXML
     private void exportToFileButton_KeyboardEvent(KeyEvent event) throws FileNotFoundException, IOException {
@@ -245,6 +262,7 @@ public class SchedulerSimulationController implements Initializable {
         currentTime = 0;
         currentXPosition = 0;
         currentYPosition = 20;
+        zoomFactor = 1;
         canvasIsEmpty = true;
         newProcess = true;
         editProcess = true;
@@ -392,8 +410,9 @@ public class SchedulerSimulationController implements Initializable {
         currentYPosition = 20;
         canvasIsEmpty = true;
         canvas.getChildren().clear();
+        canvas.getTransforms().add(Transform.scale((1.0 / zoomFactor), (1.0 / zoomFactor)));
         canvas.setPrefWidth(749);
-        canvas.setPrefHeight(265);
+        canvas.setPrefHeight(240);
     }
 
     private void clear() {
@@ -777,7 +796,6 @@ public class SchedulerSimulationController implements Initializable {
             default:
                 break;
         }
-        startOutputSimulation_btn.setDisable(false);
     }
 
     private void deleteMethodCall(PCB process) {
@@ -880,7 +898,6 @@ public class SchedulerSimulationController implements Initializable {
 
             text = new Text();
             text.setFill(Color.WHITE);
-            text.setTextAlignment(TextAlignment.LEFT);
             switch (getCurrentScheduler()) {
                 case FCFS:
                     text.setText("FCFS Scheduler");
@@ -915,7 +932,6 @@ public class SchedulerSimulationController implements Initializable {
             // write time
             text = new Text();
             text.setFill(Color.WHITE);
-            text.setTextAlignment(TextAlignment.LEFT);
             text.setRotate(45);
             text.setText(Integer.toString(getCurrentTime()));
 
@@ -961,7 +977,6 @@ public class SchedulerSimulationController implements Initializable {
         // write process id
         text = new Text();
         text.setFill(Color.WHITE);
-        text.setTextAlignment(TextAlignment.CENTER);
 
         String processText;
         if (processID == -1) {
@@ -983,15 +998,32 @@ public class SchedulerSimulationController implements Initializable {
         // write time
         text = new Text();
         text.setFill(Color.WHITE);
-        text.setTextAlignment(TextAlignment.LEFT);
-        text.setRotate(45);
+        text.getTransforms().add(Transform.rotate(45, 0, 0));
         text.setText(Integer.toString(getCurrentTime()));
 
-        text.setX((nextPosition));
-        text.setY((currentYPosition + 65));
+        text.setX(rotatedX(nextPosition, (currentYPosition + 50)));
+        text.setY(rotatedY(nextPosition, (currentYPosition + 50)));
         canvas.getChildren().add(text);
 
         currentXPosition = nextPosition + 1;
+    }
+
+    private double rotatedX(double x, double y) {
+        // to center the text
+        x -= 5;
+        y += 10;
+        double r = Math.sqrt((x * x) + (y * y));
+        double seta = Math.atan2(y, x);
+        return (r * Math.cos(seta - (0.25 * Math.PI)));
+    }
+
+    private double rotatedY(double x, double y) {
+        // to center the text
+        x -= 5;
+        y += 10;
+        double r = Math.sqrt((x * x) + (y * y));
+        double seta = Math.atan2(y, x);
+        return (r * Math.sin(seta - (0.25 * Math.PI)));
     }
 
     /**
@@ -1011,7 +1043,6 @@ public class SchedulerSimulationController implements Initializable {
     public void writeAvgWaitingTime(double avgWaitingTime) {
         Text text = new Text();
         text.setFill(Color.WHITE);
-        text.setTextAlignment(TextAlignment.LEFT);
         text.setText("Average waitting time : " + String.format("%.5g%n", avgWaitingTime));
         text.setX(40);
         text.setY(40);
@@ -1026,7 +1057,6 @@ public class SchedulerSimulationController implements Initializable {
     public void writeAvgTurnarroundTime(double avgTurnarroundTime) {
         Text text = new Text();
         text.setFill(Color.WHITE);
-        text.setTextAlignment(TextAlignment.LEFT);
         text.setText("Average turnaround time : " + String.format("%.5g%n", avgTurnarroundTime));
         text.setX(40);
         text.setY(60);
