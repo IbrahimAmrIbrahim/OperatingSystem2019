@@ -12,6 +12,7 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
+import memorymanagementAlgorithm.Segment;
 
 public class MemoryInitializationController implements Initializable {
 
@@ -26,7 +27,7 @@ public class MemoryInitializationController implements Initializable {
     @FXML
     private ChoiceBox<String> AllocationMethod_choiceBox;
     @FXML
-    private TableView<?> memoryHolesTable;
+    private TableView<Segment> memoryHolesTable;
     @FXML
     private TextField osReservedSize_txt;
 
