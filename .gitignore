@@ -1,5 +1,10 @@
-Scheduler/nbproject/
-Scheduler/dist/
-Scheduler/build/
-Scheduler/manifest.mf
-Scheduler/build.xml
+/CPUScheduler/nbproject/
+/CPUScheduler/dist/
+/CPUScheduler/build/
+/CPUScheduler/manifest.mf
+/CPUScheduler/build.xml
+/MemoryManagement/nbproject/
+/MemoryManagement/dist/
+/MemoryManagement/build/
+/MemoryManagement/manifest.mf
+/MemoryManagement/build.xml
