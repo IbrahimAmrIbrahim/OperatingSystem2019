@@ -59,7 +59,7 @@ public class MemorySimulationController implements Initializable {
         Stage stage = new Stage();
         stage.setScene(new Scene(root1));
         stage.initModality(Modality.APPLICATION_MODAL);
-        stage.setTitle("A;;ocate Process");
+        stage.setTitle("Allocate Process");
         stage.initStyle(StageStyle.UTILITY);
         stage.showAndWait();
     }
