@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.Group?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="540.0" prefWidth="751.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="scheduler.SchedulerSimulationController">
+   <children>
+      <SplitPane dividerPositions="0.5" orientation="VERTICAL" prefHeight="501.0" prefWidth="732.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <items>
+            <AnchorPane prefHeight="200.0" prefWidth="200.0">
+               <children>
+                  <TableView fx:id="processTable" layoutX="14.0" prefHeight="67.0" prefWidth="407.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="342.0" AnchorPane.topAnchor="0.0">
+                    <columns>
+                      <TableColumn fx:id="processIDColumn" editable="false" minWidth="1.0" prefWidth="95.0" text="Process ID" />
+                      <TableColumn fx:id="processColorColumn" editable="false" minWidth="1.0" prefWidth="120.0" text="Process Color" />
+                        <TableColumn fx:id="arrivalTimeColumn" editable="false" minWidth="1.0" prefWidth="110.0" text="Arrival Time" />
+                        <TableColumn fx:id="priorityColumn" editable="false" minWidth="1.0" text="Priority" />
+                        <TableColumn fx:id="burstTimeColumn" editable="false" minWidth="1.0" prefWidth="110.0" text="Burst Time" />
+                    </columns>
+                  </TableView>
+                  <Pane layoutX="407.0" prefHeight="238.0" prefWidth="342.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                     <children>
+                        <Label fx:id="schedulerIndication_label" layoutX="22.0" layoutY="14.0" />
+                        <Group fx:id="outputSimulationGroup" layoutX="22.0" layoutY="50.0">
+                           <children>
+                              <TextField fx:id="timeSlice_textField" disable="true" prefHeight="31.0" prefWidth="194.0" promptText="Time Slice" />
+                              <Button fx:id="startOutputSimulation_btn" layoutX="213.0" layoutY="3.0" mnemonicParsing="false" onKeyPressed="#startOutputSimulationButton_KeyboardEvent" onMouseClicked="#startOutputSimulationButton_MouseEvent" prefHeight="31.0" prefWidth="88.0" text="Start" />
+                           </children>
+                        </Group>
+                        <Button fx:id="addProcess_btn" layoutX="22.0" layoutY="101.0" mnemonicParsing="false" onKeyPressed="#addNewProcessButton_KeyboardEvent" onMouseClicked="#addNewProcessButton_MouseEvent" prefHeight="31.0" prefWidth="140.0" text="Add new process" />
+                        <Button fx:id="loadFromFile_btn" layoutX="181.0" layoutY="101.0" mnemonicParsing="false" onKeyPressed="#loadFromFileButton_KeyboardEvent" onMouseClicked="#loadFromFileButton_MouseEvent" prefHeight="31.0" prefWidth="140.0" text="Load from file" />
+                        <Button fx:id="clear_btn" layoutX="22.0" layoutY="149.0" mnemonicParsing="false" onKeyPressed="#clearButton_KeyboardEvent" onMouseClicked="#clearButton_MouseEvent" prefHeight="31.0" prefWidth="140.0" text="Clear" />
+                        <Button fx:id="exportToFile_btn" layoutX="181.0" layoutY="149.0" mnemonicParsing="false" onKeyPressed="#exportToFileButton_KeyboardEvent" onMouseClicked="#eportToFileButton_MouseEvent" prefHeight="31.0" prefWidth="140.0" text="Export to file" />
+                        <Button layoutX="101.0" layoutY="194.0" mnemonicParsing="false" onKeyPressed="#changeSchedulerButton_KeyboardEvent" onMouseClicked="#changeSchedulerButton_MouseEvent" text="Change Scheduler" />
+                     </children>
+                  </Pane>
+                  <HBox alignment="TOP_RIGHT" layoutX="690.0" layoutY="220.0" prefHeight="32.0" prefWidth="59.0" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0">
+                     <children>
+                        <Button maxHeight="32.0" maxWidth="32.0" minHeight="32.0" minWidth="32.0" mnemonicParsing="false" onMouseClicked="#zoomOut" prefHeight="32.0" prefWidth="32.0" text="-">
+                           <font>
+                              <Font name="System Bold" size="15.0" />
+                           </font>
+                        </Button>
+                        <Button maxHeight="32.0" maxWidth="32.0" minHeight="32.0" minWidth="32.0" mnemonicParsing="false" onMouseClicked="#zoomIn" prefHeight="32.0" prefWidth="32.0" text="+">
+                           <font>
+                              <Font name="System Bold" size="15.0" />
+                           </font>
+                        </Button>
+                     </children>
+                  </HBox>
+               </children>
+            </AnchorPane>
+            <ScrollPane fx:id="scrollPane" pannable="true" prefHeight="241.0" prefWidth="732.0" style="-fx-background: Black;" />
+         </items>
+      </SplitPane>
+   </children>
+</AnchorPane>
