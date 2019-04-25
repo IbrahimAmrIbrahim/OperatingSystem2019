@@ -1,11 +1,116 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
 
-<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" xmlns:fx="http://javafx.com/fxml/1" fx:controller="memorymanagement.AddProcessController">
-    
+<AnchorPane id="AnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.171" fx:controller="newprocess.FXMLDocumentController">
+   <children>
+      <VBox alignment="CENTER" layoutX="93.0" layoutY="-17.0" prefHeight="200.0" prefWidth="320.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <HBox alignment="CENTER" prefHeight="29.0" prefWidth="320.0" VBox.vgrow="NEVER">
+               <children>
+                  <HBox alignment="CENTER" HBox.hgrow="ALWAYS">
+                     <children>
+                        <Label fx:id="labelPID" text="PID" />
+                     </children>
+                     <HBox.margin>
+                        <Insets />
+                     </HBox.margin>
+                  </HBox>
+                  <HBox alignment="CENTER" HBox.hgrow="ALWAYS">
+                     <children>
+                        <Label fx:id="currentPID" text="ID" />
+                     </children>
+                  </HBox>
+               </children>
+               <VBox.margin>
+                  <Insets bottom="10.0" />
+               </VBox.margin>
+            </HBox>
+            <HBox alignment="CENTER" layoutX="10.0" layoutY="77.0" prefHeight="100.0" prefWidth="200.0">
+               <children>
+                  <HBox alignment="CENTER_LEFT" prefHeight="50.0" prefWidth="101.0">
+                     <children>
+                        <Label fx:id="segmentNumber" text="No of Segments:" />
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER" HBox.hgrow="ALWAYS">
+                     <children>
+                        <TextField fx:id="numberInputed" prefHeight="25.0" prefWidth="142.0" />
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER_RIGHT" HBox.hgrow="ALWAYS">
+                     <children>
+                        <Button fx:id="confirmNumber" alignment="CENTER" contentDisplay="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handlecSegmentNumberConfirmation" prefHeight="25.0" prefWidth="62.0" text="Confirm">
+                           <HBox.margin>
+                              <Insets />
+                           </HBox.margin>
+                        </Button>
+                     </children>
+                  </HBox>
+               </children>
+            </HBox>
+            <HBox alignment="CENTER" layoutX="10.0" layoutY="60.0" prefHeight="100.0" prefWidth="200.0">
+               <children>
+                  <HBox alignment="CENTER_LEFT" prefHeight="50.0" prefWidth="101.0">
+                     <children>
+                        <Label fx:id="segmentName" disable="true" text="Segment Name:" />
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER" HBox.hgrow="ALWAYS">
+                     <children>
+                        <TextField fx:id="nameInputed" disable="true" prefHeight="25.0" prefWidth="142.0" />
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER_RIGHT" HBox.hgrow="ALWAYS">
+                     <children>
+                        <Button fx:id="confirmName" alignment="CENTER" contentDisplay="CENTER" disable="true" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handlecSegmentNameConfirmation" prefHeight="25.0" prefWidth="62.0" text="Confirm" />
+                     </children>
+                  </HBox>
+               </children>
+            </HBox>
+            <HBox alignment="CENTER" layoutX="10.0" layoutY="88.0" prefHeight="100.0" prefWidth="200.0">
+               <children>
+                  <HBox alignment="CENTER_LEFT" prefHeight="50.0" prefWidth="101.0">
+                     <children>
+                        <Label fx:id="segmentSize" disable="true" text="Segment Size:" />
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER" HBox.hgrow="ALWAYS">
+                     <children>
+                        <TextField fx:id="sizeInputed" disable="true" prefHeight="25.0" prefWidth="142.0" />
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER_RIGHT" HBox.hgrow="ALWAYS">
+                     <children>
+                        <Button fx:id="confirmSize" alignment="CENTER" contentDisplay="CENTER" disable="true" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handlecSegmentSizeConfirmation" prefHeight="25.0" prefWidth="62.0" text="Confirm" />
+                     </children>
+                  </HBox>
+               </children>
+            </HBox>
+            <HBox alignment="CENTER" layoutX="10.0" layoutY="77.0" prefHeight="100.0" prefWidth="320.0">
+               <children>
+                  <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="163.0">
+                     <children>
+                        <Button fx:id="confirmSegment" disable="true" mnemonicParsing="false" onAction="#handleSegmentConfirmation" text="Confirm Segment" />
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
+                     <children>
+                        <Button fx:id="cancel" mnemonicParsing="false" onAction="#handleCancelButton" text="Cancel" />
+                     </children>
+                  </HBox>
+               </children>
+            </HBox>
+         </children>
+      </VBox>
+   </children>
+   <padding>
+      <Insets bottom="15.0" left="30.0" right="30.0" top="15.0" />
+   </padding>
 </AnchorPane>
