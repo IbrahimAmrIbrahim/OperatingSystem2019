@@ -22,10 +22,15 @@ public class MemoryManagement extends Application {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("MemorySimulation.fxml"));
         Parent root = loader.load();
 
+        MemorySimulationController myController = loader.getController();
+        myController.setMyController(myController);
+
         Scene scene = new Scene(root);
         stage.setTitle("Memory Management");
         stage.setScene(scene);
         stage.show();
+
+        myController.sceneInitialize();
     }
 
     /**

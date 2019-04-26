@@ -17,38 +17,75 @@ import javafx.stage.StageStyle;
 
 public class MemorySimulationController implements Initializable {
 
+    private MemorySimulationController myController;
+
+    public enum memoryAlignmentOptions {
+        _8bit, _32bit, _64bit
+    };
+
+    public enum allocationMethodOptions {
+        FirstFit, BestFit, WorstFit
+    };
+
+    private long memoryTotalSize;
+    private long osReservedSize;
+    private memoryAlignmentOptions memoryAlignment;
+    private allocationMethodOptions allocationMethod;
+
+    private boolean memoryConfigurationChange;
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        try {
-            // TODO
-            memoryHardwareConfigDialog();
-        } catch (IOException ex) {
-            Logger.getLogger(MemorySimulationController.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        memoryTotalSize = 0;
+        osReservedSize = 0;
+        memoryConfigurationChange = false;
+        memoryAlignment = memoryAlignmentOptions._8bit;
+        allocationMethod = allocationMethodOptions.FirstFit;
+    }
+
+    public void sceneInitialize() throws IOException {
+        memoryHardwareConfigDialog();
     }
 
     private void memoryHardwareConfigDialog() throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("MemoryInitialization.fxml"));
-        Parent root1 = (Parent) fxmlLoader.load();
+        FXMLLoader fxmlLoader1 = new FXMLLoader(getClass().getResource("MemoryConfiguration.fxml"));
+        Parent root1 = (Parent) fxmlLoader1.load();
 
-        /*MemoryInitializationController ctrl = fxmlLoader.getController();
+        MemoryConfigurationController ctrl = fxmlLoader1.getController();
+        ctrl.sceneInitialization(myController);
+
+        memoryConfigurationChange = false;
+
+        Stage stage1 = new Stage();
+        stage1.setScene(new Scene(root1));
+        stage1.initModality(Modality.APPLICATION_MODAL);
+        stage1.setTitle("Memory Hardware");
+        stage1.initStyle(StageStyle.UTILITY);
+        stage1.showAndWait();
+
+        if (memoryConfigurationChange) {
+            FXMLLoader fxmlLoader2 = new FXMLLoader(getClass().getResource("MemoryInitialization.fxml"));
+            Parent root2 = (Parent) fxmlLoader2.load();
+
+            /*MemoryInitializationController ctrl = fxmlLoader.getController();
         if (newProcess == true) {
             processtoAdd = new PCB(true);
         }
         ctrl.sceneInitialization(myController, processtoAdd, false);
-         */
-        Stage stage = new Stage();
-        stage.setScene(new Scene(root1));
-        stage.initModality(Modality.APPLICATION_MODAL);
-        stage.setTitle("Memory Hardware");
-        stage.initStyle(StageStyle.UTILITY);
-        stage.showAndWait();
+             */
+            Stage stage2 = new Stage();
+            stage2.setScene(new Scene(root2));
+            stage2.initModality(Modality.APPLICATION_MODAL);
+            stage2.setTitle("Memory Initialization");
+            stage2.initStyle(StageStyle.UTILITY);
+            stage2.showAndWait();
 
-        /*if (newProcess == true) {
+            /*if (newProcess == true) {
         processTable.getItems().add(processtoAdd);
         insertMethodCall(processtoAdd);
         startOutputSimulation_btn.setDisable(false);
     }*/
+        }
     }
 
     @FXML
@@ -64,4 +101,73 @@ public class MemorySimulationController implements Initializable {
         stage.showAndWait();
     }
 
+    /**
+     * @return the memoryTotalSize
+     */
+    public long getMemoryTotalSize() {
+        return memoryTotalSize;
+    }
+
+    /**
+     * @param memoryTotalSize the memoryTotalSize to set
+     */
+    public void setMemoryTotalSize(long memoryTotalSize) {
+        this.memoryTotalSize = memoryTotalSize;
+    }
+
+    /**
+     * @return the osReservedSize
+     */
+    public long getOsReservedSize() {
+        return osReservedSize;
+    }
+
+    /**
+     * @param osReservedSize the osReservedSize to set
+     */
+    public void setOsReservedSize(long osReservedSize) {
+        this.osReservedSize = osReservedSize;
+    }
+
+    /**
+     * @return the memoryAlignment
+     */
+    public memoryAlignmentOptions getMemoryAlignment() {
+        return memoryAlignment;
+    }
+
+    /**
+     * @param memoryAlignment the memoryAlignment to set
+     */
+    public void setMemoryAlignment(memoryAlignmentOptions memoryAlignment) {
+        this.memoryAlignment = memoryAlignment;
+    }
+
+    /**
+     * @return the allocationMethod
+     */
+    public allocationMethodOptions getAllocationMethod() {
+        return allocationMethod;
+    }
+
+    /**
+     * @param allocationMethod the allocationMethod to set
+     */
+    public void setAllocationMethod(allocationMethodOptions allocationMethod) {
+        this.allocationMethod = allocationMethod;
+    }
+
+    /**
+     * @param myController the myController to set
+     */
+    public void setMyController(MemorySimulationController myController) {
+        this.myController = myController;
+    }
+
+    /**
+     * @param memoryConfigurationChange the memoryConfigurationChange to set
+     */
+    public void setMemoryConfigurationChange(boolean memoryConfigurationChange) {
+        this.memoryConfigurationChange = memoryConfigurationChange;
+    }
 }

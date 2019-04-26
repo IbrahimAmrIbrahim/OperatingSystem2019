@@ -12,9 +12,9 @@
 <?import javafx.scene.layout.RowConstraints?>
 
 
-<AnchorPane id="AnchorPane" prefHeight="340.0" prefWidth="600.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.171" fx:controller="memorymanagement.MemoryConfigurationController">
+<AnchorPane id="AnchorPane" maxHeight="340.0" maxWidth="640.0" minHeight="340.0" minWidth="640.0" prefHeight="340.0" prefWidth="640.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.171" fx:controller="memorymanagement.MemoryConfigurationController">
    <children>
-      <TitledPane collapsible="false" layoutX="32.0" layoutY="27.0" text="Hardware Configuration">
+      <TitledPane collapsible="false" layoutX="32.0" layoutY="27.0" text="Hardware Configuration" AnchorPane.leftAnchor="40.0" AnchorPane.rightAnchor="40.0">
          <content>
             <GridPane alignment="CENTER" hgap="40.0" vgap="20.0">
                <columnConstraints>
@@ -45,8 +45,8 @@
       </TitledPane>
       <HBox alignment="CENTER" layoutY="282.0" spacing="200.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
          <children>
-            <Button mnemonicParsing="false" text="Save" />
-            <Button mnemonicParsing="false" text="Cancel" />
+            <Button mnemonicParsing="false" onKeyPressed="#saveHardwareConfig_keyboardEvent" onMouseClicked="#saveHardwareConfig_mouseEvent" text="Save" />
+            <Button fx:id="cancel_btn" mnemonicParsing="false" onKeyPressed="#cancelHardwareConfig_keyboardEvent" onMouseClicked="#cancelHardwareConfig_mouseEvent" text="Cancel" />
          </children>
       </HBox>
    </children>
