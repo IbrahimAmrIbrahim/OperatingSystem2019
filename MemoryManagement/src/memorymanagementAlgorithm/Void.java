@@ -5,7 +5,6 @@
  */
 package memorymanagementAlgorithm;
 
-
 import java.util.*;
 import javafx.scene.paint.Color;
 
@@ -42,7 +41,7 @@ public class Void {
     private Color color;
 
     private Vector<Segment> void_vector;
-    private char condtion ;// b = sort on base,  h=sort on larger at top , 
+    private char condtion;// b = sort on base,  h=sort on larger at top , 
     //====================constructor============================//
 
     public Void() {

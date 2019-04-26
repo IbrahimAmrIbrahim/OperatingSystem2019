@@ -9,7 +9,6 @@ package memorymanagementAlgorithm;
  *
  * @author ahmed
  */
-
 import java.util.*;
 import javafx.scene.paint.Color;
 //Vector<Double> list = new Vector<Double>();
@@ -23,8 +22,7 @@ public class Process {
     private Vector<Segment> Segment_vector;
     //====================constructor============================//
 
-    public Process()// just the id
-    {
+    public Process() {
         ID = Process_ID;
         Process_ID++;
         Segment_vector = new Vector<Segment>();
@@ -32,8 +30,7 @@ public class Process {
         color = randomColor();
     }
 
-    public Process(Segment input)// single segment
-    {
+    public Process(Segment input) {
         ID = Process_ID;
         Process_ID++;
         Segment_vector = new Vector<Segment>();
@@ -43,8 +40,7 @@ public class Process {
     }
 
     // use this in the gui
-    public Process(Vector<Segment> input)// vector
-    {
+    public Process(Vector<Segment> input) {
         ID = Process_ID;
         Process_ID++;
         Segment_vector = new Vector<Segment>();
