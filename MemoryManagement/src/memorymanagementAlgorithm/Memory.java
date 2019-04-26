@@ -55,7 +55,7 @@ public class Memory {
     // use it in the algorthm only
     public void deallocate_process(Process input) {
         free.add_free_segment_vector(input.getSegment_vector());
-        Process.removeElement(input);
+        runing_Process.removeElement(input);
     }
 
     //===========print =================//
