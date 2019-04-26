@@ -1,5 +1,14 @@
 package memorymanagementAlgorithm;
 
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+/**
+ *
+ * @author ahmed
+ */
 public class Segment {
 
     private static int SEGMENT_ID = 0;
@@ -8,8 +17,18 @@ public class Segment {
     private int base;
     private int limit;
     private boolean inserted = false;
-
 // ==============constructors ==========================//
+
+    //use this for gui holes
+    public Segment(int base_, int limit_) {
+        inserted = true;
+        ID = SEGMENT_ID;
+        SEGMENT_ID++;
+        name = "free";
+        base = base_;
+        limit = limit_;
+    }
+
     public Segment(int base_, int limit_, String name_, boolean isPartofProcess) {
         if (isPartofProcess) {
             ID = SEGMENT_ID;
@@ -22,6 +41,7 @@ public class Segment {
         limit = limit_;
     }
 
+    //use this in gui input for process
     public Segment(int limit_, String name_, boolean isPartofProcess) {
         if (isPartofProcess) {
             ID = SEGMENT_ID;
@@ -110,18 +130,30 @@ public class Segment {
     public int getLimit() {
         return limit;
     }
-
 // ==============copy section ==========================//
-    public void copy(Segment second) {
+
+    public void copy_segment_without_id(Segment second) {
         base = second.getBase();
         limit = second.getLimit();
-        ID = second.getID();
-        name = second.getName();
         inserted = second.isInserted();
     }
 
-//===============print   ===========================//
-    public void print() {
-        System.out.print("{ID: " + ID + " ,Name: " + name + " ,Base: " + base + " ,Limit: " + limit + "}" + "\n");
+    public void copy_segment_with_id(Segment second) {
+        base = second.getBase();
+        limit = second.getLimit();
+        ID = second.getID();
+        inserted = second.isInserted();
     }
+//===============print   ===========================//
+
+    public void print() {
+        System.out.print("[ID:" + ID + ",Name:" + name + ",Base:" + base + ",Limit:" + limit + "]" + "\n");
+
+    }
+
+    public void print_free() {
+        System.out.print("[" + "Name:" + "free" + ",Base:" + base + ",Limit:" + limit + "]" + "\n");
+
+    }
+
 }
