@@ -36,7 +36,7 @@ we will add the segments easy as 2 free segments
  * @author ahmed
  */
 public class Void {
-//   Collections.sort(xx,(a, b) -> a.getBase() < b.getBase() ? -1 : a.getBase() == b.getBase() ? 0 : 1);
+
 
     private Color color;
 
