@@ -78,7 +78,7 @@ public class Memory {
         for (int i = 0; i < free.get_number_of_free_segments() - 1; i++) {
             long old_base = free.get_segemnt_i(i).getBase() + free.get_segemnt_i(i).getLimit();
             long old_limit = free.get_segemnt_i(i + 1).getBase() - old_base;
-            Process old_process = new Process(new Segment(old_base, old_limit, true));
+            Process old_process = new Process(new Segment(old_base, old_limit,"old process", true));
             runing_Process.add(old_process);
             allocated_segment.add(old_process.get_segemnt_i(0));
         }
@@ -86,7 +86,7 @@ public class Memory {
         if (size != last_free_address) {
             long old_base = free.get_segemnt_i(free.get_number_of_free_segments() - 1).getBase() + free.get_segemnt_i(free.get_number_of_free_segments() - 1).getLimit();
             long old_limit = size - old_base;
-            Process old_process = new Process(new Segment(old_base, old_limit, true));
+            Process old_process = new Process(new Segment(old_base, old_limit,"old process", true));
             runing_Process.add(old_process);
             allocated_segment.add(old_process.get_segemnt_i(0));
         }
