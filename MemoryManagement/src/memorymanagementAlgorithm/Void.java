@@ -1,3 +1,8 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package memorymanagementAlgorithm;
 
 import java.util.*;
@@ -5,6 +10,8 @@ import javafx.scene.paint.Color;
 
 
 /*
+
+
 how it gonna work
 we have intialy void (free locations)= base = 0 limit 1000
 now when we insert a process we should remove this segment and add for example base =100 limit 1000-100=900 
@@ -21,31 +28,55 @@ require auto correct size
 
 but if it's from 500 to 600 and from 900 to 1000
 we will add the segments easy as 2 free segments
+
+
+ */
+/**
+ *
+ * @author ahmed
  */
 public class Void {
 
-    private Color color = Color.BLACK;
-    private Vector<Segment> void_vector;
 
+    private Color color;
+
+    private Vector<Segment> void_vector;
+    private char condtion;// b = sort on base,  h=sort on larger at top , 
     //====================constructor============================//
+
     public Void() {
         void_vector = new Vector<Segment>();
+        color = Color.BLACK;
+        condtion = 'b';
     }
 
     public Void(Segment input) {
         void_vector = new Vector<Segment>();
         void_vector.add(input);
+        color = Color.BLACK;
+        condtion = 'b';
     }
 
     public Void(Vector<Segment> input) {
         void_vector = input;
+        condtion = 'b';
+        Collections.sort(void_vector, (a, b) -> a.getBase() < b.getBase() ? -1 : a.getBase() == b.getBase() ? 0 : 1);
+        color = Color.BLACK;
+
     }
 
-    //===============add section =============================//
+    //===============set section =============================//
     public void add_free_segment(Segment input) {
         void_vector.add(input);
+        // sort on base
         //====================safe section=================================================================================//
-        Collections.sort(void_vector, (a, b) -> a.getBase() < b.getBase() ? -1 : a.getBase() == b.getBase() ? 0 : 1);
+        if (condtion == 'b') {
+            sort_on_base();
+        } else if (condtion == 'l') {
+            sort_on_limit_large_at_top();
+        } else if (condtion == 's') {
+            sort_on_limit_small_at_top();
+        }
         for (int i = 0; i < void_vector.size() - 1; i++) {
             if (void_vector.get(i).getBase() + void_vector.get(i).getLimit() == void_vector.get(i + 1).getBase()) {
                 void_vector.get(i).setLimit(void_vector.get(i).getLimit() + void_vector.get(i + 1).getLimit());
@@ -53,12 +84,19 @@ public class Void {
                 i--;
             }
         }
+
     }
 
     public void add_free_segment_vector(Vector<Segment> input) {
         void_vector.addAll(input);
         //====================safe section=================================================================================//
-        Collections.sort(void_vector, (a, b) -> a.getBase() < b.getBase() ? -1 : a.getBase() == b.getBase() ? 0 : 1);
+        if (condtion == 'b') {
+            sort_on_base();
+        } else if (condtion == 'l') {
+            sort_on_limit_large_at_top();
+        } else if (condtion == 's') {
+            sort_on_limit_small_at_top();
+        }
         for (int i = 0; i < void_vector.size() - 1; i++) {
             if (void_vector.get(i).getBase() + void_vector.get(i).getLimit() == void_vector.get(i + 1).getBase()) {
                 void_vector.get(i).setLimit(void_vector.get(i).getLimit() + void_vector.get(i + 1).getLimit());
@@ -66,10 +104,12 @@ public class Void {
                 i--;
             }
         }
+
     }
 
     //==============get section==============================//
     public int get_number_of_free_segments() {
+
         return void_vector.size();
     }
 
@@ -96,30 +136,56 @@ public class Void {
     //=============remove section============================//
     public void remove_free_segment_i(int i) {
         void_vector.remove(i);
+
     }
 
     public void clear_free_segment_vector() {
         void_vector.clear();
+
     }
 
     //============print section=============================//
     public void print() {
         for (int i = 0; i < void_vector.size(); i++) {
-            void_vector.get(i).print();
+            void_vector.get(i).print_free();
         }
     }
 
+    public void print(int i) {
+
+        void_vector.get(i).print_free();
+
+    }
+
     //===============General methods========================//
+    // collect all free with same base + limit = base2 together
     public void resort() {
+
         //====================safe section=================================================================================//
-        Collections.sort(void_vector, (a, b) -> a.getBase()< b.getBase()? -1 : a.getBase()== b.getBase()? 0 : 1);
+        // must sort on base
+        Collections.sort(void_vector, (a, b) -> a.getBase() < b.getBase() ? -1 : a.getBase() == b.getBase() ? 0 : 1);
         for (int i = 0; i < void_vector.size() - 1; i++) {
-            if (void_vector.get(i).getBase()+ void_vector.get(i).getLimit()== void_vector.get(i + 1).getBase()) {
-                void_vector.get(i).setLimit(void_vector.get(i).getLimit()+ void_vector.get(i + 1).getLimit());
+            if (void_vector.get(i).getBase() + void_vector.get(i).getLimit() == void_vector.get(i + 1).getBase()) {
+                void_vector.get(i).setLimit(void_vector.get(i).getLimit() + void_vector.get(i + 1).getLimit());
                 void_vector.remove(i + 1);
                 i--;
             }
         }
+    }
+
+    public void sort_on_base() {
+        condtion = 'b';
+        Collections.sort(void_vector, (a, b) -> a.getBase() < b.getBase() ? -1 : a.getBase() == b.getBase() ? 0 : 1);
+    }
+
+    public void sort_on_limit_small_at_top() {
+        condtion = 's';
+        Collections.sort(void_vector, (a, b) -> a.getLimit() < b.getLimit() ? -1 : a.getLimit() == b.getLimit() ? 0 : 1);
+    }
+
+    public void sort_on_limit_large_at_top() {
+        condtion = 'l';
+        Collections.sort(void_vector, (a, b) -> a.getLimit() > b.getLimit() ? -1 : a.getLimit() == b.getLimit() ? 0 : 1);
     }
 
 }

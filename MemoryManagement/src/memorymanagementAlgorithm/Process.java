@@ -1,21 +1,32 @@
 package memorymanagementAlgorithm;
 
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+/**
+ *
+ * @author ahmed
+ */
 import java.util.*;
 import javafx.scene.paint.Color;
+//Vector<Double> list = new Vector<Double>();
 
 public class Process {
 
-    private static int Process_ID = 0;
-    private int ID;
     private Color color;
-    private boolean inserted = false;
+    private static long Process_ID = 0;
+    private long ID;
+    private boolean inserted;
     private Vector<Segment> Segment_vector;
-
     //====================constructor============================//
+
     public Process() {
         ID = Process_ID;
         Process_ID++;
         Segment_vector = new Vector<Segment>();
+        inserted = false;
         color = randomColor();
     }
 
@@ -24,82 +35,39 @@ public class Process {
         Process_ID++;
         Segment_vector = new Vector<Segment>();
         Segment_vector.add(input);
+        inserted = false;
         color = randomColor();
     }
 
+    // use this in the gui
     public Process(Vector<Segment> input) {
         ID = Process_ID;
         Process_ID++;
+        Segment_vector = new Vector<Segment>();
         Segment_vector = input;
+        inserted = false;
         color = randomColor();
+
     }
 
     //===============set section =============================//
+    // to add in the gui table 
     public void add_Segment(Segment input) {
-        Segment_vector.add(input);
-        Collections.sort(Segment_vector, (a, b) -> a.getLimit() < b.getLimit() ? -1 : a.getLimit() == b.getLimit() ? 0 : 1);
+        getSegment_vector().add(input);
+
     }
 
+    // to add more than 1 segment at a time
     public void add_Segment_vector(Vector<Segment> input) {
-        Segment_vector.addAll(input);
-        Collections.sort(Segment_vector, (a, b) -> a.getLimit() < b.getLimit() ? -1 : a.getLimit() == b.getLimit() ? 0 : 1);
+        getSegment_vector().addAll(input);
+
     }
 
-    //==============get section==============================//
-    public int get_number_of_segments() {
-        return Segment_vector.size();
+    // check is this process inserted or no 
+    public void set_inserted(boolean condtion) {
+        inserted = condtion;
     }
 
-    /**
-     * @return the ID
-     */
-    public int getID() {
-        return ID;
-    }
-
-    public Segment get_segemnt_i(int i) {
-        return Segment_vector.get(i);
-    }
-
-    public int get_total_size() {
-        int size = 0;
-        for (int i = 0; i < Segment_vector.size(); i++) {
-            size += Segment_vector.get(i).getLimit();
-        }
-        return size;
-    }
-
-    public boolean check_all_inserted() {
-        for (int i = 0; i < Segment_vector.size(); i++) {
-            if (Segment_vector.get(i).isInserted() == false) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    /**
-     * @return the color
-     */
-    public Color getColor() {
-        return color;
-    }
-
-    /**
-     * @return the inserted
-     */
-    public boolean isInserted() {
-        return inserted;
-    }
-
-    /**
-     * @return the Segment_vector
-     */
-    public Vector<Segment> getSegment_vector() {
-        return Segment_vector;
-    }
-
-    //==============set section==============================//
     /**
      * @param ID the ID to set
      */
@@ -128,13 +96,79 @@ public class Process {
         this.Segment_vector = Segment_vector;
     }
 
-    //==============copy section==============================//
-    public void copy(Process input) {
-        ID = input.getID();
-        color = input.getColor();
-        for (int i = 0; i > input.get_number_of_segments(); i++) {
-            Segment_vector.add(input.get_segemnt_i(i));
+    //==============get section==============================//
+    // return the number of segments
+    public long get_number_of_segments() {
+        return Segment_vector.size();
+    }
+
+    //return id
+    public long getID() {
+        return ID;
+    }
+
+    // return the segment number i this will make issue as the segment index changed after sorting
+    //beter use name
+    public Segment get_segemnt_i(int i) {
+
+        return getSegment_vector().get(i);
+    }
+
+    public long get_total_size() {
+        int size = 0;
+        for (int i = 0; i < getSegment_vector().size(); i++) {
+            size += getSegment_vector().get(i).getLimit();
         }
+        return size;
+    }
+
+    public boolean check_all_inserted() {
+
+        for (int i = 0; i < getSegment_vector().size(); i++) {
+            if (getSegment_vector().get(i).isInserted() == false) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * @return the color
+     */
+    public Color getColor() {
+        return color;
+    }
+
+    /**
+     * @return the Segment_vector
+     */
+    public Vector<Segment> getSegment_vector() {
+        return Segment_vector;
+    }
+
+    /**
+     * @return the inserted
+     */
+    public boolean isInserted() {
+        return inserted;
+    }
+
+    //==============copy section==============================//
+    public void copy_with_id(Process input) {
+        ID = input.getID();
+        for (int i = 0; i > input.get_number_of_segments(); i++) {
+            getSegment_vector().add(input.get_segemnt_i(i));
+        }
+
+        color = input.getColor();
+    }
+
+    public void copy_with_out_id(Process input) {
+        for (int i = 0; i > input.get_number_of_segments(); i++) {
+            getSegment_vector().add(input.get_segemnt_i(i));
+        }
+
+        color = input.getColor();
     }
 
     //=============remove section============================//
@@ -153,6 +187,12 @@ public class Process {
         }
     }
 
+    public void print(int i) {
+
+        getSegment_vector().get(i).print();
+
+    }
+
     //============color====================================//
     private Color randomColor() {
         Color newColor;
@@ -167,4 +207,5 @@ public class Process {
         }
         return rand;
     }
+
 }

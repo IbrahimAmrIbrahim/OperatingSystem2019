@@ -1,16 +1,43 @@
 package memorymanagementAlgorithm;
 
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+/**
+ *
+ * @author ahmed
+ */
 public class Segment {
 
-    private static int SEGMENT_ID = 0;
-    private int ID;
+    private static long SEGMENT_ID = 0;
+    private long ID;
     private String name;
-    private int base;
-    private int limit;
-    private boolean inserted = false;
-
+    private long base;
+    private long limit;
+    private boolean inserted;
 // ==============constructors ==========================//
-    public Segment(int base_, int limit_, String name_, boolean isPartofProcess) {
+
+    //use this for gui holes
+    public Segment(long base_, long limit_, boolean type) {
+
+        // type = 0 mean free segment 
+        // type = 1 mean old process
+        if (type) {
+            name = "old process";
+            ID = SEGMENT_ID;
+            SEGMENT_ID++;
+        } else {
+            name = "free";
+            ID = -1;
+        }
+        base = base_;
+        inserted = false;
+        limit = limit_;
+    }
+
+    public Segment(long base_, long limit_, String name_, boolean isPartofProcess) {
         if (isPartofProcess) {
             ID = SEGMENT_ID;
             SEGMENT_ID++;
@@ -20,9 +47,11 @@ public class Segment {
         name = name_;
         base = base_;
         limit = limit_;
+        inserted = false;
     }
 
-    public Segment(int limit_, String name_, boolean isPartofProcess) {
+    //use this in gui input for process
+    public Segment(long limit_, String name_, boolean isPartofProcess) {
         if (isPartofProcess) {
             ID = SEGMENT_ID;
             SEGMENT_ID++;
@@ -32,6 +61,7 @@ public class Segment {
         name = name_;
         base = -1;
         limit = limit_;
+        inserted = false;
     }
 
     public Segment(boolean isPartofProcess) {
@@ -44,20 +74,21 @@ public class Segment {
         name = "";
         base = -1;
         limit = -1;
+        inserted = false;
     }
 
 // ==============set section  ==========================//
     /**
      * @param limit the limit to set
      */
-    public void setLimit(int limit) {
+    public void setLimit(long limit) {
         this.limit = limit;
     }
 
     /**
      * @param base the base to set
      */
-    public void setBase(int base) {
+    public void setBase(long base) {
         this.base = base;
     }
 
@@ -79,14 +110,14 @@ public class Segment {
     /**
      * @return the ID
      */
-    public int getID() {
+    public long getID() {
         return ID;
     }
 
     /**
      * @return the base
      */
-    public int getBase() {
+    public long getBase() {
         return base;
     }
 
@@ -107,21 +138,33 @@ public class Segment {
     /**
      * @return the limit
      */
-    public int getLimit() {
+    public long getLimit() {
         return limit;
     }
-
 // ==============copy section ==========================//
-    public void copy(Segment second) {
+
+    public void copy_segment_without_id(Segment second) {
         base = second.getBase();
         limit = second.getLimit();
-        ID = second.getID();
-        name = second.getName();
         inserted = second.isInserted();
     }
 
-//===============print   ===========================//
-    public void print() {
-        System.out.print("{ID: " + ID + " ,Name: " + name + " ,Base: " + base + " ,Limit: " + limit + "}" + "\n");
+    public void copy_segment_with_id(Segment second) {
+        base = second.getBase();
+        limit = second.getLimit();
+        ID = second.getID();
+        inserted = second.isInserted();
     }
+//===============print   ===========================//
+
+    public void print() {
+        System.out.print("[ID:" + ID + ",Name:" + name + ",Base:" + base + ",Limit:" + limit + "]" + "\n");
+
+    }
+
+    public void print_free() {
+        System.out.print("[" + "Name:" + "free" + ",Base:" + base + ",Limit:" + limit + "]" + "\n");
+
+    }
+
 }
