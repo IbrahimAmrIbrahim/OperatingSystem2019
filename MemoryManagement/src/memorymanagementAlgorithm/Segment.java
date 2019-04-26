@@ -16,7 +16,7 @@ public class Segment {
     private String name;
     private long base;
     private long limit;
-    private boolean inserted = false;
+    private boolean inserted;
 // ==============constructors ==========================//
 
     //use this for gui holes
@@ -33,6 +33,7 @@ public class Segment {
             ID = -1;
         }
         base = base_;
+        inserted = false;
         limit = limit_;
     }
 
@@ -46,6 +47,7 @@ public class Segment {
         name = name_;
         base = base_;
         limit = limit_;
+        inserted = false;
     }
 
     //use this in gui input for process
@@ -59,6 +61,7 @@ public class Segment {
         name = name_;
         base = -1;
         limit = limit_;
+        inserted = false;
     }
 
     public Segment(boolean isPartofProcess) {
@@ -71,6 +74,7 @@ public class Segment {
         name = "";
         base = -1;
         limit = -1;
+        inserted = false;
     }
 
 // ==============set section  ==========================//

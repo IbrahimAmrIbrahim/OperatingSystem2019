@@ -16,13 +16,10 @@ import javafx.scene.paint.Color;
 
 public class Process {
 
-    
-
     private Color color;
-    private static int Process_ID = 0;
-    private int ID;
-    private boolean inserted = false;
-    private int number_of_segments;
+    private static long Process_ID = 0;
+    private long ID;
+    private boolean inserted;
     private Vector<Segment> Segment_vector;
     //====================constructor============================//
 
@@ -31,7 +28,7 @@ public class Process {
         ID = Process_ID;
         Process_ID++;
         Segment_vector = new Vector<Segment>();
-        number_of_segments = Segment_vector.size();
+        inserted = false;
         color = randomColor();
     }
 
@@ -41,7 +38,7 @@ public class Process {
         Process_ID++;
         Segment_vector = new Vector<Segment>();
         Segment_vector.add(input);
-        number_of_segments = Segment_vector.size();
+        inserted = false;
         color = randomColor();
     }
 
@@ -52,32 +49,30 @@ public class Process {
         Process_ID++;
         Segment_vector = new Vector<Segment>();
         Segment_vector = input;
-        number_of_segments = Segment_vector.size();
+        inserted = false;
         color = randomColor();
-       
+
     }
 
     //===============set section =============================//
     // to add in the gui table 
     public void add_Segment(Segment input) {
         getSegment_vector().add(input);
-        number_of_segments = getSegment_vector().size();
 
     }
 
     // to add more than 1 segment at a time
     public void add_Segment_vector(Vector<Segment> input) {
         getSegment_vector().addAll(input);
-         number_of_segments = getSegment_vector().size();
+
     }
 
     // check is this process inserted or no 
     public void set_inserted(boolean condtion) {
         inserted = condtion;
     }
-	
-	
-	/**
+
+    /**
      * @param ID the ID to set
      */
     public void setID(int ID) {
@@ -104,25 +99,17 @@ public class Process {
     public void setSegment_vector(Vector<Segment> Segment_vector) {
         this.Segment_vector = Segment_vector;
     }
-	
-	
-	
-	
-	
-	
-	
 
     //==============get section==============================//
     // return the number of segments
-     public int get_number_of_segments() {
+    public long get_number_of_segments() {
         return Segment_vector.size();
     }
 
     //return id
-    public int getID() {
+    public long getID() {
         return ID;
     }
-
 
     // return the segment number i this will make issue as the segment index changed after sorting
     //beter use name
@@ -131,7 +118,7 @@ public class Process {
         return getSegment_vector().get(i);
     }
 
-    public int get_total_size() {
+    public long get_total_size() {
         int size = 0;
         for (int i = 0; i < getSegment_vector().size(); i++) {
             size += getSegment_vector().get(i).getLimit();
@@ -149,7 +136,6 @@ public class Process {
         return true;
     }
 
-   
     /**
      * @return the color
      */
@@ -157,7 +143,7 @@ public class Process {
         return color;
     }
 
-     /**
+    /**
      * @return the Segment_vector
      */
     public Vector<Segment> getSegment_vector() {
@@ -177,7 +163,7 @@ public class Process {
         for (int i = 0; i > input.get_number_of_segments(); i++) {
             getSegment_vector().add(input.get_segemnt_i(i));
         }
-        number_of_segments = input.get_number_of_segments();
+
         color = input.getColor();
     }
 
@@ -185,7 +171,7 @@ public class Process {
         for (int i = 0; i > input.get_number_of_segments(); i++) {
             getSegment_vector().add(input.get_segemnt_i(i));
         }
-        number_of_segments = input.get_number_of_segments();
+
         color = input.getColor();
     }
 
@@ -197,6 +183,7 @@ public class Process {
     public void clear_segment_vector() {
         getSegment_vector().clear();
     }
+
     //============print section=============================//
     public void print() {
         for (int i = 0; i < getSegment_vector().size(); i++) {

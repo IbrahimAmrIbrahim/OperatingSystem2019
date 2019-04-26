@@ -5,6 +5,7 @@
  */
 package memorymanagementAlgorithm;
 
+
 import java.util.*;
 import javafx.scene.paint.Color;
 
@@ -38,66 +39,71 @@ we will add the segments easy as 2 free segments
 public class Void {
 //   Collections.sort(xx,(a, b) -> a.getBase() < b.getBase() ? -1 : a.getBase() == b.getBase() ? 0 : 1);
 
-    private Color color = Color.BLACK;
+    private Color color;
 
     private Vector<Segment> void_vector;
-    private char condtion = 'b';// b = sort on base,  h=sort on larger at top , 
+    private char condtion ;// b = sort on base,  h=sort on larger at top , 
     //====================constructor============================//
 
     public Void() {
         void_vector = new Vector<Segment>();
+        color = Color.BLACK;
+        condtion = 'b';
     }
 
     public Void(Segment input) {
         void_vector = new Vector<Segment>();
-        input.setName("free");
         void_vector.add(input);
+        color = Color.BLACK;
+        condtion = 'b';
     }
 
     public Void(Vector<Segment> input) {
-
-        for (int i = 0; i < input.size(); i++) {
-            input.get(i).setName("free");
-        }
         void_vector = input;
-        //sort on base default
-        sort_on_base();
+        condtion = 'b';
+        Collections.sort(void_vector, (a, b) -> a.getBase() < b.getBase() ? -1 : a.getBase() == b.getBase() ? 0 : 1);
+        color = Color.BLACK;
 
     }
 
     //===============set section =============================//
     public void add_free_segment(Segment input) {
-        input.setName("free");
         void_vector.add(input);
         // sort on base
         //====================safe section=================================================================================//
-
-        sort_on_base();
-        collect_free();
         if (condtion == 'b') {
-            ;
+            sort_on_base();
         } else if (condtion == 'l') {
             sort_on_limit_large_at_top();
         } else if (condtion == 's') {
             sort_on_limit_small_at_top();
+        }
+        for (int i = 0; i < void_vector.size() - 1; i++) {
+            if (void_vector.get(i).getBase() + void_vector.get(i).getLimit() == void_vector.get(i + 1).getBase()) {
+                void_vector.get(i).setLimit(void_vector.get(i).getLimit() + void_vector.get(i + 1).getLimit());
+                void_vector.remove(i + 1);
+                i--;
+            }
         }
 
     }
 
     public void add_free_segment_vector(Vector<Segment> input) {
-        for (int i = 0; i < input.size(); i++) {
-            input.get(i).setName("free");
-        }
         void_vector.addAll(input);
         //====================safe section=================================================================================//
-        sort_on_base();
-        collect_free();
         if (condtion == 'b') {
-            ;
+            sort_on_base();
         } else if (condtion == 'l') {
             sort_on_limit_large_at_top();
         } else if (condtion == 's') {
             sort_on_limit_small_at_top();
+        }
+        for (int i = 0; i < void_vector.size() - 1; i++) {
+            if (void_vector.get(i).getBase() + void_vector.get(i).getLimit() == void_vector.get(i + 1).getBase()) {
+                void_vector.get(i).setLimit(void_vector.get(i).getLimit() + void_vector.get(i + 1).getLimit());
+                void_vector.remove(i + 1);
+                i--;
+            }
         }
 
     }
@@ -108,8 +114,8 @@ public class Void {
         return void_vector.size();
     }
 
-    public long get_total_size() {
-        long size = 0;
+    public int get_total_size() {
+        int size = 0;
         for (int i = 0; i < void_vector.size(); i++) {
             size += void_vector.get(i).getLimit();
         }
@@ -153,7 +159,7 @@ public class Void {
     }
 
     //===============General methods========================//
-    //resort the void collect free together
+    // collect all free with same base + limit = base2 together
     public void resort() {
 
         //====================safe section=================================================================================//
@@ -183,13 +189,4 @@ public class Void {
         Collections.sort(void_vector, (a, b) -> a.getLimit() > b.getLimit() ? -1 : a.getLimit() == b.getLimit() ? 0 : 1);
     }
 
-    private void collect_free() {
-        for (int i = 0; i < void_vector.size() - 1; i++) {
-            if (void_vector.get(i).getBase() + void_vector.get(i).getLimit() == void_vector.get(i + 1).getBase()) {
-                void_vector.get(i).setLimit(void_vector.get(i).getLimit() + void_vector.get(i + 1).getLimit());
-                void_vector.remove(i + 1);
-                i--;
-            }
-        }
-    }
 }
