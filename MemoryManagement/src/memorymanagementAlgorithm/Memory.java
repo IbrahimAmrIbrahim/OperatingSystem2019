@@ -106,7 +106,7 @@ public class Memory {
 
     // use it if total free can fit 
     // this will collect the free on 1 big segment take care it will take a period of time
-    public void combustion_memory() {
+    public void compaction_memory() {
         // how to trade ?!! 
         /*
         for example 

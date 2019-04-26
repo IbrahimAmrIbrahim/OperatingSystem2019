@@ -11,6 +11,7 @@ package memorymanagementAlgorithm;
  */
 public class Segment {
 
+   
     private static long SEGMENT_ID = 0;
     private long ID;
     private String name;
@@ -20,22 +21,7 @@ public class Segment {
 // ==============constructors ==========================//
 
     //use this for gui holes
-    public Segment(long base_, long limit_, boolean type) {
-
-        // type = 0 mean free segment 
-        // type = 1 mean old process
-        if (type) {
-            name = "old process";
-            ID = SEGMENT_ID;
-            SEGMENT_ID++;
-        } else {
-            name = "free";
-            ID = -1;
-        }
-        base = base_;
-        inserted = false;
-        limit = limit_;
-    }
+  
 
     public Segment(long base_, long limit_, String name_, boolean isPartofProcess) {
         if (isPartofProcess) {
@@ -78,6 +64,15 @@ public class Segment {
     }
 
 // ==============set section  ==========================//
+    
+    
+     /**
+     * @param aSEGMENT_ID the SEGMENT_ID to set
+     */
+    public static void setSEGMENT_ID(long aSEGMENT_ID) {
+        SEGMENT_ID = aSEGMENT_ID;
+    }
+
     /**
      * @param limit the limit to set
      */
@@ -105,6 +100,14 @@ public class Segment {
     public void setInserted(boolean inserted) {
         this.inserted = inserted;
     }
+    
+     /**
+     * @param ID the ID to set
+     */
+    public void setID(long ID) {
+        this.ID = ID;
+    }
+
 
 // ==============get section  ==========================//
     /**
@@ -152,13 +155,13 @@ public class Segment {
     public void copy_segment_with_id(Segment second) {
         base = second.getBase();
         limit = second.getLimit();
-        ID = second.getID();
+        setID(second.getID());
         inserted = second.isInserted();
     }
 //===============print   ===========================//
 
     public void print() {
-        System.out.print("[ID:" + ID + ",Name:" + name + ",Base:" + base + ",Limit:" + limit + "]" + "\n");
+        System.out.print("[ID:" + getID() + ",Name:" + name + ",Base:" + base + ",Limit:" + limit + "]" + "\n");
 
     }
 
@@ -167,4 +170,5 @@ public class Segment {
 
     }
 
+   
 }
