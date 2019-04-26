@@ -5,14 +5,20 @@
  */
 package memorymanagement;
 
+import memorymanagementAlgorithm.Segment;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.cell.PropertyValueFactory;
 
 /**
  *
@@ -20,7 +26,18 @@ import javafx.scene.control.TextField;
  */
 public class AddProcessController implements Initializable {
 
-    private int numberOfSegments;
+    private int numberOfSegments = 0;
+    private Segment[] SegmentsArray;
+    private int segmentIndex = 0;
+
+    @FXML
+    private TableView<Segment> segmentsTable;
+
+    @FXML
+    private TableColumn<Segment, String> segmentName;
+
+    @FXML
+    private TableColumn<Segment, Integer> segmentSize;
 
     @FXML
     private Label labelPID;
@@ -38,7 +55,7 @@ public class AddProcessController implements Initializable {
     private Button confirmNumber;
 
     @FXML
-    private Label segmentName;
+    private Label labelsegmentName;
 
     @FXML
     private TextField nameInputed;
@@ -47,7 +64,7 @@ public class AddProcessController implements Initializable {
     private Button confirmName;
 
     @FXML
-    private Label segmentSize;
+    private Label labelsegmentSize;
 
     @FXML
     private TextField sizeInputed;
@@ -63,12 +80,41 @@ public class AddProcessController implements Initializable {
 
     @FXML
     void handleCancelButton(ActionEvent event) {
-
+        
     }
 
     @FXML
     void handleSegmentConfirmation(ActionEvent event) {
+        try {
 
+            int tempSize = Integer.valueOf(sizeInputed.getText());
+            SegmentsArray[segmentIndex] = new Segment(tempSize, nameInputed.getText(), true);
+
+            segmentsTable.getItems().add(SegmentsArray[segmentIndex]);
+
+            segmentIndex++;
+
+            nameInputed.setText("");
+            sizeInputed.setText("");
+
+            labelsegmentName.setText("Segment " + Integer.toString(segmentIndex + 1) + " name");
+            labelsegmentSize.setText("Segment " + Integer.toString(segmentIndex + 1) + " size");
+
+            if (segmentIndex == numberOfSegments ) {
+                labelsegmentName.setDisable(true);
+                nameInputed.setDisable(true);
+                confirmName.setDisable(true);
+                labelsegmentSize.setDisable(true);
+                sizeInputed.setDisable(true);
+                confirmSize.setDisable(true);
+                confirmSegment.setDisable(true);
+                cancel.setText("Done");
+            }
+        } catch (NumberFormatException | NullPointerException nfe) {
+            Alert WrongEntry = new Alert(AlertType.ERROR);
+            WrongEntry.setContentText("Input must be Integer");
+            WrongEntry.show();
+        }
     }
 
     @FXML
@@ -76,16 +122,33 @@ public class AddProcessController implements Initializable {
 
     }
 
+    void InputRequiredSegments(int NumberOfSegments) {
+    }
+
     @FXML
     void handlecSegmentNumberConfirmation(ActionEvent event) {
+        try {
+            numberOfSegments = Integer.valueOf(numberInputed.getText());
+            labelsegmentName.setDisable(false);
+            nameInputed.setDisable(false);
+            confirmName.setDisable(false);
+            labelsegmentSize.setDisable(false);
+            sizeInputed.setDisable(false);
+            confirmSize.setDisable(false);
+            segmentsTable.setDisable(false);
+            confirmSegment.setDisable(false);
+            confirmNumber.setDisable(true);
+            numberInputed.setDisable(true);
 
-        segmentName.setDisable(false);
-        nameInputed.setDisable(false);
-        confirmName.setDisable(false);
-        segmentSize.setDisable(false);
-        sizeInputed.setDisable(false);
-        confirmSize.setDisable(false);
-        confirmSegment.setDisable(false);
+            labelsegmentName.setText("Segment 1 name");
+            labelsegmentSize.setText("Segment 1 size");
+
+            SegmentsArray = new Segment[numberOfSegments];
+        } catch (NumberFormatException | NullPointerException nfe) {
+            Alert WrongEntry = new Alert(AlertType.ERROR);
+            WrongEntry.setContentText("Input must be Integer");
+            WrongEntry.show();
+        }
     }
 
     @FXML
@@ -95,7 +158,8 @@ public class AddProcessController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-
+        segmentName.setCellValueFactory(new PropertyValueFactory<>("name"));
+        segmentSize.setCellValueFactory(new PropertyValueFactory<>("limit"));
     }
 
 }
