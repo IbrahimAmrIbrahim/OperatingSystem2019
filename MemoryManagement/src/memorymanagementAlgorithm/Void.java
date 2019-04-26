@@ -67,7 +67,10 @@ public class Void {
 
     //===============set section =============================//
     public void add_free_segment(Segment input) {
+        input.setName("Free");
+        input.setID(-1);
         void_vector.add(input);
+        
         // sort on base
         //====================safe section=================================================================================//
         if (condtion == 'b') {
@@ -88,6 +91,12 @@ public class Void {
     }
 
     public void add_free_segment_vector(Vector<Segment> input) {
+        
+        for(int i=0;i<input.size();i++)
+        {
+            input.get(i).setName("Free");
+            input.get(i).setID(-1);
+        }
         void_vector.addAll(input);
         //====================safe section=================================================================================//
         if (condtion == 'b') {

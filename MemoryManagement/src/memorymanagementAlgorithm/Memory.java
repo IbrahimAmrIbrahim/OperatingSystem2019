@@ -55,7 +55,7 @@ public class Memory {
     // use it in the algorthm only
     public void deallocate_process(Process input) {
         free.add_free_segment_vector(input.getSegment_vector());
-        Process.removeElement(input);
+        runing_Process.removeElement(input);
     }
 
     //===========print =================//
@@ -78,7 +78,7 @@ public class Memory {
         for (int i = 0; i < free.get_number_of_free_segments() - 1; i++) {
             long old_base = free.get_segemnt_i(i).getBase() + free.get_segemnt_i(i).getLimit();
             long old_limit = free.get_segemnt_i(i + 1).getBase() - old_base;
-            Process old_process = new Process(new Segment(old_base, old_limit, true));
+            Process old_process = new Process(new Segment(old_base, old_limit,"old process", true));
             runing_Process.add(old_process);
             allocated_segment.add(old_process.get_segemnt_i(0));
         }
@@ -86,7 +86,7 @@ public class Memory {
         if (size != last_free_address) {
             long old_base = free.get_segemnt_i(free.get_number_of_free_segments() - 1).getBase() + free.get_segemnt_i(free.get_number_of_free_segments() - 1).getLimit();
             long old_limit = size - old_base;
-            Process old_process = new Process(new Segment(old_base, old_limit, true));
+            Process old_process = new Process(new Segment(old_base, old_limit,"old process", true));
             runing_Process.add(old_process);
             allocated_segment.add(old_process.get_segemnt_i(0));
         }
@@ -106,7 +106,7 @@ public class Memory {
 
     // use it if total free can fit 
     // this will collect the free on 1 big segment take care it will take a period of time
-    public void combustion_memory() {
+    public void compaction_memory() {
         // how to trade ?!! 
         /*
         for example 
