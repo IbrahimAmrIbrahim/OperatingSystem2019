@@ -11,25 +11,32 @@ package memorymanagementAlgorithm;
  */
 public class Segment {
 
-    private static int SEGMENT_ID = 0;
-    private int ID;
+    private static long SEGMENT_ID = 0;
+    private long ID;
     private String name;
-    private int base;
-    private int limit;
+    private long base;
+    private long limit;
     private boolean inserted = false;
 // ==============constructors ==========================//
 
     //use this for gui holes
-    public Segment(int base_, int limit_) {
-        inserted = true;
-        ID = SEGMENT_ID;
-        SEGMENT_ID++;
-        name = "free";
+    public Segment(long base_, long limit_, boolean type) {
+
+        // type = 0 mean free segment 
+        // type = 1 mean old process
+        if (type) {
+            name = "old process";
+            ID = SEGMENT_ID;
+            SEGMENT_ID++;
+        } else {
+            name = "free";
+            ID = -1;
+        }
         base = base_;
         limit = limit_;
     }
 
-    public Segment(int base_, int limit_, String name_, boolean isPartofProcess) {
+    public Segment(long base_, long limit_, String name_, boolean isPartofProcess) {
         if (isPartofProcess) {
             ID = SEGMENT_ID;
             SEGMENT_ID++;
@@ -42,7 +49,7 @@ public class Segment {
     }
 
     //use this in gui input for process
-    public Segment(int limit_, String name_, boolean isPartofProcess) {
+    public Segment(long limit_, String name_, boolean isPartofProcess) {
         if (isPartofProcess) {
             ID = SEGMENT_ID;
             SEGMENT_ID++;
@@ -70,14 +77,14 @@ public class Segment {
     /**
      * @param limit the limit to set
      */
-    public void setLimit(int limit) {
+    public void setLimit(long limit) {
         this.limit = limit;
     }
 
     /**
      * @param base the base to set
      */
-    public void setBase(int base) {
+    public void setBase(long base) {
         this.base = base;
     }
 
@@ -99,14 +106,14 @@ public class Segment {
     /**
      * @return the ID
      */
-    public int getID() {
+    public long getID() {
         return ID;
     }
 
     /**
      * @return the base
      */
-    public int getBase() {
+    public long getBase() {
         return base;
     }
 
@@ -127,7 +134,7 @@ public class Segment {
     /**
      * @return the limit
      */
-    public int getLimit() {
+    public long getLimit() {
         return limit;
     }
 // ==============copy section ==========================//

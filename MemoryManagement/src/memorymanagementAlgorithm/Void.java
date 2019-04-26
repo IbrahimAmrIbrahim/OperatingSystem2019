@@ -108,8 +108,8 @@ public class Void {
         return void_vector.size();
     }
 
-    public int get_total_size() {
-        int size = 0;
+    public long get_total_size() {
+        long size = 0;
         for (int i = 0; i < void_vector.size(); i++) {
             size += void_vector.get(i).getLimit();
         }

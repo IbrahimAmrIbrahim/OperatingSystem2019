@@ -16,28 +16,37 @@ public class Memory {
 
     private Vector<Process> Process;// all process
     private Vector<Segment> allocated_segment;// segment inserted on memory
-    private Vector<Process> waiting_queue;// process on waiting 
-    private Vector<Process> runing_process;// process on waiting 
+    private Vector<Process> waiting_Process;// process on waiting 
+    private Vector<Process> runing_Process;// process on waiting 
     private Void free;
+    private long size;
 
     //=============================constructor====================================//
-    public Memory() {
+    public Memory(long size_) {
+        size = size_;
         Process = new Vector<Process>();
         allocated_segment = new Vector<Segment>();
-        waiting_queue = new Vector<Process>();
-        runing_process = new Vector<Process>();
+        waiting_Process = new Vector<Process>();
+        runing_Process = new Vector<Process>();
         free = new Void();
     }
 
     //================== set area ===============================//
-    public void add_process(Process input) {
-        Process.add(input);
-        waiting_queue.add(input);
+    public void add_waiting_process(Process input) {
+
+        waiting_Process.add(input);
     }
 
-    public void add_process_vector(Vector<Process> input) {
-        Process.addAll(input);
-        waiting_queue.addAll(input);
+    public void add_waiting_process_vector(Vector<Process> input) {
+        waiting_Process.addAll(input);
+    }
+
+    public void add_runing_process_vecotr(Vector<Process> input) {
+        waiting_Process.addAll(input);
+    }
+
+    public void add_runing_process(Process input) {
+        waiting_Process.add(input);
     }
 
     public void add_free_Segment(Segment input) {
@@ -45,7 +54,7 @@ public class Memory {
     }
 
     // use it in the algorthm only
-    public void add_free_process(Process input) {
+    public void deallocate_process(Process input) {
         free.add_free_segment_vector(input.getSegment_vector());
         Process.removeElement(input);
     }
@@ -53,20 +62,39 @@ public class Memory {
     //===========print =================//
     public void print() {
         System.out.println("process allocated ");
-        for (int i = 0; i < Process.size(); i++) {
-            Process.get(i).print();
+        for (int i = 0; i < runing_Process.size(); i++) {
+            runing_Process.get(i).print();
         }
         System.out.println("free locations ");
         free.print();
     }
 
     //===========get section=================================//
-    public int get_total_free() {
+    public long get_total_free() {
         return free.get_total_size();
     }
 
     //====================== method sections ====================//
-    public void sort_segment_vector(Vector<Segment> input) {
+    public void adding_old_process() {// the free is sorted on base 
+        for (int i = 0; i < free.get_number_of_free_segments() - 1; i++) {
+            long old_base = free.get_segemnt_i(i).getBase() + free.get_segemnt_i(i).getLimit();
+            long old_limit = free.get_segemnt_i(i + 1).getBase() - old_base;
+            Process old_process = new Process(new Segment(old_base, old_limit, true));
+            runing_Process.add(old_process);
+            allocated_segment.add(new Segment(old_base, old_limit, true));
+        }
+        long last_free_address = (free.get_segemnt_i(free.get_number_of_free_segments() - 1).getBase() + free.get_segemnt_i(free.get_number_of_free_segments() - 1).getLimit());
+        if (size != last_free_address) {
+            long old_base = free.get_segemnt_i(free.get_number_of_free_segments() - 1).getBase() + free.get_segemnt_i(free.get_number_of_free_segments() - 1).getLimit();
+            long old_limit = size - old_base;
+            Process old_process = new Process(new Segment(old_base, old_limit, true));
+            runing_Process.add(old_process);
+            allocated_segment.add(new Segment(old_base, old_limit, true));
+        }
+
+    }
+
+    private void sort_segment_vector(Vector<Segment> input) {
         Collections.sort(input, (a, b) -> a.getBase() < b.getBase() ? -1 : a.getBase() == b.getBase() ? 0 : 1);
 
     }
@@ -78,7 +106,7 @@ public class Memory {
     }
 
     // use it if total free can fit 
-    public void re_arrange_the_memory()// this will collect the free on 1 big segment take care it will take a period of time
+    public void combustion_memory()// this will collect the free on 1 big segment take care it will take a period of time
     {
         // how to trade ?!! 
         /*
