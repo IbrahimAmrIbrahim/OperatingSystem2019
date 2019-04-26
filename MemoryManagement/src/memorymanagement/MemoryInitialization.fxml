@@ -15,7 +15,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane id="AnchorPane" prefHeight="526.0" prefWidth="616.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="memorymanagement.MemoryInitializationController">
+<AnchorPane id="AnchorPane" maxHeight="530.0" maxWidth="620.0" minHeight="530.0" minWidth="620.0" prefHeight="530.0" prefWidth="620.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="memorymanagement.MemoryInitializationController">
    <children>
       <TitledPane collapsible="false" layoutX="40.0" layoutY="27.0" prefHeight="420.0" prefWidth="520.0" text="Memory Initialize" AnchorPane.leftAnchor="40.0" AnchorPane.rightAnchor="40.0">
          <content>
@@ -39,16 +39,16 @@
                     </rowConstraints>
                      <children>
                         <Label text="Base Address" />
-                        <TextField GridPane.columnIndex="1" />
+                        <TextField fx:id="baseAddress_txt" GridPane.columnIndex="1" />
                         <Label text="Limit" GridPane.rowIndex="1" />
-                        <TextField GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                        <ChoiceBox prefWidth="150.0" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                        <TextField fx:id="limit_txt" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                        <ChoiceBox fx:id="limitUnit_choiceBox" prefWidth="150.0" GridPane.columnIndex="2" GridPane.rowIndex="1" />
                      </children>
                   </GridPane>
                   <FlowPane alignment="CENTER" columnHalignment="CENTER" hgap="200.0" prefHeight="31.0" prefWidth="200.0">
                      <children>
-                        <Button mnemonicParsing="false" text="Add" />
-                        <Button mnemonicParsing="false" text="Cancel" />
+                        <Button mnemonicParsing="false" onKeyPressed="#addFreeHole_keyboardEvent" onMouseClicked="#addFreeHole_mouseEvent" text="Add" />
+                        <Button mnemonicParsing="false" onKeyPressed="#cancelAdditionofFreeHole_keyboardEvent" onMouseDragged="#cancelAdditionofFreeHole_mouseEvent" text="Cancel" />
                      </children>
                   </FlowPane>
                </children>
@@ -57,8 +57,8 @@
       </TitledPane>
       <HBox alignment="CENTER" layoutY="470.0" spacing="200.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
          <children>
-            <Button mnemonicParsing="false" text="Save" />
-            <Button mnemonicParsing="false" text="Cancel" />
+            <Button mnemonicParsing="false" onKeyPressed="#saveFreeHoles_keyboardEvent" onMouseClicked="#saveFreeHoles_mouseEvent" text="Save" />
+            <Button mnemonicParsing="false" onKeyPressed="#cancelFreeHoles_keyboardEvent" onMouseClicked="#cancelFreeHoles_mouseEvent" text="Cancel" />
          </children>
       </HBox>
    </children>

@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package memorymanagementAlgorithm;
 
 import java.util.*;
@@ -10,8 +5,6 @@ import javafx.scene.paint.Color;
 
 
 /*
-
-
 how it gonna work
 we have intialy void (free locations)= base = 0 limit 1000
 now when we insert a process we should remove this segment and add for example base =100 limit 1000-100=900 
@@ -28,22 +21,15 @@ require auto correct size
 
 but if it's from 500 to 600 and from 900 to 1000
 we will add the segments easy as 2 free segments
-
-
- */
-/**
- *
- * @author ahmed
  */
 public class Void {
-
 
     private Color color;
 
     private Vector<Segment> void_vector;
     private char condtion;// b = sort on base,  h=sort on larger at top , 
-    //====================constructor============================//
 
+    //====================constructor============================//
     public Void() {
         void_vector = new Vector<Segment>();
         color = Color.BLACK;
@@ -59,10 +45,9 @@ public class Void {
 
     public Void(Vector<Segment> input) {
         void_vector = input;
+        color = Color.BLACK;
         condtion = 'b';
         Collections.sort(void_vector, (a, b) -> a.getBase() < b.getBase() ? -1 : a.getBase() == b.getBase() ? 0 : 1);
-        color = Color.BLACK;
-
     }
 
     //===============set section =============================//
@@ -70,7 +55,7 @@ public class Void {
         input.setName("Free");
         input.setID(-1);
         void_vector.add(input);
-        
+
         // sort on base
         //====================safe section=================================================================================//
         if (condtion == 'b') {
@@ -87,13 +72,11 @@ public class Void {
                 i--;
             }
         }
-
     }
 
     public void add_free_segment_vector(Vector<Segment> input) {
-        
-        for(int i=0;i<input.size();i++)
-        {
+
+        for (int i = 0; i < input.size(); i++) {
             input.get(i).setName("Free");
             input.get(i).setID(-1);
         }
@@ -118,7 +101,6 @@ public class Void {
 
     //==============get section==============================//
     public int get_number_of_free_segments() {
-
         return void_vector.size();
     }
 
@@ -161,9 +143,7 @@ public class Void {
     }
 
     public void print(int i) {
-
         void_vector.get(i).print_free();
-
     }
 
     //===============General methods========================//

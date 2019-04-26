@@ -1,28 +1,15 @@
 package memorymanagementAlgorithm;
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-/**
- *
- * @author ahmed
- */
 public class Segment {
 
-   
     private static long SEGMENT_ID = 0;
     private long ID;
     private String name;
     private long base;
     private long limit;
     private boolean inserted;
+
 // ==============constructors ==========================//
-
-    //use this for gui holes
-  
-
     public Segment(long base_, long limit_, String name_, boolean isPartofProcess) {
         if (isPartofProcess) {
             ID = SEGMENT_ID;
@@ -64,9 +51,7 @@ public class Segment {
     }
 
 // ==============set section  ==========================//
-    
-    
-     /**
+    /**
      * @param aSEGMENT_ID the SEGMENT_ID to set
      */
     public static void setSEGMENT_ID(long aSEGMENT_ID) {
@@ -100,14 +85,13 @@ public class Segment {
     public void setInserted(boolean inserted) {
         this.inserted = inserted;
     }
-    
-     /**
+
+    /**
      * @param ID the ID to set
      */
     public void setID(long ID) {
         this.ID = ID;
     }
-
 
 // ==============get section  ==========================//
     /**
@@ -144,8 +128,8 @@ public class Segment {
     public long getLimit() {
         return limit;
     }
-// ==============copy section ==========================//
 
+// ==============copy section ==========================//
     public void copy_segment_without_id(Segment second) {
         base = second.getBase();
         limit = second.getLimit();
@@ -158,8 +142,8 @@ public class Segment {
         setID(second.getID());
         inserted = second.isInserted();
     }
-//===============print   ===========================//
 
+//===============print   ===========================//
     public void print() {
         System.out.print("[ID:" + getID() + ",Name:" + name + ",Base:" + base + ",Limit:" + limit + "]" + "\n");
 
@@ -170,5 +154,4 @@ public class Segment {
 
     }
 
-   
 }

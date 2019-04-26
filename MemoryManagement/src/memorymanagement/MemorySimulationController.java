@@ -3,8 +3,6 @@ package memorymanagement;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -51,8 +49,8 @@ public class MemorySimulationController implements Initializable {
         FXMLLoader fxmlLoader1 = new FXMLLoader(getClass().getResource("MemoryConfiguration.fxml"));
         Parent root1 = (Parent) fxmlLoader1.load();
 
-        MemoryConfigurationController ctrl = fxmlLoader1.getController();
-        ctrl.sceneInitialization(myController);
+        MemoryConfigurationController ctrl1 = fxmlLoader1.getController();
+        ctrl1.sceneInitialization(myController);
 
         memoryConfigurationChange = false;
 
@@ -67,24 +65,15 @@ public class MemorySimulationController implements Initializable {
             FXMLLoader fxmlLoader2 = new FXMLLoader(getClass().getResource("MemoryInitialization.fxml"));
             Parent root2 = (Parent) fxmlLoader2.load();
 
-            /*MemoryInitializationController ctrl = fxmlLoader.getController();
-        if (newProcess == true) {
-            processtoAdd = new PCB(true);
-        }
-        ctrl.sceneInitialization(myController, processtoAdd, false);
-             */
+            MemoryInitializationController ctrl2 = fxmlLoader2.getController();
+            ctrl2.sceneInitialization();
+
             Stage stage2 = new Stage();
             stage2.setScene(new Scene(root2));
             stage2.initModality(Modality.APPLICATION_MODAL);
             stage2.setTitle("Memory Initialization");
             stage2.initStyle(StageStyle.UTILITY);
             stage2.showAndWait();
-
-            /*if (newProcess == true) {
-        processTable.getItems().add(processtoAdd);
-        insertMethodCall(processtoAdd);
-        startOutputSimulation_btn.setDisable(false);
-    }*/
         }
     }
 

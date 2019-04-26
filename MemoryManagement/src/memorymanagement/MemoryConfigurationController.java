@@ -35,6 +35,7 @@ public class MemoryConfigurationController implements Initializable {
     private Button cancel_btn;
 
     private MemorySimulationController parentCtrl;
+    boolean isTrueConfiguration;
 
     /**
      * Initializes the controller class.
@@ -46,6 +47,7 @@ public class MemoryConfigurationController implements Initializable {
 
     public void sceneInitialization(MemorySimulationController ctrl) {
         parentCtrl = ctrl;
+        isTrueConfiguration = false;
         setTextFieldValidation();
         initializeChoiceBox();
     }
@@ -115,14 +117,18 @@ public class MemoryConfigurationController implements Initializable {
     private void saveHardwareConfig_keyboardEvent(KeyEvent event) {
         if (event.getCode().toString().equals("ENTER")) {
             save();
-            sceneClose();
+            if (isTrueConfiguration) {
+                sceneClose();
+            }
         }
     }
 
     @FXML
     private void saveHardwareConfig_mouseEvent(MouseEvent event) {
         save();
-        sceneClose();
+        if (isTrueConfiguration) {
+            sceneClose();
+        }
     }
 
     @FXML
@@ -300,6 +306,7 @@ public class MemoryConfigurationController implements Initializable {
                 break;
         }
 
+        isTrueConfiguration = true;
         parentCtrl.setMemoryConfigurationChange(true);
     }
 
