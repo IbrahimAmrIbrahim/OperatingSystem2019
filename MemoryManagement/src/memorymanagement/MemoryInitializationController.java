@@ -9,9 +9,11 @@ import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import memorymanagementAlgorithm.Segment;
@@ -26,6 +28,10 @@ public class MemoryInitializationController implements Initializable {
     private TextField limit_txt;
     @FXML
     private ChoiceBox<String> limitUnit_choiceBox;
+    @FXML
+    private TableColumn<Segment, Long> baseAddressColumn;
+    @FXML
+    private TableColumn<Segment, Long> limitColumn;
 
     /**
      * Initializes the controller class.
@@ -38,6 +44,7 @@ public class MemoryInitializationController implements Initializable {
     public void sceneInitialization() {
         setTextFieldValidation();
         initializeChoiceBox();
+        tableInitialize();
     }
 
     private void setTextFieldValidation() {
@@ -69,7 +76,8 @@ public class MemoryInitializationController implements Initializable {
     }
 
     private void tableInitialize() {
-
+        baseAddressColumn.setCellValueFactory(new PropertyValueFactory<>("base"));
+        limitColumn.setCellValueFactory(new PropertyValueFactory<>("limit"));
     }
 
     @FXML

@@ -23,8 +23,8 @@
                <children>
                   <TableView fx:id="memoryHolesTable" prefHeight="200.0" prefWidth="520.0">
                     <columns>
-                      <TableColumn editable="false" maxWidth="254.0" minWidth="254.0" prefWidth="254.0" resizable="false" text="Base Address" />
-                      <TableColumn editable="false" maxWidth="254.0" minWidth="254.0" prefWidth="254.0" resizable="false" text="Limit" />
+                      <TableColumn fx:id="baseAddressColumn" editable="false" maxWidth="254.0" minWidth="254.0" prefWidth="254.0" resizable="false" text="Base Address" />
+                      <TableColumn fx:id="limitColumn" editable="false" maxWidth="254.0" minWidth="254.0" prefWidth="254.0" resizable="false" text="Limit" />
                     </columns>
                   </TableView>
                   <GridPane hgap="40.0" vgap="20.0">

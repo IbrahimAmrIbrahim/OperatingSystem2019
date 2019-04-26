@@ -12,6 +12,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import memorymanagementAlgorithm.Blank;
 
 public class MemorySimulationController implements Initializable {
 
@@ -65,6 +66,7 @@ public class MemorySimulationController implements Initializable {
             FXMLLoader fxmlLoader2 = new FXMLLoader(getClass().getResource("MemoryInitialization.fxml"));
             Parent root2 = (Parent) fxmlLoader2.load();
 
+            Blank freeHoles = new Blank();
             MemoryInitializationController ctrl2 = fxmlLoader2.getController();
             ctrl2.sceneInitialization();
 

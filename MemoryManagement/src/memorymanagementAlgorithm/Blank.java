@@ -22,7 +22,7 @@ require auto correct size
 but if it's from 500 to 600 and from 900 to 1000
 we will add the segments easy as 2 free segments
  */
-public class Void {
+public class Blank {
 
     private Color color;
 
@@ -30,20 +30,20 @@ public class Void {
     private char condtion;// b = sort on base,  h=sort on larger at top , 
 
     //====================constructor============================//
-    public Void() {
+    public Blank() {
         void_vector = new Vector<Segment>();
         color = Color.BLACK;
         condtion = 'b';
     }
 
-    public Void(Segment input) {
+    public Blank(Segment input) {
         void_vector = new Vector<Segment>();
         void_vector.add(input);
         color = Color.BLACK;
         condtion = 'b';
     }
 
-    public Void(Vector<Segment> input) {
+    public Blank(Vector<Segment> input) {
         void_vector = input;
         color = Color.BLACK;
         condtion = 'b';

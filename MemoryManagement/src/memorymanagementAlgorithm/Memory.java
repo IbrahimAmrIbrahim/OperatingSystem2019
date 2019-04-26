@@ -17,7 +17,7 @@ public class Memory {
     private Vector<Segment> allocated_segment;// segment inserted on memory
     private Vector<Process> waiting_Process;// process on waiting 
     private Vector<Process> runing_Process;// process on waiting 
-    private Void free;
+    private Blank free;
     private long size;
 
     //=============================constructor====================================//
@@ -27,7 +27,7 @@ public class Memory {
         allocated_segment = new Vector<Segment>();
         waiting_Process = new Vector<Process>();
         runing_Process = new Vector<Process>();
-        free = new Void();
+        free = new Blank();
     }
 
     //================== set area ===============================//
