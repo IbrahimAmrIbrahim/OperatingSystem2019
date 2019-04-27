@@ -76,6 +76,8 @@ public class MemorySimulationController implements Initializable {
             stage2.setTitle("Memory Initialization");
             stage2.initStyle(StageStyle.UTILITY);
             stage2.showAndWait();
+            
+            freeHoles.print();
         }
     }
 

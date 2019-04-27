@@ -47,7 +47,7 @@
                   </GridPane>
                   <FlowPane alignment="CENTER" columnHalignment="CENTER" hgap="200.0" prefHeight="31.0" prefWidth="200.0">
                      <children>
-                        <Button mnemonicParsing="false" onKeyPressed="#addFreeHole_keyboardEvent" onMouseClicked="#addFreeHole_mouseEvent" text="Add" />
+                        <Button fx:id="add_edit_btn" mnemonicParsing="false" onKeyPressed="#addFreeHole_keyboardEvent" onMouseClicked="#addFreeHole_mouseEvent" text="Add" />
                         <Button mnemonicParsing="false" onKeyPressed="#cancelAdditionofFreeHole_keyboardEvent" onMouseClicked="#cancelAdditionofFreeHole_mouseEvent" text="Cancel" />
                      </children>
                   </FlowPane>

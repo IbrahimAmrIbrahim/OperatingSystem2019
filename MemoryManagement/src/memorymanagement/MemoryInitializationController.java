@@ -7,14 +7,20 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.Vector;
 import java.util.function.UnaryOperator;
+import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
@@ -22,6 +28,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 import memorymanagementAlgorithm.Blank;
 import memorymanagementAlgorithm.Segment;
 
@@ -41,10 +48,14 @@ public class MemoryInitializationController implements Initializable {
     private TableColumn<Segment, Long> limitColumn;
     @FXML
     private Button cancel_btn;
+    @FXML
+    private Button add_edit_btn;
 
     private MemorySimulationController parentCtrl;
     private Blank freeSpace;
     private Vector<Segment> free_vector;
+    private boolean isEdit;
+    private Segment editedHole;
 
     /**
      * Initializes the controller class.
@@ -57,6 +68,8 @@ public class MemoryInitializationController implements Initializable {
     public void sceneInitialization(MemorySimulationController ctrl, Blank free) {
         parentCtrl = ctrl;
         freeSpace = free;
+        isEdit = false;
+        add_edit_btn.setText("Add");
         free_vector = new Vector<Segment>();
         setTextFieldValidation();
         initializeChoiceBox();
@@ -103,6 +116,56 @@ public class MemoryInitializationController implements Initializable {
     private void tableInitialize() {
         baseAddressColumn.setCellValueFactory(new PropertyValueFactory<>("base"));
         limitColumn.setCellValueFactory(new PropertyValueFactory<>("limit"));
+
+        memoryHolesTable.setRowFactory(new Callback<TableView<Segment>, TableRow<Segment>>() {
+            @Override
+            public TableRow<Segment> call(TableView<Segment> tableView) {
+                final ContextMenu contextMenu = new ContextMenu();
+                final MenuItem editMenuItem = new MenuItem("Edit");
+                final MenuItem removeMenuItem = new MenuItem("Delete");
+                final TableRow<Segment> row = new TableRow<>();
+
+                editMenuItem.setOnAction(new EventHandler<ActionEvent>() {
+                    @Override
+                    public void handle(ActionEvent event) {
+                        int index = row.getIndex();
+                        editedHole = memoryHolesTable.getItems().get(index);
+                        deleteHole(editedHole);
+                        baseAddress_txt.setText(Long.toString(editedHole.getBase()));
+                        limit_txt.setText(Long.toString(editedHole.getLimit()));
+                        add_edit_btn.setText("Edit");
+                        isEdit = true;
+                    }
+                }
+                );
+                contextMenu.getItems().add(editMenuItem);
+
+                removeMenuItem.setOnAction(
+                        new EventHandler<ActionEvent>() {
+                    @Override
+                    public void handle(ActionEvent event) {
+                        if (yesNoDialog("Are you sure you want to delete this free hole?")) {
+                            int index = row.getIndex();
+                            Segment holetodelete = memoryHolesTable.getItems().get(index);
+                            memoryHolesTable.getItems().remove(row.getItem());
+                            deleteHole(holetodelete);
+                        }
+                    }
+                }
+                );
+                contextMenu.getItems().add(removeMenuItem);
+                // Set context menu on row, but use a binding to make it only show for non-empty rows:  
+                row.contextMenuProperty()
+                        .bind(
+                                Bindings.when(row.emptyProperty())
+                                        .then((ContextMenu) null)
+                                        .otherwise(contextMenu)
+                        );
+                return row;
+            }
+        }
+        );
+
     }
 
     /**
@@ -149,12 +212,24 @@ public class MemoryInitializationController implements Initializable {
     private void addFreeHole_keyboardEvent(KeyEvent event) {
         if (event.getCode().toString().equals("ENTER")) {
             addHole();
+            if (isEdit) {
+                memoryHolesTable.refresh();
+                editedHole = null;
+                add_edit_btn.setText("Add");
+                isEdit = false;
+            }
         }
     }
 
     @FXML
     private void addFreeHole_mouseEvent(MouseEvent event) {
         addHole();
+        if (isEdit) {
+            memoryHolesTable.refresh();
+            editedHole = null;
+            add_edit_btn.setText("Add");
+            isEdit = false;
+        }
     }
 
     @FXML
@@ -162,6 +237,10 @@ public class MemoryInitializationController implements Initializable {
         if (event.getCode().toString().equals("ENTER")) {
             baseAddress_txt.clear();
             limit_txt.clear();
+            free_vector.add(editedHole);
+            editedHole = null;
+            add_edit_btn.setText("Add");
+            isEdit = false;
         }
     }
 
@@ -169,6 +248,10 @@ public class MemoryInitializationController implements Initializable {
     private void cancelAdditionofFreeHole_mouseEvent(MouseEvent event) {
         baseAddress_txt.clear();
         limit_txt.clear();
+        free_vector.add(editedHole);
+        editedHole = null;
+        add_edit_btn.setText("Add");
+        isEdit = false;
     }
 
     @FXML
@@ -312,12 +395,22 @@ public class MemoryInitializationController implements Initializable {
             }
         }
 
-        Segment newHole = new Segment(baseAddress, limit, "Free", false);
-        free_vector.add(newHole);
-        memoryHolesTable.getItems().add(newHole);
+        if (isEdit) {
+            editedHole.setBase(baseAddress);
+            editedHole.setLimit(limit);
+            free_vector.add(editedHole);
+        } else {
+            Segment newHole = new Segment(baseAddress, limit, "Free", false);
+            free_vector.add(newHole);
+            memoryHolesTable.getItems().add(newHole);
+        }
 
         baseAddress_txt.clear();
         limit_txt.clear();
+    }
+
+    private void deleteHole(Segment deletedHole) {
+        free_vector.remove(deletedHole);
     }
 
     private void sceneClose() {
