@@ -49,6 +49,7 @@ public class Memory {
     public void add_runing_process(Process input) {
         waiting_Process.removeElement(input);
         runing_Process.add(input);
+        allocated_segment.addAll(input.getSegment_vector());
     }
 
     public void set_free_Blank(Blank input) {

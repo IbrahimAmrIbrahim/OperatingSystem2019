@@ -99,6 +99,15 @@ public class Blank {
 
     }
 
+    public void copy(Blank input) {
+        for (int i = 0; i < input.get_number_of_free_segments(); i++) {
+            Segment copy = new Segment(false);
+            copy.copy_segment_with_id(input.get_segemnt_i(i));
+            void_vector.add(copy);
+        }
+
+    }
+
     //==============get section==============================//
     public int get_number_of_free_segments() {
         return void_vector.size();
