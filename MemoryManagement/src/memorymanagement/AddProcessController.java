@@ -36,6 +36,7 @@ public class AddProcessController implements Initializable {
     private int numberOfSegments = 0;
     private Segment[] SegmentsArray;
     private int segmentIndex = 0;
+    private long maxSize;
 
     private MemorySimulationController parentCtrl;
     private Process newProcess = new Process();
@@ -205,6 +206,7 @@ public class AddProcessController implements Initializable {
         parentCtrl = ctrl;
         newProcess = process;
         isEdit = false;
+        parentCtrl.getMemoryTotalSize();
         Segment.setSEGMENT_ID(0);   
         initializeChoiceBox();
     }
