@@ -25,6 +25,7 @@ import javafx.stage.StageStyle;
 import memorymanagementAlgorithm.Blank;
 import memorymanagementAlgorithm.Process;
 import memorymanagementAlgorithm.Segment;
+import memorymanagementAlgorithm.first_fit;
 
 public class MemorySimulationController implements Initializable {
 
@@ -150,12 +151,31 @@ public class MemorySimulationController implements Initializable {
 
     @FXML
     private void clear_mouseEvent(MouseEvent event) {
+        first_fit a1 = new first_fit(8388608);
+        Blank b1 = new Blank(new Segment(0, 8388608, "Free", true));
         Process p0 = new Process();
         p0.add_Segment(new Segment(400, "S1", true));
-        p0.add_Segment(new Segment(500, "S1", true));
-        p0.add_Segment(new Segment(900, "S1", true));
-        p0.add_Segment(new Segment(1500, "S1", true));
-        p0.add_Segment(new Segment(200, "S1", true));
+        p0.add_Segment(new Segment(500, "S2", true));
+        p0.add_Segment(new Segment(900, "S3", true));
+        p0.add_Segment(new Segment(1500, "S4", true));
+        p0.add_Segment(new Segment(200, "S5", true));
+        Process p1 = new Process();
+        p1.add_Segment(new Segment(900, "S1", true));
+        p1.add_Segment(new Segment(2000, "S2", true));
+        p1.add_Segment(new Segment(4500, "S3", true));
+        p1.add_Segment(new Segment(200, "S4", true));
+        p1.add_Segment(new Segment(10, "S5", true));
+        Process p2 = new Process();
+        p2.add_Segment(new Segment(60, "S1", true));
+        p2.add_Segment(new Segment(90, "S2", true));
+        p2.add_Segment(new Segment(6800, "S3", true));
+        p2.add_Segment(new Segment(40, "S4", true));
+        p2.add_Segment(new Segment(9000, "S5", true));
+        a1.insert_holes(b1);
+        a1.allocate_process(p0);
+        a1.allocate_process(p1);
+        a1.allocate_process(p2);
+
     }
 
     private void canvasReset() {
