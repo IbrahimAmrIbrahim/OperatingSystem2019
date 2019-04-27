@@ -112,7 +112,7 @@ public class AddProcessController implements Initializable {
 
             switch (selectedValue) {
                 case "Byte":
-                    if (newProcess.get_total_size() > (maxSize)) {
+                    if (newProcess.get_total_size() + tempSizeD > (maxSize)) {
                         errorDialog("Total Memory Size exceeded the maximum limit allowed.");
                         return;
                     } else {
@@ -120,7 +120,7 @@ public class AddProcessController implements Initializable {
                     }
                     break;
                 case "KB":
-                    if (newProcess.get_total_size() > (maxSize)) {
+                    if (newProcess.get_total_size() + tempSizeD> (maxSize)) {
                         errorDialog("Total Memory Size exceeded the maximum limit allowed.");
                         return;
                     } else {
@@ -129,7 +129,7 @@ public class AddProcessController implements Initializable {
 
                     break;
                 case "MB":
-                    if (newProcess.get_total_size() > (maxSize)) {
+                    if (newProcess.get_total_size() + tempSizeD> (maxSize)) {
                         errorDialog("Total Memory Size exceeded the maximum limit allowed.");
                         return;
                     } else {
@@ -138,7 +138,7 @@ public class AddProcessController implements Initializable {
 
                     break;
                 case "GB":
-                    if (newProcess.get_total_size() > (maxSize)) {
+                    if (newProcess.get_total_size() + tempSizeD> (maxSize)) {
                         errorDialog("Total Memory Size exceeded the maximum limit allowed.");
                         return;
                     } else {
@@ -147,7 +147,7 @@ public class AddProcessController implements Initializable {
 
                     break;
                 case "TB":
-                    if (newProcess.get_total_size() > maxSize) {
+                    if (newProcess.get_total_size() + tempSizeD> maxSize) {
                         errorDialog("Total Memory Size exceeded the maximum limit allowed.");
                         return;
                     } else {
