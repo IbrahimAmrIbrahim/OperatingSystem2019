@@ -19,6 +19,12 @@ public class first_fit {
     public first_fit(long Size_) {
         my_memory = new Memory(Size_);
     }
+    
+    //=======================methods ====================//
+        public void test ()
+        {
+
+        }
 
     public void allocate_process(Process input) {
         //add the process on waiting queue
@@ -87,6 +93,8 @@ public class first_fit {
             // error msg the process size is bigger than the memory itself
         }
         my_memory.print();
+        System.out.println("----------------------------------");
+       
     }
 
     public void deallocate_process(Process input) {

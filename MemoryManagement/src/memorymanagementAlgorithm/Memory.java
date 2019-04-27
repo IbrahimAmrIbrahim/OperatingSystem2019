@@ -41,10 +41,12 @@ public class Memory {
     }
 
     // remove it, it;s gonna destroy us 
+    //====================on destroy list ============================================//
     public void add_runing_process_vecotr(Vector<Process> input) {
         waiting_Process.removeElement(input);
         runing_Process.addAll(input);
     }
+    //====================on destroy list ============================================//
 
     public void add_runing_process(Process input) {
         waiting_Process.removeElement(input);
@@ -60,6 +62,7 @@ public class Memory {
     public void deallocate_process(Process input) {
         free.add_free_segment_vector(input.getSegment_vector());
         runing_Process.removeElement(input);
+        allocated_segment.removeAll(input.getSegment_vector());
     }
 
     //===========print =================//
