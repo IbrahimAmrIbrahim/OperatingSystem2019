@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package memorymanagement;
 
 import memorymanagementAlgorithm.Segment;
@@ -38,13 +33,12 @@ public class AddProcessController implements Initializable {
     private int segmentIndex = 0;
 
     private MemorySimulationController parentCtrl;
-    private Process newProcess = new Process();
+    private Process newProcess;
     private boolean isEdit;
 
-    
     @FXML
     private ChoiceBox<String> sizeUnit_choiceBox;
-    
+
     @FXML
     private TitledPane allocateProcessTitlePane;
 
@@ -52,13 +46,13 @@ public class AddProcessController implements Initializable {
     private TableView<Segment> segmentsTable;
 
     @FXML
-    private TableColumn<Segment, Integer> segmentIDColumn;
-    
+    private TableColumn<Segment, Long> segmentIDColumn;
+
     @FXML
     private TableColumn<Segment, String> segmentName;
 
     @FXML
-    private TableColumn<Segment, Integer> segmentSize;
+    private TableColumn<Segment, Long> segmentSize;
 
     @FXML
     private Label labelPID;
@@ -100,29 +94,28 @@ public class AddProcessController implements Initializable {
     @FXML
     void handleSegmentConfirmation(ActionEvent event) {
         try {
-
             Long tempSize = Long.valueOf(sizeInputed.getText());
             SegmentsArray[segmentIndex] = new Segment(tempSize, nameInputed.getText(), true);
 
-            Long InputedSize = SegmentsArray[segmentIndex].getLimit(); 
+            Long InputedSize = SegmentsArray[segmentIndex].getLimit();
             String selectedValue = sizeUnit_choiceBox.getValue();
-            
-            switch(selectedValue){ // Still needs maxsize constraint
+
+            switch (selectedValue) { // Still needs maxsize constraint
                 case "Byte":
                     break;
                 case "KB":
-                    SegmentsArray[segmentIndex].setLimit(InputedSize * 1024);
+                    SegmentsArray[segmentIndex].setLimit(InputedSize * (1024L));
                     break;
                 case "MB":
-                    SegmentsArray[segmentIndex].setLimit(InputedSize * 2048);
+                    SegmentsArray[segmentIndex].setLimit(InputedSize * (1024L * 1024L));
                     break;
                 case "GB":
-                    SegmentsArray[segmentIndex].setLimit(InputedSize * 4096);
+                    SegmentsArray[segmentIndex].setLimit(InputedSize * (1024L * 1024L * 1024L));
                     break;
                 case "TB":
-                    SegmentsArray[segmentIndex].setLimit(InputedSize * 8192);
+                    SegmentsArray[segmentIndex].setLimit(InputedSize * (1024L * 1024L * 1024L * 1024L));
                     break;
-                            
+
             }
             newProcess.add_Segment(SegmentsArray[segmentIndex]);
             segmentsTable.getItems().add(newProcess.get_segemnt_i(segmentIndex));
@@ -140,7 +133,7 @@ public class AddProcessController implements Initializable {
                 confirmSegment.setDisable(true);
                 sizeUnit_choiceBox.setDisable(true);
                 cancel.setText("Done");
-            }else{
+            } else {
                 labelsegmentName.setText("Segment " + Integer.toString(segmentIndex + 1) + " name");
                 labelsegmentSize.setText("Segment " + Integer.toString(segmentIndex + 1) + " size");
             }
@@ -205,7 +198,7 @@ public class AddProcessController implements Initializable {
         parentCtrl = ctrl;
         newProcess = process;
         isEdit = false;
-        Segment.setSEGMENT_ID(0);   
+        Segment.setSEGMENT_ID(0);
         initializeChoiceBox();
     }
 
@@ -215,7 +208,6 @@ public class AddProcessController implements Initializable {
         segmentSize.setCellValueFactory(new PropertyValueFactory<>("limit"));
         segmentIDColumn.setCellValueFactory(new PropertyValueFactory<>("ID"));
         allocateProcessTitlePane.setText("Process x");
-        initializeChoiceBox();
     }
 
 }

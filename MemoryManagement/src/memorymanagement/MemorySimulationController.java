@@ -20,7 +20,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
-import javafx.scene.transform.Transform;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -113,6 +112,7 @@ public class MemorySimulationController implements Initializable {
         stage1.setScene(new Scene(root1));
         stage1.initModality(Modality.APPLICATION_MODAL);
         stage1.setTitle("Memory Hardware");
+        stage1.setResizable(false);
         stage1.initStyle(StageStyle.UTILITY);
         stage1.showAndWait();
 
@@ -128,6 +128,7 @@ public class MemorySimulationController implements Initializable {
             stage2.setScene(new Scene(root2));
             stage2.initModality(Modality.APPLICATION_MODAL);
             stage2.setTitle("Memory Initialization");
+            stage2.setResizable(false);
             stage2.initStyle(StageStyle.UTILITY);
             stage2.showAndWait();
 
@@ -144,40 +145,54 @@ public class MemorySimulationController implements Initializable {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("AddProcess.fxml"));
         Parent root1 = (Parent) fxmlLoader.load();
 
+        Process newProcess = new Process();
+        AddProcessController ctrl = fxmlLoader.getController();
+        ctrl.sceneInitialization(myController, newProcess);
+
         Stage stage = new Stage();
         stage.setScene(new Scene(root1));
         stage.initModality(Modality.APPLICATION_MODAL);
         stage.setTitle("Allocate Process");
+        stage.setResizable(false);
         stage.initStyle(StageStyle.UTILITY);
         stage.showAndWait();
+
+        newProcess.print();
     }
 
     @FXML
     private void clear_mouseEvent(MouseEvent event) {
-        first_fit a1 = new first_fit(8388608);
-        Blank b1 = new Blank(new Segment(0, 8388608, "Free", true));
+        first_fit a1 = new first_fit(2000);
+        Blank b1 = new Blank(new Segment(0, 1000, "Free", true));
         Process p0 = new Process();
-        p0.add_Segment(new Segment(400, "S1", true));
-        p0.add_Segment(new Segment(500, "S2", true));
-        p0.add_Segment(new Segment(900, "S3", true));
-        p0.add_Segment(new Segment(1500, "S4", true));
-        p0.add_Segment(new Segment(200, "S5", true));
+        p0.add_Segment(new Segment(100, "S1", true));
+        p0.add_Segment(new Segment(100, "S2", true));
+        p0.add_Segment(new Segment(100, "S3", true));
+        p0.add_Segment(new Segment(100, "S4", true));
+        p0.add_Segment(new Segment(100, "S5", true));
         Process p1 = new Process();
-        p1.add_Segment(new Segment(900, "S1", true));
-        p1.add_Segment(new Segment(2000, "S2", true));
-        p1.add_Segment(new Segment(4500, "S3", true));
-        p1.add_Segment(new Segment(200, "S4", true));
-        p1.add_Segment(new Segment(10, "S5", true));
+        p1.add_Segment(new Segment(100, "S1", true));
+        p1.add_Segment(new Segment(100, "S2", true));
+        p1.add_Segment(new Segment(100, "S3", true));
+        p1.add_Segment(new Segment(100, "S4", true));
+        p1.add_Segment(new Segment(100, "S5", true));
         Process p2 = new Process();
-        p2.add_Segment(new Segment(60, "S1", true));
-        p2.add_Segment(new Segment(90, "S2", true));
-        p2.add_Segment(new Segment(6800, "S3", true));
-        p2.add_Segment(new Segment(40, "S4", true));
-        p2.add_Segment(new Segment(9000, "S5", true));
+        p2.add_Segment(new Segment(100, "S1", true));
+        p2.add_Segment(new Segment(100, "S2", true));
+        p2.add_Segment(new Segment(100, "S3", true));
+        p2.add_Segment(new Segment(100, "S4", true));
+        p2.add_Segment(new Segment(100, "S5", true));
+        Process p3 = new Process();
+        p3.add_Segment(new Segment(100, "S1", true));
+        p3.add_Segment(new Segment(100, "S2", true));
+        p3.add_Segment(new Segment(100, "S3", true));
+        p3.add_Segment(new Segment(100, "S4", true));
+        p3.add_Segment(new Segment(100, "S5", true));
         a1.insert_holes(b1);
         a1.allocate_process(p0);
         a1.allocate_process(p1);
         a1.allocate_process(p2);
+        a1.allocate_process(p3);
 
     }
 
@@ -292,7 +307,7 @@ public class MemorySimulationController implements Initializable {
             text.setText("OS Reserved\n" + "Size: " + Long.toString(osReservedSize));
             text.setTextAlignment(TextAlignment.CENTER);
             text.setX(200 + (memoryWidth / 2d) - (text.getLayoutBounds().getWidth() / 2d));
-            text.setY(55 + ((osReservedSize * byteHeigt) / 2d) - (text.getLayoutBounds().getHeight() / 2d) );
+            text.setY(55 + ((osReservedSize * byteHeigt) / 2d) - (text.getLayoutBounds().getHeight() / 2d));
             canvas.getChildren().add(text);
         }
     }
@@ -321,8 +336,12 @@ public class MemorySimulationController implements Initializable {
             canvas.getChildren().add(text);
         }
 
-        /*        for (int i = 0; i < allocatedProcess_vector.size(); i++) {
+        /*for (int i = 0; i < allocatedProcess_vector.size(); i++) {
+            for (int j = 0; j < allocatedProcess_vector.get(i).getSegment_vector().size(); j++) {
 
+                
+                
+            }
         }*/
     }
 
