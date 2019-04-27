@@ -56,7 +56,7 @@ public class MemoryConfigurationController implements Initializable {
         UnaryOperator<TextFormatter.Change> filter = change -> {
             String text = change.getText();
 
-            if (text.matches("[0-9]*")) {
+            if (text.matches("[0-9]*\\.?[0-9]*")) {
                 return change;
             }
 
@@ -160,128 +160,143 @@ public class MemoryConfigurationController implements Initializable {
 
         //Memory Total Size
         long totalSize = 0;
+        double totalSizeDouble = 0;
         try {
-            totalSize = Long.valueOf(memoryTotalSize_txt.getText());
+            totalSizeDouble = Double.valueOf(memoryTotalSize_txt.getText());
         } catch (Exception e) {
-            errorDialog("Total Memory Size is empty or its exceeded the max limit allowed.");
+            errorDialog("Total Memory Size is empty, wrong input or its exceeded the max limit allowed.");
             return;
         }
-        if (totalSize == 0) {
+        if (totalSizeDouble == 0) {
             errorDialog("Total Memory Size can't equal to zero.");
             return;
         }
         String totalSizeUnit = memoryTotalSizeUnit_choiceBox.getValue();
         switch (totalSizeUnit) {
             case "Byte":
-                switch (parentCtrl.getMemoryAlignment()) {
-                    case _8bit:
-                        break;
-                    case _32bit:
-                        if ((totalSize % 4L != 0)) {
-                            errorDialog("Total Memory Size must be divisible by 4.");
-                            return;
-                        }
-                        break;
-                    case _64bit:
-                        if ((totalSize % 8L != 0)) {
-                            errorDialog("Total Memory Size must be divisible by 8.");
-                            return;
-                        }
-                        break;
-                }
-                parentCtrl.setMemoryTotalSize(totalSize);
-                break;
-            case "KB":
-                if (totalSize > (Long.MAX_VALUE / 1024L)) {
+                if (totalSizeDouble > (Long.MAX_VALUE)) {
                     errorDialog("Total Memory Size is exceeded the max limit allowed.");
                     return;
                 } else {
-                    parentCtrl.setMemoryTotalSize(totalSize * 1024L);
+                    totalSize = Math.round(totalSizeDouble);
+                }
+                break;
+            case "KB":
+                if (totalSizeDouble > (Long.MAX_VALUE / 1024d)) {
+                    errorDialog("Total Memory Size is exceeded the max limit allowed.");
+                    return;
+                } else {
+                    totalSize = Math.round(totalSizeDouble * 1024d);
                 }
                 break;
             case "MB":
-                if (totalSize > (Long.MAX_VALUE / (1024L * 1024L))) {
+                if (totalSizeDouble > (Long.MAX_VALUE / (1024d * 1024d))) {
                     errorDialog("Total Memory Size is exceeded the max limit allowed.");
                     return;
                 } else {
-                    parentCtrl.setMemoryTotalSize(totalSize * (1024L * 1024L));
+                    totalSize = Math.round(totalSizeDouble * (1024d * 1024d));
                 }
                 break;
             case "GB":
-                if (totalSize > (Long.MAX_VALUE / (1024L * 1024L * 1024L))) {
+                if (totalSizeDouble > (Long.MAX_VALUE / (1024d * 1024d * 1024d))) {
                     errorDialog("Total Memory Size is exceeded the max limit allowed.");
                     return;
                 } else {
-                    parentCtrl.setMemoryTotalSize(totalSize * (1024L * 1024L * 1024L));
+                    totalSize = Math.round(totalSizeDouble * (1024d * 1024d * 1024d));
                 }
                 break;
             case "TB":
-                if (totalSize > (Long.MAX_VALUE / (1024L * 1024L * 1024L * 1024L))) {
+                if (totalSizeDouble > (Long.MAX_VALUE / (1024d * 1024d * 1024d * 1024d))) {
                     errorDialog("Total Memory Size is exceeded the max limit allowed.");
                     return;
                 } else {
-                    parentCtrl.setMemoryTotalSize(totalSize * (1024L * 1024L * 1024L * 1024L));
+                    totalSize = Math.round(totalSizeDouble * (1024d * 1024d * 1024d * 1024d));
                 }
                 break;
         }
+        switch (parentCtrl.getMemoryAlignment()) {
+            case _8bit:
+                break;
+            case _32bit:
+                if ((totalSize % 4L != 0)) {
+                    errorDialog("Total Memory Size must be divisible by 4.");
+                    return;
+                }
+                break;
+            case _64bit:
+                if ((totalSize % 8L != 0)) {
+                    errorDialog("Total Memory Size must be divisible by 8.");
+                    return;
+                }
+                break;
+        }
+        parentCtrl.setMemoryTotalSize(totalSize);
 
         //Os Reserved Size.
         long osSize = 0;
+        double osSizeDouble = 0;
         try {
-            osSize = Long.valueOf(osReservedSize_txt.getText());
+            osSizeDouble = Double.valueOf(osReservedSize_txt.getText());
         } catch (Exception e) {
-            errorDialog("OS Reserved Size is empty or its exceeded the max limit allowed.");
+            errorDialog("OS Reserved Size is empty, wrong input or its exceeded the max limit allowed.");
             return;
         }
 
         String osSizeUnit = osReservedSizeUnit_choiceBox.getValue();
         switch (osSizeUnit) {
             case "Byte":
-                switch (parentCtrl.getMemoryAlignment()) {
-                    case _8bit:
-                        break;
-                    case _32bit:
-                        if ((osSize % 4L != 0)) {
-                            osSize += 4 - (osSize % 4L);
-                        }
-                        break;
-                    case _64bit:
-                        if ((osSize % 8L != 0)) {
-                            osSize += 8 - (osSize % 8L);
-                        }
-                        break;
+                if (osSizeDouble > (Long.MAX_VALUE)) {
+                    errorDialog("OS Reserved Size is exceeded the max limit allowed.");
+                    return;
+                } else {
+                    osSize = Math.round(osSizeDouble);
                 }
                 break;
             case "KB":
-                if (osSize > (Long.MAX_VALUE / 1024L)) {
+                if (osSizeDouble > (Long.MAX_VALUE / 1024d)) {
                     errorDialog("OS Reserved Size is exceeded the max limit allowed.");
                     return;
                 } else {
-                    osSize = (osSize * 1024L);
+                    osSize = Math.round(osSizeDouble * 1024d);
                 }
                 break;
             case "MB":
-                if (osSize > (Long.MAX_VALUE / (1024L * 1024L))) {
+                if (osSizeDouble > (Long.MAX_VALUE / (1024d * 1024d))) {
                     errorDialog("OS Reserved Size is exceeded the max limit allowed.");
                     return;
                 } else {
-                    osSize = (osSize * (1024L * 1024L));
+                    osSize = Math.round(osSizeDouble * (1024d * 1024d));
                 }
                 break;
             case "GB":
-                if (osSize > (Long.MAX_VALUE / (1024L * 1024L * 1024L))) {
+                if (osSizeDouble > (Long.MAX_VALUE / (1024d * 1024d * 1024d))) {
                     errorDialog("OS Reserved Size is exceeded the max limit allowed.");
                     return;
                 } else {
-                    osSize = (osSize * (1024L * 1024L * 1024L));
+                    osSize = Math.round(osSizeDouble * (1024d * 1024d * 1024d));
                 }
                 break;
             case "TB":
-                if (osSize > (Long.MAX_VALUE / (1024L * 1024L * 1024L * 1024L))) {
+                if (osSizeDouble > (Long.MAX_VALUE / (1024d * 1024d * 1024d * 1024d))) {
                     errorDialog("OS Reserved Size is exceeded the max limit allowed.");
                     return;
                 } else {
-                    osSize = (osSize * (1024L * 1024L * 1024L * 1024L));
+                    osSize = Math.round(osSizeDouble * (1024d * 1024d * 1024d * 1024d));
+                }
+                break;
+        }
+
+        switch (parentCtrl.getMemoryAlignment()) {
+            case _8bit:
+                break;
+            case _32bit:
+                if ((osSize % 4L != 0)) {
+                    osSize += 4 - (osSize % 4L);
+                }
+                break;
+            case _64bit:
+                if ((osSize % 8L != 0)) {
+                    osSize += 8 - (osSize % 8L);
                 }
                 break;
         }

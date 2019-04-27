@@ -150,7 +150,7 @@ public class Segment {
     }
 
     public void print_free() {
-        System.out.print("[" + "Name:" + "free" + ",Base:" + base + ",Limit:" + limit + "]" + "\n");
+        System.out.print("[" + "Name:" + name + ",Base:" + base + ",Limit:" + limit + "]" + "\n");
 
     }
 

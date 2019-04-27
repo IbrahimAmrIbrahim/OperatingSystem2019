@@ -68,7 +68,7 @@ public class MemorySimulationController implements Initializable {
 
             Blank freeHoles = new Blank();
             MemoryInitializationController ctrl2 = fxmlLoader2.getController();
-            ctrl2.sceneInitialization();
+            ctrl2.sceneInitialization(myController, freeHoles);
 
             Stage stage2 = new Stage();
             stage2.setScene(new Scene(root2));

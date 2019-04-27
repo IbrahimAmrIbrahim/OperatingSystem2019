@@ -23,8 +23,8 @@
                <children>
                   <TableView fx:id="memoryHolesTable" prefHeight="200.0" prefWidth="520.0">
                     <columns>
-                      <TableColumn fx:id="baseAddressColumn" editable="false" maxWidth="254.0" minWidth="254.0" prefWidth="254.0" resizable="false" text="Base Address" />
-                      <TableColumn fx:id="limitColumn" editable="false" maxWidth="254.0" minWidth="254.0" prefWidth="254.0" resizable="false" text="Limit" />
+                      <TableColumn fx:id="baseAddressColumn" editable="false" maxWidth="254.0" minWidth="254.0" prefWidth="254.0" resizable="false" style="-fx-alignment: CENTER;" text="Base Address" />
+                      <TableColumn fx:id="limitColumn" editable="false" maxWidth="254.0" minWidth="254.0" prefWidth="254.0" resizable="false" style="-fx-alignment: CENTER;" text="Limit (Bytes)" />
                     </columns>
                   </TableView>
                   <GridPane hgap="40.0" vgap="20.0">
@@ -40,7 +40,7 @@
                      <children>
                         <Label text="Base Address" />
                         <TextField fx:id="baseAddress_txt" GridPane.columnIndex="1" />
-                        <Label text="Limit" GridPane.rowIndex="1" />
+                        <Label text="Size" GridPane.rowIndex="1" />
                         <TextField fx:id="limit_txt" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                         <ChoiceBox fx:id="limitUnit_choiceBox" prefWidth="150.0" GridPane.columnIndex="2" GridPane.rowIndex="1" />
                      </children>
@@ -48,7 +48,7 @@
                   <FlowPane alignment="CENTER" columnHalignment="CENTER" hgap="200.0" prefHeight="31.0" prefWidth="200.0">
                      <children>
                         <Button mnemonicParsing="false" onKeyPressed="#addFreeHole_keyboardEvent" onMouseClicked="#addFreeHole_mouseEvent" text="Add" />
-                        <Button mnemonicParsing="false" onKeyPressed="#cancelAdditionofFreeHole_keyboardEvent" onMouseDragged="#cancelAdditionofFreeHole_mouseEvent" text="Cancel" />
+                        <Button mnemonicParsing="false" onKeyPressed="#cancelAdditionofFreeHole_keyboardEvent" onMouseClicked="#cancelAdditionofFreeHole_mouseEvent" text="Cancel" />
                      </children>
                   </FlowPane>
                </children>
@@ -58,7 +58,7 @@
       <HBox alignment="CENTER" layoutY="470.0" spacing="200.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
          <children>
             <Button mnemonicParsing="false" onKeyPressed="#saveFreeHoles_keyboardEvent" onMouseClicked="#saveFreeHoles_mouseEvent" text="Save" />
-            <Button mnemonicParsing="false" onKeyPressed="#cancelFreeHoles_keyboardEvent" onMouseClicked="#cancelFreeHoles_mouseEvent" text="Cancel" />
+            <Button fx:id="cancel_btn" mnemonicParsing="false" onKeyPressed="#cancelFreeHoles_keyboardEvent" onMouseClicked="#cancelFreeHoles_mouseEvent" text="Cancel" />
          </children>
       </HBox>
    </children>
