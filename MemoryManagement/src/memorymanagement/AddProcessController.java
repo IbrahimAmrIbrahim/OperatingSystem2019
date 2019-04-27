@@ -107,12 +107,12 @@ public class AddProcessController implements Initializable {
     void handleSegmentConfirmation(ActionEvent event) {
         try {
             Double tempSizeD = Double.valueOf(sizeInputed.getText());
-            Long tempSize = 0L;
+            Long tempSize = Math.round(tempSizeD);
             String selectedValue = sizeUnit_choiceBox.getValue();
 
             switch (selectedValue) {
                 case "Byte":
-                    if (newProcess.get_total_size() + tempSizeD > (maxSize)) {
+                    if (newProcess.get_total_size() + tempSize > (maxSize)) {
                         errorDialog("Total Memory Size exceeded the maximum limit allowed.");
                         return;
                     } else {
@@ -120,7 +120,7 @@ public class AddProcessController implements Initializable {
                     }
                     break;
                 case "KB":
-                    if (newProcess.get_total_size() + tempSizeD> (maxSize)) {
+                    if (newProcess.get_total_size() + (tempSize * 1024L)> (maxSize)) {
                         errorDialog("Total Memory Size exceeded the maximum limit allowed.");
                         return;
                     } else {
@@ -129,7 +129,7 @@ public class AddProcessController implements Initializable {
 
                     break;
                 case "MB":
-                    if (newProcess.get_total_size() + tempSizeD> (maxSize)) {
+                    if (newProcess.get_total_size() + (tempSize * 1024L * 1024L)> (maxSize)) {
                         errorDialog("Total Memory Size exceeded the maximum limit allowed.");
                         return;
                     } else {
@@ -138,7 +138,7 @@ public class AddProcessController implements Initializable {
 
                     break;
                 case "GB":
-                    if (newProcess.get_total_size() + tempSizeD> (maxSize)) {
+                    if (newProcess.get_total_size() + (tempSize * 1024L * 1024L * 1024L)> (maxSize)) {
                         errorDialog("Total Memory Size exceeded the maximum limit allowed.");
                         return;
                     } else {
@@ -147,7 +147,7 @@ public class AddProcessController implements Initializable {
 
                     break;
                 case "TB":
-                    if (newProcess.get_total_size() + tempSizeD> maxSize) {
+                    if (newProcess.get_total_size() + (tempSize * 1024L * 1024L * 1024L * 1024L)> maxSize) {
                         errorDialog("Total Memory Size exceeded the maximum limit allowed.");
                         return;
                     } else {
