@@ -20,7 +20,7 @@ public class first_fit {
         my_memory = new Memory(Size_);
     }
 
-    void allocate_process(Process input) {
+    public void allocate_process(Process input) {
         //here start the real work
         my_memory.add_waiting_process(input);
 
@@ -92,11 +92,11 @@ public class first_fit {
         }
     }
 
-    void deallocate_process(Process input) {
+    public void deallocate_process(Process input) {
 
     }
 
-    void insert_holes(Blank input) {
+    public void insert_holes(Blank input) {
         // change it with memory.setfree
         my_memory.set_free_Blank(input);
         // free set 
@@ -107,7 +107,7 @@ public class first_fit {
         // now the memory have the old process and free location
     }
 
-    void get_total_free() {
+    public void get_total_free() {
 
     }
     //==================================//
