@@ -1,38 +1,28 @@
 package memorymanagementAlgorithm;
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-/**
- *
- * @author ahmed
- */
 import java.util.*;
 import javafx.scene.paint.Color;
-//Vector<Double> list = new Vector<Double>();
 
 public class Process {
 
+    private static long PROCESS_ID = 0;
     private Color color;
-    private static long Process_ID = 0;
     private long ID;
     private boolean inserted;
     private Vector<Segment> Segment_vector;
-    //====================constructor============================//
 
+    //====================constructor============================//
     public Process() {
-        ID = Process_ID;
-        Process_ID++;
+        ID = PROCESS_ID;
+        PROCESS_ID++;
         Segment_vector = new Vector<Segment>();
         inserted = false;
         color = randomColor();
     }
 
     public Process(Segment input) {
-        ID = Process_ID;
-        Process_ID++;
+        ID = PROCESS_ID;
+        PROCESS_ID++;
         Segment_vector = new Vector<Segment>();
         Segment_vector.add(input);
         inserted = false;
@@ -41,31 +31,22 @@ public class Process {
 
     // use this in the gui
     public Process(Vector<Segment> input) {
-        ID = Process_ID;
-        Process_ID++;
-        Segment_vector = new Vector<Segment>();
+        ID = PROCESS_ID;
+        PROCESS_ID++;
         Segment_vector = input;
         inserted = false;
         color = randomColor();
-
     }
 
     //===============set section =============================//
     // to add in the gui table 
     public void add_Segment(Segment input) {
         getSegment_vector().add(input);
-
     }
 
     // to add more than 1 segment at a time
     public void add_Segment_vector(Vector<Segment> input) {
         getSegment_vector().addAll(input);
-
-    }
-
-    // check is this process inserted or no 
-    public void set_inserted(boolean condtion) {
-        inserted = condtion;
     }
 
     /**
@@ -110,7 +91,6 @@ public class Process {
     // return the segment number i this will make issue as the segment index changed after sorting
     //beter use name
     public Segment get_segemnt_i(int i) {
-
         return getSegment_vector().get(i);
     }
 
@@ -123,7 +103,6 @@ public class Process {
     }
 
     public boolean check_all_inserted() {
-
         for (int i = 0; i < getSegment_vector().size(); i++) {
             if (getSegment_vector().get(i).isInserted() == false) {
                 return false;
@@ -159,7 +138,6 @@ public class Process {
         for (int i = 0; i > input.get_number_of_segments(); i++) {
             getSegment_vector().add(input.get_segemnt_i(i));
         }
-
         color = input.getColor();
     }
 
@@ -167,7 +145,6 @@ public class Process {
         for (int i = 0; i > input.get_number_of_segments(); i++) {
             getSegment_vector().add(input.get_segemnt_i(i));
         }
-
         color = input.getColor();
     }
 
@@ -188,15 +165,15 @@ public class Process {
     }
 
     public void print(int i) {
-
         getSegment_vector().get(i).print();
-
     }
 
     //============color====================================//
     private Color randomColor() {
         Color newColor;
-        newColor = Color.hsb(randomNo(0, 360), randomNo(0.6, 1), randomNo(0.6, 1));
+        do {
+            newColor = Color.hsb(randomNo(0, 360), randomNo(0.6, 1), randomNo(0.6, 1));
+        } while ((newColor == color.RED) || (newColor == color.BLUE));
         return newColor;
     }
 

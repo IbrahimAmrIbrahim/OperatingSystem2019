@@ -8,13 +8,13 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.Pane?>
 
-<AnchorPane id="AnchorPane" prefHeight="540.0" prefWidth="776.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="memorymanagement.MemorySimulationController">
+<AnchorPane id="AnchorPane" prefHeight="540.0" prefWidth="961.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="memorymanagement.MemorySimulationController">
    <children>
       <SplitPane dividerPositions="0.5" layoutX="206.0" layoutY="66.0" prefHeight="539.0" prefWidth="761.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <items>
           <AnchorPane prefHeight="160.0" prefWidth="100.0">
                <children>
-                  <TreeTableView layoutX="29.0" layoutY="14.0" prefHeight="354.0" prefWidth="383.0" AnchorPane.bottomAnchor="120.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                  <TreeTableView fx:id="treeTable" layoutX="29.0" layoutY="14.0" prefHeight="354.0" prefWidth="383.0" AnchorPane.bottomAnchor="120.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                     <columns>
                       <TreeTableColumn prefWidth="75.0" text="C1" />
                       <TreeTableColumn prefWidth="75.0" text="C2" />
@@ -22,16 +22,16 @@
                   </TreeTableView>
                   <Pane layoutX="-29.0" layoutY="458.0" prefHeight="120.0" prefWidth="383.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0">
                      <children>
-                        <Button layoutX="32.0" layoutY="19.0" mnemonicParsing="false" onMouseClicked="#allocateProcess_mouseEvent" text="Allocate Process" />
-                        <Button layoutX="75.0" layoutY="72.0" mnemonicParsing="false" text="Memory Hardware Configuration" />
-                        <Button layoutX="227.0" layoutY="19.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="128.0" text="Clear" />
+                        <Button fx:id="allocateProcess_btn" layoutX="32.0" layoutY="19.0" mnemonicParsing="false" onMouseClicked="#allocateProcess_mouseEvent" text="Allocate Process" />
+                        <Button fx:id="MemoryConfig_btn" layoutX="75.0" layoutY="72.0" mnemonicParsing="false" text="Memory Hardware Configuration" />
+                        <Button fx:id="clear_btn" layoutX="227.0" layoutY="19.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="128.0" text="Clear" />
                      </children>
                   </Pane>
                </children>
             </AnchorPane>
           <AnchorPane prefHeight="160.0" prefWidth="100.0">
                <children>
-                  <ScrollPane layoutX="48.0" layoutY="37.0" pannable="true" prefHeight="538.0" prefWidth="375.0" style="-fx-background: Black;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                  <ScrollPane fx:id="scrollPane" layoutX="48.0" layoutY="37.0" pannable="true" prefHeight="538.0" prefWidth="451.0" style="-fx-background: Black;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                </children>
             </AnchorPane>
         </items>
