@@ -24,7 +24,7 @@
                      <children>
                         <Button fx:id="allocateProcess_btn" layoutX="32.0" layoutY="19.0" mnemonicParsing="false" onMouseClicked="#allocateProcess_mouseEvent" text="Allocate Process" />
                         <Button fx:id="MemoryConfig_btn" layoutX="75.0" layoutY="72.0" mnemonicParsing="false" text="Memory Hardware Configuration" />
-                        <Button fx:id="clear_btn" layoutX="227.0" layoutY="19.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="128.0" text="Clear" />
+                        <Button fx:id="clear_btn" layoutX="227.0" layoutY="19.0" mnemonicParsing="false" onMouseClicked="#clear_mouseEvent" prefHeight="31.0" prefWidth="128.0" text="Clear" />
                      </children>
                   </Pane>
                </children>

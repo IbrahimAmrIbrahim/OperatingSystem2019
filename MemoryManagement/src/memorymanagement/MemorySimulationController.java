@@ -23,6 +23,8 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import memorymanagementAlgorithm.Blank;
+import memorymanagementAlgorithm.Process;
+import memorymanagementAlgorithm.Segment;
 
 public class MemorySimulationController implements Initializable {
 
@@ -146,6 +148,16 @@ public class MemorySimulationController implements Initializable {
         stage.showAndWait();
     }
 
+    @FXML
+    private void clear_mouseEvent(MouseEvent event) {
+        Process p0 = new Process();
+        p0.add_Segment(new Segment(400, "S1", true));
+        p0.add_Segment(new Segment(500, "S1", true));
+        p0.add_Segment(new Segment(900, "S1", true));
+        p0.add_Segment(new Segment(1500, "S1", true));
+        p0.add_Segment(new Segment(200, "S1", true));
+    }
+
     private void canvasReset() {
         canvas.getChildren().clear();
         canvas.getTransforms().add(Transform.scale((1.0 / zoomFactor), (1.0 / zoomFactor)));
@@ -154,7 +166,6 @@ public class MemorySimulationController implements Initializable {
     }
 
     private void canvasInitialization() {
-        canvasReset();
         Rectangle rectangle;
         Text text;
 
@@ -190,7 +201,7 @@ public class MemorySimulationController implements Initializable {
         text = new Text();
         text.setFill(Color.WHITE);
         text.setText("0");
-        text.setX(190 - text.getLayoutBounds().getWidth());
+        text.setX(180 - text.getLayoutBounds().getWidth());
         text.setY(45);
         canvas.getChildren().add(text);
 
@@ -209,6 +220,12 @@ public class MemorySimulationController implements Initializable {
             text.setY(40 + ((osReservedSize * byteHeigt) / 2d) - (text.getLayoutBounds().getHeight() / 2d));
             canvas.getChildren().add(text);
         }
+    }
+
+    private void draw() {
+        canvasReset();
+        canvasInitialization();
+
     }
 
     /**
