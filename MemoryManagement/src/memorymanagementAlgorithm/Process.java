@@ -39,6 +39,13 @@ public class Process {
     }
 
     //===============set section =============================//
+    /**
+     * @param aPROCESS_ID the PROCESS_ID to set
+     */
+    public static void setPROCESS_ID(long aPROCESS_ID) {
+        PROCESS_ID = aPROCESS_ID;
+    }
+
     // to add in the gui table 
     public void add_Segment(Segment input) {
         getSegment_vector().add(input);

@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package memorymanagement;
 
 import memorymanagementAlgorithm.Segment;
@@ -54,13 +49,13 @@ public class AddProcessController implements Initializable {
     private TableView<Segment> segmentsTable;
 
     @FXML
-    private TableColumn<Segment, Integer> segmentIDColumn;
+    private TableColumn<Segment, Long> segmentIDColumn;
 
     @FXML
     private TableColumn<Segment, String> segmentName;
 
     @FXML
-    private TableColumn<Segment, Integer> segmentSize;
+    private TableColumn<Segment, Long> segmentSize;
 
     @FXML
     private Label labelPID;
@@ -111,7 +106,6 @@ public class AddProcessController implements Initializable {
     @FXML
     void handleSegmentConfirmation(ActionEvent event) {
         try {
-
             Double tempSizeD = Double.valueOf(sizeInputed.getText());
             Long tempSize = 0L;
             String selectedValue = sizeUnit_choiceBox.getValue();
@@ -262,7 +256,6 @@ public class AddProcessController implements Initializable {
         maxSize = parentCtrl.getMemoryTotalSize();
         osSize = parentCtrl.getOsReservedSize();
         option = parentCtrl.getMemoryAlignment();
-
         Segment.setSEGMENT_ID(0);
         initializeChoiceBox();
     }

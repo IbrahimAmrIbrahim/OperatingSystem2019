@@ -164,7 +164,7 @@ public class MemoryConfigurationController implements Initializable {
         try {
             totalSizeDouble = Double.valueOf(memoryTotalSize_txt.getText());
         } catch (Exception e) {
-            errorDialog("Total Memory Size is empty, wrong input or its exceeded the max limit allowed.");
+            errorDialog("Total Memory Size is empty, wrong input or it exceeded the max limit allowed.");
             return;
         }
         if (totalSizeDouble == 0) {
@@ -175,7 +175,7 @@ public class MemoryConfigurationController implements Initializable {
         switch (totalSizeUnit) {
             case "Byte":
                 if (totalSizeDouble > (Long.MAX_VALUE)) {
-                    errorDialog("Total Memory Size is exceeded the max limit allowed.");
+                    errorDialog("Total Memory Size exceeded the max limit allowed.");
                     return;
                 } else {
                     totalSize = Math.round(totalSizeDouble);
@@ -183,7 +183,7 @@ public class MemoryConfigurationController implements Initializable {
                 break;
             case "KB":
                 if (totalSizeDouble > (Long.MAX_VALUE / 1024d)) {
-                    errorDialog("Total Memory Size is exceeded the max limit allowed.");
+                    errorDialog("Total Memory Size exceeded the max limit allowed.");
                     return;
                 } else {
                     totalSize = Math.round(totalSizeDouble * 1024d);
@@ -191,7 +191,7 @@ public class MemoryConfigurationController implements Initializable {
                 break;
             case "MB":
                 if (totalSizeDouble > (Long.MAX_VALUE / (1024d * 1024d))) {
-                    errorDialog("Total Memory Size is exceeded the max limit allowed.");
+                    errorDialog("Total Memory Size exceeded the max limit allowed.");
                     return;
                 } else {
                     totalSize = Math.round(totalSizeDouble * (1024d * 1024d));
@@ -199,7 +199,7 @@ public class MemoryConfigurationController implements Initializable {
                 break;
             case "GB":
                 if (totalSizeDouble > (Long.MAX_VALUE / (1024d * 1024d * 1024d))) {
-                    errorDialog("Total Memory Size is exceeded the max limit allowed.");
+                    errorDialog("Total Memory Size exceeded the max limit allowed.");
                     return;
                 } else {
                     totalSize = Math.round(totalSizeDouble * (1024d * 1024d * 1024d));
@@ -207,7 +207,7 @@ public class MemoryConfigurationController implements Initializable {
                 break;
             case "TB":
                 if (totalSizeDouble > (Long.MAX_VALUE / (1024d * 1024d * 1024d * 1024d))) {
-                    errorDialog("Total Memory Size is exceeded the max limit allowed.");
+                    errorDialog("Total Memory Size exceeded the max limit allowed.");
                     return;
                 } else {
                     totalSize = Math.round(totalSizeDouble * (1024d * 1024d * 1024d * 1024d));
@@ -238,7 +238,7 @@ public class MemoryConfigurationController implements Initializable {
         try {
             osSizeDouble = Double.valueOf(osReservedSize_txt.getText());
         } catch (Exception e) {
-            errorDialog("OS Reserved Size is empty, wrong input or its exceeded the max limit allowed.");
+            errorDialog("OS Reserved Size is empty, wrong input or it exceeded the max limit allowed.");
             return;
         }
 
@@ -246,7 +246,7 @@ public class MemoryConfigurationController implements Initializable {
         switch (osSizeUnit) {
             case "Byte":
                 if (osSizeDouble > (Long.MAX_VALUE)) {
-                    errorDialog("OS Reserved Size is exceeded the max limit allowed.");
+                    errorDialog("OS Reserved Size exceeded the max limit allowed.");
                     return;
                 } else {
                     osSize = Math.round(osSizeDouble);
@@ -254,7 +254,7 @@ public class MemoryConfigurationController implements Initializable {
                 break;
             case "KB":
                 if (osSizeDouble > (Long.MAX_VALUE / 1024d)) {
-                    errorDialog("OS Reserved Size is exceeded the max limit allowed.");
+                    errorDialog("OS Reserved Size exceeded the max limit allowed.");
                     return;
                 } else {
                     osSize = Math.round(osSizeDouble * 1024d);
@@ -262,7 +262,7 @@ public class MemoryConfigurationController implements Initializable {
                 break;
             case "MB":
                 if (osSizeDouble > (Long.MAX_VALUE / (1024d * 1024d))) {
-                    errorDialog("OS Reserved Size is exceeded the max limit allowed.");
+                    errorDialog("OS Reserved Size exceeded the max limit allowed.");
                     return;
                 } else {
                     osSize = Math.round(osSizeDouble * (1024d * 1024d));
@@ -270,7 +270,7 @@ public class MemoryConfigurationController implements Initializable {
                 break;
             case "GB":
                 if (osSizeDouble > (Long.MAX_VALUE / (1024d * 1024d * 1024d))) {
-                    errorDialog("OS Reserved Size is exceeded the max limit allowed.");
+                    errorDialog("OS Reserved Size exceeded the max limit allowed.");
                     return;
                 } else {
                     osSize = Math.round(osSizeDouble * (1024d * 1024d * 1024d));
@@ -278,7 +278,7 @@ public class MemoryConfigurationController implements Initializable {
                 break;
             case "TB":
                 if (osSizeDouble > (Long.MAX_VALUE / (1024d * 1024d * 1024d * 1024d))) {
-                    errorDialog("OS Reserved Size is exceeded the max limit allowed.");
+                    errorDialog("OS Reserved Size exceeded the max limit allowed.");
                     return;
                 } else {
                     osSize = Math.round(osSizeDouble * (1024d * 1024d * 1024d * 1024d));

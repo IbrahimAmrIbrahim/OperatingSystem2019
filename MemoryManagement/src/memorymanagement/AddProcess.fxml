@@ -20,19 +20,19 @@
                <children>
                   <HBox alignment="CENTER" layoutX="10.0" layoutY="77.0" prefHeight="60.0" prefWidth="521.0">
                      <children>
-                        <HBox alignment="CENTER_LEFT" prefHeight="50.0" prefWidth="101.0">
+                        <HBox alignment="CENTER_LEFT" prefHeight="52.0" prefWidth="130.0">
                            <children>
-                              <Label fx:id="segmentNumber" text="No of Segments:" />
+                              <Label fx:id="segmentNumber" prefHeight="21.0" prefWidth="175.0" text="No of Segments:" />
                            </children>
                         </HBox>
                         <HBox alignment="CENTER" HBox.hgrow="ALWAYS">
                            <children>
-                              <TextField fx:id="numberInputed" prefHeight="25.0" prefWidth="142.0" />
+                              <TextField fx:id="numberInputed" prefHeight="31.0" prefWidth="175.0" />
                            </children>
                         </HBox>
-                        <HBox alignment="CENTER_RIGHT" HBox.hgrow="ALWAYS">
+                        <HBox alignment="CENTER" prefWidth="160.0" HBox.hgrow="ALWAYS">
                            <children>
-                              <Button fx:id="confirmNumber" alignment="CENTER" contentDisplay="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handlecSegmentNumberConfirmation" prefHeight="25.0" prefWidth="62.0" text="Confirm">
+                              <Button fx:id="confirmNumber" alignment="CENTER" contentDisplay="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handlecSegmentNumberConfirmation" prefHeight="29.0" prefWidth="135.0" text="Confirm">
                                  <HBox.margin>
                                     <Insets />
                                  </HBox.margin>
@@ -43,41 +43,41 @@
                   </HBox>
                   <HBox alignment="CENTER" layoutX="10.0" layoutY="60.0" prefHeight="60.0" prefWidth="521.0">
                      <children>
-                        <HBox alignment="CENTER_LEFT" prefHeight="50.0" prefWidth="101.0">
+                        <HBox alignment="CENTER_LEFT" prefHeight="50.0" prefWidth="130.0">
                            <children>
                               <Label fx:id="labelsegmentName" disable="true" text="Segment Name:" />
                            </children>
                         </HBox>
                         <HBox alignment="CENTER" HBox.hgrow="ALWAYS">
                            <children>
-                              <TextField fx:id="nameInputed" disable="true" prefHeight="25.0" prefWidth="142.0" />
+                              <TextField fx:id="nameInputed" disable="true" prefHeight="31.0" prefWidth="175.0" />
                            </children>
                         </HBox>
-                        <HBox alignment="CENTER_RIGHT" prefHeight="54.0" prefWidth="62.0" HBox.hgrow="ALWAYS" />
+                        <HBox alignment="CENTER_RIGHT" prefHeight="54.0" prefWidth="160.0" HBox.hgrow="ALWAYS" />
                      </children>
                   </HBox>
                   <HBox alignment="CENTER" layoutX="10.0" layoutY="88.0" prefHeight="60.0" prefWidth="200.0">
                      <children>
-                        <HBox alignment="CENTER_LEFT" prefHeight="50.0" prefWidth="101.0">
+                        <HBox alignment="CENTER_LEFT" prefHeight="50.0" prefWidth="130.0">
                            <children>
                               <Label fx:id="labelsegmentSize" disable="true" text="Segment Size:" />
                            </children>
                         </HBox>
                         <HBox alignment="CENTER" HBox.hgrow="ALWAYS">
                            <children>
-                              <TextField fx:id="sizeInputed" disable="true" prefHeight="25.0" prefWidth="142.0" />
+                              <TextField fx:id="sizeInputed" disable="true" prefHeight="25.0" prefWidth="175.0" />
                            </children>
                         </HBox>
-                        <HBox alignment="CENTER_RIGHT" HBox.hgrow="ALWAYS">
+                        <HBox alignment="CENTER" prefWidth="160.0" HBox.hgrow="ALWAYS">
                            <children>
-                              <ChoiceBox fx:id="sizeUnit_choiceBox" disable="true" prefHeight="25.0" prefWidth="62.0" />
+                              <ChoiceBox fx:id="sizeUnit_choiceBox" disable="true" prefHeight="31.0" prefWidth="87.0" />
                            </children>
                         </HBox>
                      </children>
                   </HBox>
                   <HBox alignment="CENTER" layoutX="10.0" layoutY="77.0" prefHeight="52.0" prefWidth="499.0">
                      <children>
-                        <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="163.0">
+                        <HBox alignment="CENTER" prefHeight="100.0" prefWidth="163.0">
                            <children>
                               <Button fx:id="confirmSegment" disable="true" mnemonicParsing="false" onAction="#handleSegmentConfirmation" text="Confirm Segment" />
                            </children>

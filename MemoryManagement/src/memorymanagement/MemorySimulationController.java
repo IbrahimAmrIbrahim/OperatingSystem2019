@@ -3,6 +3,7 @@ package memorymanagement;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.Vector;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -12,17 +13,21 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TreeTableView;
 import javafx.scene.effect.DropShadow;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
-import javafx.scene.transform.Transform;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import memorymanagementAlgorithm.Blank;
+import memorymanagementAlgorithm.Process;
+import memorymanagementAlgorithm.Segment;
+import memorymanagementAlgorithm.first_fit;
 
 public class MemorySimulationController implements Initializable {
 
@@ -37,12 +42,16 @@ public class MemorySimulationController implements Initializable {
     private Button clear_btn;
     @FXML
     private ScrollPane scrollPane;
+    @FXML
+    private AnchorPane canvas_anchorPane;
 
     private Pane canvas;
-    private double zoomFactor;
 
     private int memoryWidth;
-    private int byteHeigt;
+    private double byteHeigt;
+
+    private Vector<Segment> free_vector;
+    private Vector<Process> allocatedProcess_vector;
 
     public enum memoryAlignmentOptions {
         _8bit, _32bit, _64bit
@@ -63,7 +72,6 @@ public class MemorySimulationController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         memoryTotalSize = 0;
         osReservedSize = 0;
-        zoomFactor = 1;
         memoryWidth = 200;
         byteHeigt = 8;
         memoryConfigurationChange = false;
@@ -91,9 +99,7 @@ public class MemorySimulationController implements Initializable {
     }
 
     public void sceneInitialize() throws IOException {
-        //memoryHardwareConfigDialog();
-        sceneEnable();
-        canvasInitialization();
+        memoryHardwareConfigDialog();
     }
 
     private void memoryHardwareConfigDialog() throws IOException {
@@ -109,6 +115,7 @@ public class MemorySimulationController implements Initializable {
         stage1.setScene(new Scene(root1));
         stage1.initModality(Modality.APPLICATION_MODAL);
         stage1.setTitle("Memory Hardware");
+        stage1.setResizable(false);
         stage1.initStyle(StageStyle.UTILITY);
         stage1.showAndWait();
 
@@ -124,12 +131,47 @@ public class MemorySimulationController implements Initializable {
             stage2.setScene(new Scene(root2));
             stage2.initModality(Modality.APPLICATION_MODAL);
             stage2.setTitle("Memory Initialization");
+            stage2.setResizable(false);
             stage2.initStyle(StageStyle.UTILITY);
             stage2.showAndWait();
 
             sceneEnable();
-            canvasInitialization();
-            freeHoles.print();
+
+            free_vector = freeHoles.get_segment_vector();
+
+            Process p0 = new Process();
+            p0.add_Segment(new Segment(1000, 100, "S1", true));
+            p0.add_Segment(new Segment(1200, 100, "S2", true));
+            p0.add_Segment(new Segment(1400, 100, "S3", true));
+            p0.add_Segment(new Segment(1600, 100, "S4", true));
+            p0.add_Segment(new Segment(1800, 100, "S5", true));
+            Process p1 = new Process();
+            p1.add_Segment(new Segment(2000, 100, "S1", true));
+            p1.add_Segment(new Segment(2200, 100, "S2", true));
+            p1.add_Segment(new Segment(2400, 100, "S3", true));
+            p1.add_Segment(new Segment(2600, 100, "S4", true));
+            p1.add_Segment(new Segment(2800, 100, "S5", true));
+            Process p2 = new Process();
+            p2.add_Segment(new Segment(3000, 100, "S1", true));
+            p2.add_Segment(new Segment(3200, 100, "S2", true));
+            p2.add_Segment(new Segment(3400, 100, "S3", true));
+            p2.add_Segment(new Segment(3600, 100, "S4", true));
+            p2.add_Segment(new Segment(3800, 100, "S5", true));
+            Process p3 = new Process();
+            p3.add_Segment(new Segment(4000, 100, "S1", true));
+            p3.add_Segment(new Segment(4200, 100, "S2", true));
+            p3.add_Segment(new Segment(4400, 100, "S3", true));
+            p3.add_Segment(new Segment(4600, 100, "S4", true));
+            p3.add_Segment(new Segment(4800, 100, "S5", true));
+
+            allocatedProcess_vector = new Vector<>();
+            allocatedProcess_vector.add(p0);
+            allocatedProcess_vector.add(p1);
+            allocatedProcess_vector.add(p2);
+            allocatedProcess_vector.add(p3);
+
+            zoomFit();
+
         }
     }
 
@@ -138,42 +180,84 @@ public class MemorySimulationController implements Initializable {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("AddProcess.fxml"));
         Parent root1 = (Parent) fxmlLoader.load();
 
+        Process newProcess = new Process();
+        AddProcessController ctrl = fxmlLoader.getController();
+        ctrl.sceneInitialization(myController, newProcess);
+
         Stage stage = new Stage();
         stage.setScene(new Scene(root1));
         stage.initModality(Modality.APPLICATION_MODAL);
         stage.setTitle("Allocate Process");
+        stage.setResizable(false);
         stage.initStyle(StageStyle.UTILITY);
         stage.showAndWait();
+
+        newProcess.print();
+    }
+
+    @FXML
+    private void clear_mouseEvent(MouseEvent event) {
+        first_fit a1 = new first_fit(2000);
+        a1.test();
+    }
+
+    @FXML
+    private void zoomOut_keyboardEvent(KeyEvent event) {
+        if (event.getCode().toString().equals("ENTER")) {
+            zoomOut();
+        }
+    }
+
+    @FXML
+    private void zoomOut_mouseEvent(MouseEvent event) {
+        zoomOut();
+    }
+
+    @FXML
+    private void zoomIn_keyboardEvent(KeyEvent event) {
+        if (event.getCode().toString().equals("ENTER")) {
+            zoomIn();
+        }
+    }
+
+    @FXML
+    private void zoomIn_mouseEvent(MouseEvent event) {
+        zoomIn();
+    }
+
+    @FXML
+    private void zoomFit_keyboardEvent(KeyEvent event) {
+        if (event.getCode().toString().equals("ENTER")) {
+            zoomFit();
+        }
+    }
+
+    @FXML
+    private void zoomFit_mouseEvent(MouseEvent event) {
+        zoomFit();
     }
 
     private void canvasReset() {
         canvas.getChildren().clear();
-        canvas.getTransforms().add(Transform.scale((1.0 / zoomFactor), (1.0 / zoomFactor)));
         canvas.setPrefWidth(0);
         canvas.setPrefHeight(0);
     }
 
     private void canvasInitialization() {
-        canvasReset();
         Rectangle rectangle;
         Text text;
 
-        //************************************
-        memoryTotalSize = 1024;
-        osReservedSize = 50;
-        //************************************
         //240 Address text max size
         //6   Rect Margin
-        //200 byteWidth
         canvas.setPrefWidth((memoryWidth + 6) + 240);
         //80 Margin
         //5  Rect Margin
-        canvas.setPrefHeight(((memoryTotalSize * byteHeigt) + 5) + 80);
+        canvas.setPrefHeight((((memoryTotalSize + osReservedSize) * byteHeigt) + 5) + 80);
 
-        rectangle = new Rectangle((memoryWidth + 6), ((memoryTotalSize * byteHeigt) + 5), Color.TRANSPARENT);
+        rectangle = new Rectangle((memoryWidth + 6), (((memoryTotalSize + osReservedSize) * byteHeigt) + 5), Color.TRANSPARENT);
         rectangle.setStroke(Color.BLUE);
         rectangle.setStrokeWidth(4);
-        rectangle.relocate((200 - 6), (40 - 5));
+        rectangle.relocate((200 - 5), (40 - 5));
 
         DropShadow e = new DropShadow();
         e.setColor(Color.BLUE);
@@ -189,12 +273,46 @@ public class MemorySimulationController implements Initializable {
 
         text = new Text();
         text.setFill(Color.WHITE);
-        text.setText("0");
-        text.setX(190 - text.getLayoutBounds().getWidth());
-        text.setY(45);
+        switch (memoryAlignment) {
+            case _8bit:
+                text.setText("0");
+                break;
+            case _32bit:
+                text.setText("3");
+                break;
+            case _64bit:
+                text.setText("7");
+                break;
+        }
+        text.setX(200 + memoryWidth);
+        text.setY(30);
+        canvas.getChildren().add(text);
+
+        text = new Text();
+        text.setFill(Color.WHITE);
+        switch (memoryAlignment) {
+            case _8bit:
+                text.setText(Long.toString(memoryTotalSize + osReservedSize - 1));
+                break;
+            case _32bit:
+                text.setText(Long.toString(memoryTotalSize + osReservedSize - 4));
+                break;
+            case _64bit:
+                text.setText(Long.toString(memoryTotalSize + osReservedSize - 8));
+                break;
+        }
+        text.setX(180 - text.getLayoutBounds().getWidth());
+        text.setY(40 + ((memoryTotalSize + osReservedSize) * byteHeigt) + 5);
         canvas.getChildren().add(text);
 
         if (osReservedSize > 0) {
+            text = new Text();
+            text.setFill(Color.WHITE);
+            text.setText("0");
+            text.setX(180 - text.getLayoutBounds().getWidth());
+            text.setY(45);
+            canvas.getChildren().add(text);
+
             rectangle = new Rectangle(memoryWidth, (osReservedSize * byteHeigt), Color.RED);
             rectangle.setArcWidth(30);
             rectangle.setArcHeight(30);
@@ -206,9 +324,81 @@ public class MemorySimulationController implements Initializable {
             text.setText("OS Reserved\n" + "Size: " + Long.toString(osReservedSize));
             text.setTextAlignment(TextAlignment.CENTER);
             text.setX(200 + (memoryWidth / 2d) - (text.getLayoutBounds().getWidth() / 2d));
-            text.setY(40 + ((osReservedSize * byteHeigt) / 2d) - (text.getLayoutBounds().getHeight() / 2d));
+            text.setY(55 + ((osReservedSize * byteHeigt) / 2d) - (text.getLayoutBounds().getHeight() / 2d));
             canvas.getChildren().add(text);
         }
+    }
+
+    private void draw() {
+        canvasReset();
+        canvasInitialization();
+
+        Rectangle rectangle;
+        Text text;
+
+        for (int i = 0; i < free_vector.size(); i++) {
+            long segBase = free_vector.get(i).getBase();
+            text = new Text();
+            text.setFill(Color.WHITE);
+            text.setText(Long.toString(segBase));
+            text.setX(180 - text.getLayoutBounds().getWidth());
+            text.setY(40 + (segBase * byteHeigt));
+            canvas.getChildren().add(text);
+
+            text = new Text();
+            text.setFill(Color.WHITE);
+            text.setText("Free Space\n" + "Size: " + Long.toString(free_vector.get(i).getLimit()));
+            text.setTextAlignment(TextAlignment.CENTER);
+            text.setX(200 + (memoryWidth / 2d) - (text.getLayoutBounds().getWidth() / 2d));
+            text.setY(55 + (segBase * byteHeigt) + ((free_vector.get(i).getLimit() * byteHeigt) / 2d) - (text.getLayoutBounds().getHeight() / 2d));
+            canvas.getChildren().add(text);
+        }
+
+        for (int i = 0; i < allocatedProcess_vector.size(); i++) {
+            for (int j = 0; j < allocatedProcess_vector.get(i).getSegment_vector().size(); j++) {
+                Segment drawn = allocatedProcess_vector.get(i).getSegment_vector().get(j);
+                long segBase = osReservedSize + drawn.getBase();
+
+                text = new Text();
+                text.setFill(Color.WHITE);
+                text.setText(Long.toString(segBase));
+                text.setX(180 - text.getLayoutBounds().getWidth());
+                text.setY(40 + (segBase * byteHeigt));
+                canvas.getChildren().add(text);
+
+                rectangle = new Rectangle(memoryWidth, (drawn.getLimit() * byteHeigt), allocatedProcess_vector.get(i).getColor());
+                rectangle.setArcWidth(30);
+                rectangle.setArcHeight(30);
+                rectangle.relocate(200, (40 + (segBase * byteHeigt)));
+                canvas.getChildren().add(rectangle);
+
+                text = new Text();
+                text.setFill(Color.WHITE);
+                text.setText("P" + Long.toString(allocatedProcess_vector.get(i).getID()) + " , S" + Long.toString(drawn.getID()) + "\n"
+                        + drawn.getName() + "\n"
+                        + "Size: " + Long.toString(drawn.getLimit()));
+                text.setTextAlignment(TextAlignment.CENTER);
+                text.setX(200 + (memoryWidth / 2d) - (text.getLayoutBounds().getWidth() / 2d));
+                text.setY(55 + (segBase * byteHeigt) + ((drawn.getLimit() * byteHeigt) / 2d) - (text.getLayoutBounds().getHeight() / 2d));
+                canvas.getChildren().add(text);
+
+            }
+        }
+    }
+
+    private void zoomOut() {
+        byteHeigt *= 0.8;
+        draw();
+    }
+
+    private void zoomIn() {
+        byteHeigt *= 1.25;
+        draw();
+    }
+
+    private void zoomFit() {
+        byteHeigt = ((canvas_anchorPane.getHeight() - 120) / (memoryTotalSize + osReservedSize));
+        draw();
     }
 
     /**
@@ -254,15 +444,12 @@ public class MemorySimulationController implements Initializable {
         switch (memoryAlignment) {
             case _8bit:
                 memoryWidth = 200;
-                byteHeigt = 64;
                 break;
             case _32bit:
                 memoryWidth = 400;
-                byteHeigt = 16;
                 break;
             case _64bit:
                 memoryWidth = 600;
-                byteHeigt = 8;
                 break;
         }
     }

@@ -40,22 +40,29 @@ public class Memory {
         waiting_Process.addAll(input);
     }
 
+    // remove it, it;s gonna destroy us 
+    //====================on destroy list ============================================//
     public void add_runing_process_vecotr(Vector<Process> input) {
-        waiting_Process.addAll(input);
+        waiting_Process.removeElement(input);
+        runing_Process.addAll(input);
     }
+    //====================on destroy list ============================================//
 
     public void add_runing_process(Process input) {
-        waiting_Process.add(input);
+        waiting_Process.removeElement(input);
+        runing_Process.add(input);
+        allocated_segment.addAll(input.getSegment_vector());
     }
 
-    public void add_free_Segment(Segment input) {
-        free.add_free_segment(input);
+    public void set_free_Blank(Blank input) {
+        free = input;
     }
 
     // use it in the algorthm only
     public void deallocate_process(Process input) {
         free.add_free_segment_vector(input.getSegment_vector());
         runing_Process.removeElement(input);
+        allocated_segment.removeAll(input.getSegment_vector());
     }
 
     //===========print =================//
@@ -73,23 +80,55 @@ public class Memory {
         return free.get_total_size();
     }
 
+    public Blank get_free_Blank() {
+        return free;
+    }
+
     //====================== method sections ====================//
-    public void adding_old_process() {// the free is sorted on base 
+    public void adding_old_process() {// the free is sorted on base
+
+        //this code work when i have 1 segment or more free and must be at first location
+        //============between 2 free ========================//
         for (int i = 0; i < free.get_number_of_free_segments() - 1; i++) {
             long old_base = free.get_segemnt_i(i).getBase() + free.get_segemnt_i(i).getLimit();
             long old_limit = free.get_segemnt_i(i + 1).getBase() - old_base;
-            Process old_process = new Process(new Segment(old_base, old_limit,"old process", true));
+            Process old_process = new Process(new Segment(old_base, old_limit, "old process", true));
             runing_Process.add(old_process);
             allocated_segment.add(old_process.get_segemnt_i(0));
         }
-        long last_free_address = (free.get_segemnt_i(free.get_number_of_free_segments() - 1).getBase() + free.get_segemnt_i(free.get_number_of_free_segments() - 1).getLimit());
-        if (size != last_free_address) {
+        //==================================================//
+        //===============add old process at the end ==========//
+        long last_free_address = 0;
+        // i have 1 segment only
+        if (free.get_number_of_free_segments() > 0) {
+            last_free_address = (free.get_segemnt_i(free.get_number_of_free_segments() - 1).getBase() + free.get_segemnt_i(free.get_number_of_free_segments() - 1).getLimit());
+            // if the free not at the first location
+            if (free.get_segemnt_i(0).getBase() > 0) {
+                long old_base = 0;
+                long old_limit = free.get_segemnt_i(0).getBase() - old_base;
+                Process old_process = new Process(new Segment(old_base, old_limit, "old process", true));
+                runing_Process.add(old_process);
+                allocated_segment.add(old_process.get_segemnt_i(0));
+            }
+
+        }
+        //for 1 segment
+        if (size != last_free_address && free.get_number_of_free_segments() > 0) {
             long old_base = free.get_segemnt_i(free.get_number_of_free_segments() - 1).getBase() + free.get_segemnt_i(free.get_number_of_free_segments() - 1).getLimit();
             long old_limit = size - old_base;
-            Process old_process = new Process(new Segment(old_base, old_limit,"old process", true));
+            Process old_process = new Process(new Segment(old_base, old_limit, "old process", true));
             runing_Process.add(old_process);
             allocated_segment.add(old_process.get_segemnt_i(0));
         }
+        // for no segment 
+        if (free.get_number_of_free_segments() == 0) {
+            long old_base = 0;
+            long old_limit = size - old_base;
+            Process old_process = new Process(new Segment(old_base, old_limit, "old process", true));
+            runing_Process.add(old_process);
+            allocated_segment.add(old_process.get_segemnt_i(0));
+        }
+        //================================================================//
 
     }
 
