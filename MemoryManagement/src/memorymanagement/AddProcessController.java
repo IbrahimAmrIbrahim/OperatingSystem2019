@@ -36,12 +36,12 @@ public class AddProcessController implements Initializable {
     private int numberOfSegments = 0;
     private Segment[] SegmentsArray;
     private int segmentIndex = 0;
-    private long maxSize;
+    private long maxSize = 10000;
     private long osSize;
-    private MemorySimulationController.memoryAlignmentOptions option;
+    private MemorySimulationController.memoryAlignmentOptions option = MemorySimulationController.memoryAlignmentOptions._32bit;
 
     private MemorySimulationController parentCtrl;
-    private Process newProcess;
+    private Process newProcess = new Process();
     private boolean isEdit;
 
     @FXML
@@ -273,7 +273,7 @@ public class AddProcessController implements Initializable {
         segmentSize.setCellValueFactory(new PropertyValueFactory<>("limit"));
         segmentIDColumn.setCellValueFactory(new PropertyValueFactory<>("ID"));
         allocateProcessTitlePane.setText("Process x");
-//        initializeChoiceBox();
+        initializeChoiceBox();
     }
 
 }
