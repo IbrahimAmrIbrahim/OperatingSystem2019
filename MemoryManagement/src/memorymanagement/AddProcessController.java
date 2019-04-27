@@ -31,6 +31,9 @@ public class AddProcessController implements Initializable {
     private int numberOfSegments = 0;
     private Segment[] SegmentsArray;
     private int segmentIndex = 0;
+    private long maxSize;
+    private long osSize;
+    private MemorySimulationController.memoryAlignmentOptions option;
 
     private MemorySimulationController parentCtrl;
     private Process newProcess;
@@ -87,6 +90,15 @@ public class AddProcessController implements Initializable {
     @FXML
     private Button cancel;
 
+    private void errorDialog(String msg) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Error Dialog");
+        alert.setHeaderText(null);
+        alert.setContentText(msg);
+
+        alert.showAndWait();
+    }
+
     @FXML
     void handleCancelButton(ActionEvent event) {
     }
@@ -94,29 +106,72 @@ public class AddProcessController implements Initializable {
     @FXML
     void handleSegmentConfirmation(ActionEvent event) {
         try {
-            Long tempSize = Long.valueOf(sizeInputed.getText());
-            SegmentsArray[segmentIndex] = new Segment(tempSize, nameInputed.getText(), true);
-
-            Long InputedSize = SegmentsArray[segmentIndex].getLimit();
+            Double tempSizeD = Double.valueOf(sizeInputed.getText());
+            Long tempSize = 0L;
             String selectedValue = sizeUnit_choiceBox.getValue();
 
-            switch (selectedValue) { // Still needs maxsize constraint
+            switch (selectedValue) {
                 case "Byte":
+                    if (newProcess.get_total_size() > (maxSize)) {
+                        errorDialog("Total Memory Size exceeded the maximum limit allowed.");
+                        return;
+                    } else {
+                        tempSize = Math.round(tempSizeD);
+                    }
                     break;
                 case "KB":
-                    SegmentsArray[segmentIndex].setLimit(InputedSize * (1024L));
+                    if (newProcess.get_total_size() > (maxSize)) {
+                        errorDialog("Total Memory Size exceeded the maximum limit allowed.");
+                        return;
+                    } else {
+                        tempSize = Math.round(tempSizeD * 1024.0);
+                    }
+
                     break;
                 case "MB":
-                    SegmentsArray[segmentIndex].setLimit(InputedSize * (1024L * 1024L));
+                    if (newProcess.get_total_size() > (maxSize)) {
+                        errorDialog("Total Memory Size exceeded the maximum limit allowed.");
+                        return;
+                    } else {
+                        tempSize = Math.round(tempSizeD * 1024.0 * 1024.0);
+                    }
+
                     break;
                 case "GB":
-                    SegmentsArray[segmentIndex].setLimit(InputedSize * (1024L * 1024L * 1024L));
+                    if (newProcess.get_total_size() > (maxSize)) {
+                        errorDialog("Total Memory Size exceeded the maximum limit allowed.");
+                        return;
+                    } else {
+                        tempSize = Math.round(tempSizeD * 1024.0 * 1024.0 * 1024.0);
+                    }
+
                     break;
                 case "TB":
-                    SegmentsArray[segmentIndex].setLimit(InputedSize * (1024L * 1024L * 1024L * 1024L));
-                    break;
+                    if (newProcess.get_total_size() > maxSize) {
+                        errorDialog("Total Memory Size exceeded the maximum limit allowed.");
+                        return;
+                    } else {
+                        tempSize = Math.round(tempSizeD * 1024.0 * 1024.0 * 1024.0 * 1024.0);
+                    }
 
+                    break;
             }
+            switch (option) {
+                case _8bit:
+                    break;
+                case _32bit:
+                    if ((tempSize % 4L != 0)) {
+                        tempSize += 4 - (tempSize % 4L);
+                    }
+                    break;
+                case _64bit:
+                    if ((tempSize % 8L != 0)) {
+                        tempSize += 8 - (tempSize % 8L);
+                    }
+                    break;
+            }
+            SegmentsArray[segmentIndex] = new Segment(tempSize, nameInputed.getText(), true);
+            
             newProcess.add_Segment(SegmentsArray[segmentIndex]);
             segmentsTable.getItems().add(newProcess.get_segemnt_i(segmentIndex));
 
@@ -198,6 +253,9 @@ public class AddProcessController implements Initializable {
         parentCtrl = ctrl;
         newProcess = process;
         isEdit = false;
+        maxSize = parentCtrl.getMemoryTotalSize();
+        osSize = parentCtrl.getOsReservedSize();
+        option = parentCtrl.getMemoryAlignment();
         Segment.setSEGMENT_ID(0);
         initializeChoiceBox();
     }
@@ -208,6 +266,7 @@ public class AddProcessController implements Initializable {
         segmentSize.setCellValueFactory(new PropertyValueFactory<>("limit"));
         segmentIDColumn.setCellValueFactory(new PropertyValueFactory<>("ID"));
         allocateProcessTitlePane.setText("Process x");
+//        initializeChoiceBox();
     }
 
 }
