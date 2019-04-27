@@ -15,6 +15,7 @@ import javafx.scene.control.TreeTableView;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -41,6 +42,8 @@ public class MemorySimulationController implements Initializable {
     private Button clear_btn;
     @FXML
     private ScrollPane scrollPane;
+    @FXML
+    private AnchorPane canvas_anchorPane;
 
     private Pane canvas;
 
@@ -134,9 +137,10 @@ public class MemorySimulationController implements Initializable {
 
             sceneEnable();
 
-            freeHoles.print();
             free_vector = freeHoles.get_segment_vector();
-            draw();
+
+            zoomFit();
+
         }
     }
 
@@ -163,37 +167,7 @@ public class MemorySimulationController implements Initializable {
     @FXML
     private void clear_mouseEvent(MouseEvent event) {
         first_fit a1 = new first_fit(2000);
-        Blank b1 = new Blank(new Segment(0, 1000, "Free", true));
-        Process p0 = new Process();
-        p0.add_Segment(new Segment(100, "S1", true));
-        p0.add_Segment(new Segment(100, "S2", true));
-        p0.add_Segment(new Segment(100, "S3", true));
-        p0.add_Segment(new Segment(100, "S4", true));
-        p0.add_Segment(new Segment(100, "S5", true));
-        Process p1 = new Process();
-        p1.add_Segment(new Segment(100, "S1", true));
-        p1.add_Segment(new Segment(100, "S2", true));
-        p1.add_Segment(new Segment(100, "S3", true));
-        p1.add_Segment(new Segment(100, "S4", true));
-        p1.add_Segment(new Segment(100, "S5", true));
-        Process p2 = new Process();
-        p2.add_Segment(new Segment(100, "S1", true));
-        p2.add_Segment(new Segment(100, "S2", true));
-        p2.add_Segment(new Segment(100, "S3", true));
-        p2.add_Segment(new Segment(100, "S4", true));
-        p2.add_Segment(new Segment(100, "S5", true));
-        Process p3 = new Process();
-        p3.add_Segment(new Segment(100, "S1", true));
-        p3.add_Segment(new Segment(100, "S2", true));
-        p3.add_Segment(new Segment(100, "S3", true));
-        p3.add_Segment(new Segment(100, "S4", true));
-        p3.add_Segment(new Segment(100, "S5", true));
-        a1.insert_holes(b1);
-        a1.allocate_process(p0);
-        a1.allocate_process(p1);
-        a1.allocate_process(p2);
-        a1.allocate_process(p3);
-
+        a1.test();
     }
 
     @FXML
@@ -218,6 +192,18 @@ public class MemorySimulationController implements Initializable {
     @FXML
     private void zoomIn_mouseEvent(MouseEvent event) {
         zoomIn();
+    }
+
+    @FXML
+    private void zoomFit_keyboardEvent(KeyEvent event) {
+        if (event.getCode().toString().equals("ENTER")) {
+            zoomFit();
+        }
+    }
+
+    @FXML
+    private void zoomFit_mouseEvent(MouseEvent event) {
+        zoomFit();
     }
 
     private void canvasReset() {
@@ -256,13 +242,6 @@ public class MemorySimulationController implements Initializable {
 
         text = new Text();
         text.setFill(Color.WHITE);
-        text.setText("0");
-        text.setX(180 - text.getLayoutBounds().getWidth());
-        text.setY(45);
-        canvas.getChildren().add(text);
-
-        text = new Text();
-        text.setFill(Color.WHITE);
         switch (memoryAlignment) {
             case _8bit:
                 text.setText("0");
@@ -296,6 +275,13 @@ public class MemorySimulationController implements Initializable {
         canvas.getChildren().add(text);
 
         if (osReservedSize > 0) {
+            text = new Text();
+            text.setFill(Color.WHITE);
+            text.setText("0");
+            text.setX(180 - text.getLayoutBounds().getWidth());
+            text.setY(45);
+            canvas.getChildren().add(text);
+
             rectangle = new Rectangle(memoryWidth, (osReservedSize * byteHeigt), Color.RED);
             rectangle.setArcWidth(30);
             rectangle.setArcHeight(30);
@@ -352,6 +338,11 @@ public class MemorySimulationController implements Initializable {
 
     private void zoomIn() {
         byteHeigt *= 1.25;
+        draw();
+    }
+
+    private void zoomFit() {
+        byteHeigt = ((canvas_anchorPane.getHeight() - 120) / memoryTotalSize);
         draw();
     }
 
