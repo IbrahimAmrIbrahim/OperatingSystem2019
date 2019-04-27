@@ -134,12 +134,14 @@ public class Segment {
         base = second.getBase();
         limit = second.getLimit();
         inserted = second.isInserted();
+        name = second.getName();
     }
 
     public void copy_segment_with_id(Segment second) {
         base = second.getBase();
         limit = second.getLimit();
         setID(second.getID());
+        name = second.getName();
         inserted = second.isInserted();
     }
 
