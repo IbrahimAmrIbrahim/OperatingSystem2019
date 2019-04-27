@@ -80,6 +80,10 @@ public class Memory {
         return free.get_total_size();
     }
 
+    public Vector<Process> get_waiting_vector()
+    {
+        return waiting_Process;
+    }
     public Blank get_free_Blank() {
         return free;
     }

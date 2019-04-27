@@ -11,12 +11,12 @@ import java.util.*;
  *
  * @author ahmed
  */
-public class first_fit {
+public class Best_fit {
 
     private Memory my_memory;
 
     //==========constructor==============//
-    public first_fit(long Size_) {
+    public Best_fit(long Size_) {
         my_memory = new Memory(Size_);
     }
 
@@ -167,6 +167,7 @@ public class first_fit {
         //sorted on base
         my_memory.adding_old_process();
 
+        my_memory.get_free_Blank().sort_on_limit_small_at_top();
         // now the memory have the old process and free location
     }
 
