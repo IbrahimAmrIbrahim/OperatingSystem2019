@@ -289,11 +289,11 @@ public class MemoryInitializationController implements Initializable {
         try {
             baseAddress = Long.valueOf(baseAddress_txt.getText());
         } catch (Exception e) {
-            errorDialog("Base Address is empty or its exceeded the max limit allowed.");
+            errorDialog("Base Address is empty or it exceeded the max limit allowed.");
             return;
         }
         if (baseAddress < parentCtrl.getOsReservedSize()) {
-            errorDialog("Base Address is overlapped with the OS memory size.");
+            errorDialog("Base Address overlapped with the OS memory size.");
             return;
         }
         switch (parentCtrl.getMemoryAlignment()) {
@@ -318,14 +318,18 @@ public class MemoryInitializationController implements Initializable {
         try {
             limitDouble = Double.valueOf(limit_txt.getText());
         } catch (Exception e) {
-            errorDialog("limit is empty, wrong input or its exceeded the max limit allowed.");
+            errorDialog("Size is empty, wrong input or it exceeded the max limit allowed.");
+            return;
+        }
+        if (limitDouble == 0) {
+            errorDialog("Size can't equal to zero.");
             return;
         }
         String limitUnit = limitUnit_choiceBox.getValue();
         switch (limitUnit) {
             case "Byte":
                 if (limitDouble > (Long.MAX_VALUE)) {
-                    errorDialog("Total Memory Size is exceeded the max limit allowed.");
+                    errorDialog("Total Memory Size exceeded the max limit allowed.");
                     return;
                 } else {
                     limit = Math.round(limitDouble);
@@ -333,7 +337,7 @@ public class MemoryInitializationController implements Initializable {
                 break;
             case "KB":
                 if (limitDouble > (Long.MAX_VALUE / 1024d)) {
-                    errorDialog("Total Memory Size is exceeded the max limit allowed.");
+                    errorDialog("Total Memory Size exceeded the max limit allowed.");
                     return;
                 } else {
                     limit = Math.round(limitDouble * 1024d);
@@ -341,7 +345,7 @@ public class MemoryInitializationController implements Initializable {
                 break;
             case "MB":
                 if (limitDouble > (Long.MAX_VALUE / (1024d * 1024d))) {
-                    errorDialog("Total Memory Size is exceeded the max limit allowed.");
+                    errorDialog("Total Memory Size exceeded the max limit allowed.");
                     return;
                 } else {
                     limit = Math.round(limitDouble * (1024d * 1024d));
@@ -349,7 +353,7 @@ public class MemoryInitializationController implements Initializable {
                 break;
             case "GB":
                 if (limitDouble > (Long.MAX_VALUE / (1024d * 1024d * 1024d))) {
-                    errorDialog("Total Memory Size is exceeded the max limit allowed.");
+                    errorDialog("Total Memory Size exceeded the max limit allowed.");
                     return;
                 } else {
                     limit = Math.round(limitDouble * (1024d * 1024d * 1024d));
@@ -357,7 +361,7 @@ public class MemoryInitializationController implements Initializable {
                 break;
             case "TB":
                 if (limitDouble > (Long.MAX_VALUE / (1024d * 1024d * 1024d * 1024d))) {
-                    errorDialog("Total Memory Size is exceeded the max limit allowed.");
+                    errorDialog("Total Memory Size exceeded the max limit allowed.");
                     return;
                 } else {
                     limit = Math.round(limitDouble * (1024d * 1024d * 1024d * 1024d));
@@ -380,17 +384,17 @@ public class MemoryInitializationController implements Initializable {
         }
 
         if ((baseAddress + limit) > (parentCtrl.getOsReservedSize() + parentCtrl.getMemoryTotalSize())) {
-            errorDialog("This hole is exceeeded total memory size.");
+            errorDialog("This hole exceeeded total memory size.");
             return;
         }
 
         for (int i = 0; i < free_vector.size(); i++) {
             if ((free_vector.get(i).getBase() >= baseAddress) && (free_vector.get(i).getBase() < (baseAddress + limit))) {
-                errorDialog("This hole is overlapped with onther hole.");
+                errorDialog("This hole overlapped with onther hole.");
                 return;
             }
             if ((free_vector.get(i).getBase() <= baseAddress) && ((free_vector.get(i).getBase() + free_vector.get(i).getLimit()) > baseAddress)) {
-                errorDialog("This hole is overlapped with onther hole.");
+                errorDialog("This hole overlapped with onther hole.");
                 return;
             }
         }
