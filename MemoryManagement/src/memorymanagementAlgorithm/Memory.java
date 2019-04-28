@@ -92,7 +92,14 @@ public class Memory {
     //====================== method sections ====================//
     public void adding_old_process() {// the free is sorted on base
 
-        //this code work when i have 1 segment or more free and must be at first location
+        if (free.get_segemnt_i(0).getBase() > 0) {
+            long old_base2 = 0;
+            long old_limit2 = free.get_segemnt_i(0).getBase() - old_base2;
+            Process old_process2 = new Process(new Segment(old_base2, old_limit2, "old process", true));
+            runing_Process.add(old_process2);
+            allocated_segment.add(old_process2.get_segemnt_i(0));
+        }
+
         //============between 2 free ========================//
         for (int i = 0; i < free.get_number_of_free_segments() - 1; i++) {
             long old_base = free.get_segemnt_i(i).getBase() + free.get_segemnt_i(i).getLimit();
@@ -108,13 +115,6 @@ public class Memory {
         if (free.get_number_of_free_segments() > 0) {
             last_free_address = (free.get_segemnt_i(free.get_number_of_free_segments() - 1).getBase() + free.get_segemnt_i(free.get_number_of_free_segments() - 1).getLimit());
             // if the free not at the first location
-            if (free.get_segemnt_i(0).getBase() > 0) {
-                long old_base = 0;
-                long old_limit = free.get_segemnt_i(0).getBase() - old_base;
-                Process old_process = new Process(new Segment(old_base, old_limit, "old process", true));
-                runing_Process.add(old_process);
-                allocated_segment.add(old_process.get_segemnt_i(0));
-            }
 
         }
         //for 1 segment
@@ -124,6 +124,7 @@ public class Memory {
             Process old_process = new Process(new Segment(old_base, old_limit, "old process", true));
             runing_Process.add(old_process);
             allocated_segment.add(old_process.get_segemnt_i(0));
+
         }
         // for no segment 
         if (free.get_number_of_free_segments() == 0) {

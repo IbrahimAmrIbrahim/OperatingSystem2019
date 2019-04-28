@@ -21,52 +21,7 @@ public class first_fit {
     }
 
     //=======================methods ====================//
-    public void test() {
-        my_memory = new Memory(10000);
-        Blank b = new Blank();
-        b.add_free_segment(new Segment(100, 100, "Free", false));
-
-        b.add_free_segment(new Segment(400, 100, "Free", false));
-        b.add_free_segment(new Segment(600, 100, "Free", false));
-        b.add_free_segment(new Segment(800, 100, "Free", false));
-        b.add_free_segment(new Segment(1000, 100, "Free", false));
-
-        b.add_free_segment(new Segment(1200, 400, "Free", false));
-
-        b.add_free_segment(new Segment(1800, 50, "Free", false));
-        b.add_free_segment(new Segment(2000, 50, "Free", false));
-        insert_holes(b);
-        Process p0 = new Process();
-        p0.add_Segment(new Segment(100, "S11", true));
-        p0.add_Segment(new Segment(100, "S21", true));
-        p0.add_Segment(new Segment(100, "S31", true));
-        p0.add_Segment(new Segment(100, "S41", true));
-        p0.add_Segment(new Segment(100, "S51", true));
-        Process p1 = new Process();
-        p1.add_Segment(new Segment(100, "S12", true));
-        p1.add_Segment(new Segment(100, "S22", true));
-        p1.add_Segment(new Segment(100, "S32", true));
-        p1.add_Segment(new Segment(100, "S42", true));
-        p1.add_Segment(new Segment(100, "S52", true));
-        Process p2 = new Process();
-        p2.add_Segment(new Segment(100, "S13", true));
-        p2.add_Segment(new Segment(100, "S23", true));
-        p2.add_Segment(new Segment(100, "S33", true));
-        p2.add_Segment(new Segment(100, "S43", true));
-        p2.add_Segment(new Segment(100, "S53", true));
-        Process p3 = new Process();
-        p3.add_Segment(new Segment(100, "S14", true));
-        p3.add_Segment(new Segment(100, "S24", true));
-        p3.add_Segment(new Segment(100, "S34", true));
-        p3.add_Segment(new Segment(100, "S44", true));
-        p3.add_Segment(new Segment(100, "S54", true));
-
-        allocate_process(p0);
-        allocate_process(p1);
-        allocate_process(p2);
-        allocate_process(p3);
-        deallocate_process(p0);
-    }
+ 
 
     public boolean allocate_process(Process input) {
         //add the process on waiting queue
