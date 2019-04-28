@@ -106,6 +106,7 @@ public class Worst_fit {
                         input.get_segemnt_i(i).setInserted(true);// this segment is inserted 
 
                         //=========================================================//
+                        my_memory.get_free_Blank().sort_on_limit_large_at_top();
                         break;// see another segment
                     }//if 
 
@@ -189,5 +190,6 @@ public class Worst_fit {
 
     public void memoryCompaction() {
         my_memory.compaction_memory();
+        my_memory.get_free_Blank().sort_on_limit_large_at_top();
     }
 }

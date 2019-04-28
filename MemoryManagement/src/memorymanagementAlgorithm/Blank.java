@@ -177,11 +177,13 @@ public class Blank {
     }
 
     public void sort_on_limit_small_at_top() {
+        sort_on_base();
         condtion = 's';
         Collections.sort(void_vector, (a, b) -> a.getLimit() < b.getLimit() ? -1 : a.getLimit() == b.getLimit() ? 0 : 1);
     }
 
     public void sort_on_limit_large_at_top() {
+        sort_on_base();
         condtion = 'l';
         Collections.sort(void_vector, (a, b) -> a.getLimit() > b.getLimit() ? -1 : a.getLimit() == b.getLimit() ? 0 : 1);
     }

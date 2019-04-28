@@ -104,7 +104,7 @@ public class Best_fit {
 
                         base_values.add(new_base);
                         input.get_segemnt_i(i).setInserted(true);// this segment is inserted 
-
+                        my_memory.get_free_Blank().sort_on_limit_small_at_top();
                         //=========================================================//
                         break;// see another segment
                     }//if 
@@ -189,5 +189,6 @@ public class Best_fit {
 
     public void memoryCompaction() {
         my_memory.compaction_memory();
+        my_memory.get_free_Blank().sort_on_limit_small_at_top();
     }
 }
