@@ -19,6 +19,7 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.Tooltip;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeTableCell;
 import javafx.scene.control.TreeTableColumn;
@@ -386,8 +387,11 @@ public class MemorySimulationController implements Initializable {
                 });
                 contextMenu.getItems().add(deallocatedMenuItem);
 
+                Tooltip processTooltip = new Tooltip("To Deallocate process, please right click then click deallocate");
                 row.emptyProperty().addListener((obs, wasEmpty, isNowEmpty)
                         -> row.setContextMenu((isNowEmpty) ? null : (!(row.getItem().getBase().equals("") && !row.getItem().getID().equals("OS Reserved"))) ? null : contextMenu));
+                row.emptyProperty().addListener((obs, wasEmpty, isNowEmpty)
+                        -> row.setTooltip((isNowEmpty) ? null : (!(row.getItem().getBase().equals("") && !row.getItem().getID().equals("OS Reserved"))) ? null : processTooltip));
 
                 return row;
             }
