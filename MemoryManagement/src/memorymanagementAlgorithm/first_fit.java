@@ -143,10 +143,26 @@ public class first_fit {
 
     public void memoryCompaction() {
         my_memory.compaction_memory();
+        my_memory.get_free_Blank().sort_on_base();
+         for (int i = 0; i < my_memory.get_waiting_vector().size(); i++) {
+
+            int size = my_memory.get_waiting_vector().size();
+            allocate_process(my_memory.get_waiting_vector().get(0));
+
+            my_memory.get_waiting_vector().removeElement(my_memory.get_waiting_vector().get(my_memory.get_waiting_vector().size() - 1));
+
+            if (size > my_memory.get_waiting_vector().size()) {
+                i--;
+            }
+        }
     }
     
     public void clear_waiting_process() {
         my_memory.clear_waiting_process();
+    }
+    
+    public void remove_waiting_process(Process input) {
+        my_memory.get_waiting_vector().removeElement(input);
     }
     public long get_total_used_size() {
         return my_memory.get_utlization();
