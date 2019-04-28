@@ -21,8 +21,6 @@ public class first_fit {
     }
 
     //=======================methods ====================//
- 
-
     public boolean allocate_process(Process input) {
         //add the process on waiting queue
         my_memory.add_waiting_process(input);
@@ -92,7 +90,6 @@ public class first_fit {
             return false;
             // error msg the process size is bigger than the memory itself
         }
-       
 
     }
 
@@ -110,7 +107,7 @@ public class first_fit {
                 i--;
             }
         }
-        
+
     }
 
     public void insert_holes(Blank input) {
@@ -144,7 +141,7 @@ public class first_fit {
     public void memoryCompaction() {
         my_memory.compaction_memory();
         my_memory.get_free_Blank().sort_on_base();
-         for (int i = 0; i < my_memory.get_waiting_vector().size(); i++) {
+        for (int i = 0; i < my_memory.get_waiting_vector().size(); i++) {
 
             int size = my_memory.get_waiting_vector().size();
             allocate_process(my_memory.get_waiting_vector().get(0));
@@ -156,14 +153,34 @@ public class first_fit {
             }
         }
     }
-    
+
     public void clear_waiting_process() {
         my_memory.clear_waiting_process();
     }
-    
+
     public void remove_waiting_process(Process input) {
         my_memory.get_waiting_vector().removeElement(input);
     }
+
+    public void remove_all_runing() {
+        for (int i = 0; i < my_memory.getRuning_Process().size(); i++) {
+            my_memory.deallocate_process(my_memory.getRuning_Process().get(0));
+            i = 0;
+        }
+
+        for (int i = 0; i < my_memory.get_waiting_vector().size(); i++) {
+
+            int size = my_memory.get_waiting_vector().size();
+            allocate_process(my_memory.get_waiting_vector().get(0));
+
+            my_memory.get_waiting_vector().removeElement(my_memory.get_waiting_vector().get(my_memory.get_waiting_vector().size() - 1));
+
+            if (size > my_memory.get_waiting_vector().size()) {
+                i--;
+            }
+        }
+    }
+
     public long get_total_used_size() {
         return my_memory.get_utlization();
     }

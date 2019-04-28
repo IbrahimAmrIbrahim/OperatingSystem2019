@@ -163,6 +163,25 @@ public class Best_fit {
         my_memory.get_waiting_vector().removeElement(input);
     }
 
+    public void remove_all_runing() {
+        for (int i = 0; i < my_memory.getRuning_Process().size(); i++) {
+            my_memory.deallocate_process(my_memory.getRuning_Process().get(0));
+            i = 0;
+        }
+
+        for (int i = 0; i < my_memory.get_waiting_vector().size(); i++) {
+
+            int size = my_memory.get_waiting_vector().size();
+            allocate_process(my_memory.get_waiting_vector().get(0));
+
+            my_memory.get_waiting_vector().removeElement(my_memory.get_waiting_vector().get(my_memory.get_waiting_vector().size() - 1));
+
+            if (size > my_memory.get_waiting_vector().size()) {
+                i--;
+            }
+        }
+    }
+
     public long get_total_used_size() {
         return my_memory.get_utlization();
     }
