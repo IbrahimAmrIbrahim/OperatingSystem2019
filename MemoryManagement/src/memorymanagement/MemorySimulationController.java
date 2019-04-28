@@ -9,9 +9,16 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Accordion;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TreeItem;
+import javafx.scene.control.TreeTableColumn;
 import javafx.scene.control.TreeTableView;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.cell.TreeItemPropertyValueFactory;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
@@ -29,14 +36,14 @@ import memorymanagementAlgorithm.Best_fit;
 import memorymanagementAlgorithm.Blank;
 import memorymanagementAlgorithm.Process;
 import memorymanagementAlgorithm.Segment;
+import memorymanagementAlgorithm.TableData;
 import memorymanagementAlgorithm.Worst_fit;
 import memorymanagementAlgorithm.first_fit;
 
 public class MemorySimulationController implements Initializable {
 
     private MemorySimulationController myController;
-    @FXML
-    private TreeTableView<?> treeTable;
+
     @FXML
     private Button allocateProcess_btn;
     @FXML
@@ -57,10 +64,40 @@ public class MemorySimulationController implements Initializable {
 
     private Vector<Segment> free_vector;
     private Vector<Process> allocatedProcess_vector;
+    private Vector<Process> waitProcess_vector;
 
     private first_fit firstFitAlgorithm;
     private Best_fit bestFitAlgorithm;
     private Worst_fit worstFitAlgorithm;
+
+    @FXML
+    private TreeTableView<TableData> allocatedProcessTable;
+    @FXML
+    private TreeTableColumn<TableData, String> allocatedProcessesTable_id_column;
+    @FXML
+    private TreeTableColumn<TableData, String> allocatedProcessesTable_name_column;
+    @FXML
+    private TreeTableColumn<TableData, String> allocatedProcessesTable_color_column;
+    @FXML
+    private TreeTableColumn<TableData, String> allocatedProcessesTable_base_column;
+    @FXML
+    private TreeTableColumn<TableData, String> allocatedProcessesTable_limit_column;
+    @FXML
+    private TreeTableView<TableData> waitingProcessTable;
+    @FXML
+    private TreeTableColumn<TableData, String> waitingProcessesTable_id_column;
+    @FXML
+    private TreeTableColumn<TableData, String> waitingProcessesTable_name_column;
+    @FXML
+    private TreeTableColumn<TableData, String> waitingProcessesTable_color_column;
+    @FXML
+    private TableView<TableData> memoryFreeSpaceTable;
+    @FXML
+    private TableColumn<TableData, String> memoryFreeSpaceTable_base_column;
+    @FXML
+    private TableColumn<TableData, String> memoryFreeSpaceTable_limit_column;
+    @FXML
+    private Accordion accordionPane;
 
     public enum memoryAlignmentOptions {
         _8bit, _32bit, _64bit
@@ -92,7 +129,7 @@ public class MemorySimulationController implements Initializable {
     }
 
     private void sceneDisable() {
-        treeTable.setDisable(true);
+        accordionPane.setDisable(true);
         scrollPane.setDisable(true);
         allocateProcess_btn.setDisable(true);
         clear_btn.setDisable(true);
@@ -101,7 +138,7 @@ public class MemorySimulationController implements Initializable {
     }
 
     private void sceneEnable() {
-        treeTable.setDisable(false);
+        accordionPane.setDisable(false);
         scrollPane.setDisable(false);
         allocateProcess_btn.setDisable(false);
         clear_btn.setDisable(false);
@@ -147,6 +184,7 @@ public class MemorySimulationController implements Initializable {
             stage2.showAndWait();
 
             sceneEnable();
+            tableInitialize();
 
             for (int i = 0; i < freeHoles.get_number_of_free_segments(); i++) {
                 freeHoles.get_segemnt_i(i).setBase((freeHoles.get_segemnt_i(i).getBase() - osReservedSize));
@@ -289,6 +327,74 @@ public class MemorySimulationController implements Initializable {
         newProcess.print();
     }
 
+    private void tableInitialize() {
+        allocatedProcessesTable_id_column.setCellValueFactory(new TreeItemPropertyValueFactory<>("ID"));
+        allocatedProcessesTable_name_column.setCellValueFactory(new TreeItemPropertyValueFactory<>("name"));
+        allocatedProcessesTable_color_column.setCellValueFactory(new TreeItemPropertyValueFactory<>("color"));
+        allocatedProcessesTable_base_column.setCellValueFactory(new TreeItemPropertyValueFactory<>("base"));
+        allocatedProcessesTable_limit_column.setCellValueFactory(new TreeItemPropertyValueFactory<>("limit"));
+
+        waitingProcessesTable_id_column.setCellValueFactory(new TreeItemPropertyValueFactory<>("ID"));
+        waitingProcessesTable_name_column.setCellValueFactory(new TreeItemPropertyValueFactory<>("name"));
+        waitingProcessesTable_color_column.setCellValueFactory(new TreeItemPropertyValueFactory<>("color"));
+
+        memoryFreeSpaceTable_base_column.setCellValueFactory(new PropertyValueFactory<>("base"));
+        memoryFreeSpaceTable_limit_column.setCellValueFactory(new PropertyValueFactory<>("limit"));
+    }
+
+    private void tableFill() {
+        //Allocated Processes table
+        allocatedProcessTable.setRoot(null);
+        // Create the root node and add children
+        TreeItem<TableData> allocatedTableRootNode = new TreeItem<>();
+        for (int i = 0; i < allocatedProcess_vector.size(); i++) {
+            TreeItem<TableData> Node = new TreeItem<>(new TableData(("p" + Long.toString(allocatedProcess_vector.get(i).getID())),
+                    allocatedProcess_vector.get(i).getColor().toString(),
+                    allocatedProcess_vector.get(i)));
+            for (int j = 0; j < allocatedProcess_vector.get(i).getSegment_vector().size(); j++) {
+                Segment seg = allocatedProcess_vector.get(i).get_segemnt_i(j);
+                TreeItem<TableData> child = new TreeItem<>(new TableData(("Seg" + Long.toString(seg.getID())),
+                        seg.getName(),
+                        Long.toString(seg.getBase()),
+                        Long.toString(seg.getLimit()),
+                        allocatedProcess_vector.get(i).getColor().toString()));
+
+                Node.getChildren().add(child);
+            }
+            allocatedTableRootNode.getChildren().add(Node);
+        }
+        allocatedProcessTable.setShowRoot(false);
+        allocatedProcessTable.setRoot(allocatedTableRootNode);
+
+        //Waiting Table
+        waitingProcessTable.setRoot(null);
+        // Create the root node and add children
+        TreeItem<TableData> waitingTableRootNode = new TreeItem<>();
+        for (int i = 0; i < waitProcess_vector.size(); i++) {
+            TreeItem<TableData> Node = new TreeItem<>(new TableData(("p" + Long.toString(waitProcess_vector.get(i).getID())),
+                    waitProcess_vector.get(i).getColor().toString(),
+                    waitProcess_vector.get(i)));
+            for (int j = 0; j < waitProcess_vector.get(i).getSegment_vector().size(); j++) {
+                Segment seg = waitProcess_vector.get(i).get_segemnt_i(j);
+                TreeItem<TableData> child = new TreeItem<>(new TableData(("Seg" + Long.toString(seg.getID())),
+                        seg.getName(),
+                        waitProcess_vector.get(i).getColor().toString()));
+
+                Node.getChildren().add(child);
+            }
+            waitingTableRootNode.getChildren().add(Node);
+        }
+        waitingProcessTable.setShowRoot(false);
+        waitingProcessTable.setRoot(waitingTableRootNode);
+
+        //Memory Free Space Table
+        memoryFreeSpaceTable.getItems().clear();
+        for (int i = 0; i < free_vector.size(); i++) {
+            memoryFreeSpaceTable.getItems().add(new TableData(Long.toString(free_vector.get(i).getBase()), Long.toString(free_vector.get(i).getLimit())));
+        }
+
+    }
+
     private void canvasReset() {
         canvas.getChildren().clear();
         canvas.setPrefWidth(0);
@@ -389,14 +495,17 @@ public class MemorySimulationController implements Initializable {
             case FirstFit:
                 free_vector = firstFitAlgorithm.getFreeSpace().get_segment_vector();
                 allocatedProcess_vector = firstFitAlgorithm.getAllocatedProcessVector();
+                waitProcess_vector = firstFitAlgorithm.getWaitingProcessVector();
                 break;
             case BestFit:
                 free_vector = bestFitAlgorithm.getFreeSpace().get_segment_vector();
                 allocatedProcess_vector = bestFitAlgorithm.getAllocatedProcessVector();
+                waitProcess_vector = bestFitAlgorithm.getWaitingProcessVector();
                 break;
             case WorstFit:
                 free_vector = worstFitAlgorithm.getFreeSpace().get_segment_vector();
                 allocatedProcess_vector = worstFitAlgorithm.getAllocatedProcessVector();
+                waitProcess_vector = worstFitAlgorithm.getWaitingProcessVector();
                 break;
         }
 
@@ -451,6 +560,8 @@ public class MemorySimulationController implements Initializable {
 
             }
         }
+
+        tableFill();
     }
 
     private void zoomOut() {

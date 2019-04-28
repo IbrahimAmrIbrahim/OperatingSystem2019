@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.Accordion?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TitledPane?>
 <?import javafx.scene.control.TreeTableColumn?>
 <?import javafx.scene.control.TreeTableView?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -15,12 +19,6 @@
         <items>
           <AnchorPane prefHeight="160.0" prefWidth="100.0">
                <children>
-                  <TreeTableView fx:id="treeTable" layoutX="29.0" layoutY="14.0" prefHeight="354.0" prefWidth="383.0" AnchorPane.bottomAnchor="120.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                    <columns>
-                      <TreeTableColumn prefWidth="75.0" text="C1" />
-                      <TreeTableColumn prefWidth="75.0" text="C2" />
-                    </columns>
-                  </TreeTableView>
                   <Pane layoutX="-29.0" layoutY="458.0" prefHeight="120.0" prefWidth="475.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0">
                      <children>
                         <Button fx:id="allocateProcess_btn" layoutX="32.0" layoutY="19.0" mnemonicParsing="false" onKeyPressed="#allocateProcess_keyboardEvent" onMouseClicked="#allocateProcess_mouseEvent" text="Allocate Process" />
@@ -29,6 +27,56 @@
                         <Button layoutX="291.0" layoutY="67.0" mnemonicParsing="false" onKeyPressed="#memoryCompaction_KeyboardEvent" onMouseClicked="#memoryCompaction_mouseEvent" text="Memory Compaction" />
                      </children>
                   </Pane>
+                  <Accordion fx:id="accordionPane" layoutY="7.0" AnchorPane.bottomAnchor="120.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                    <panes>
+                      <TitledPane text="Allocated Processes">
+                        <content>
+                          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                 <children>
+                                    <TreeTableView fx:id="allocatedProcessTable" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                      <columns>
+                                        <TreeTableColumn fx:id="allocatedProcessesTable_id_column" prefWidth="82.0" style="-fx-alignment: CENTER;" text="ID" />
+                                        <TreeTableColumn fx:id="allocatedProcessesTable_name_column" prefWidth="92.0" style="-fx-alignment: CENTER;" text="Name" />
+                                          <TreeTableColumn fx:id="allocatedProcessesTable_color_column" prefWidth="69.0" style="-fx-alignment: CENTER;" text="Color" />
+                                          <TreeTableColumn fx:id="allocatedProcessesTable_base_column" prefWidth="87.0" style="-fx-alignment: CENTER;" text="Base" />
+                                          <TreeTableColumn fx:id="allocatedProcessesTable_limit_column" prefWidth="113.0" style="-fx-alignment: CENTER;" text="Limit (Bytes)" />
+                                      </columns>
+                                    </TreeTableView>
+                                 </children>
+                              </AnchorPane>
+                        </content>
+                      </TitledPane>
+                      <TitledPane text="Waiting Processes">
+                        <content>
+                          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                 <children>
+                                    <TreeTableView fx:id="waitingProcessTable" layoutX="82.0" layoutY="14.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                      <columns>
+                                        <TreeTableColumn fx:id="waitingProcessesTable_id_column" prefWidth="146.0" style="-fx-alignment: CENTER;" text="ID" />
+                                        <TreeTableColumn fx:id="waitingProcessesTable_name_column" minWidth="4.0" prefWidth="142.0" style="-fx-alignment: CENTER;" text="Name" />
+                                          <TreeTableColumn fx:id="waitingProcessesTable_color_column" minWidth="0.0" prefWidth="138.0" style="-fx-alignment: CENTER;" text="Color" />
+                                      </columns>
+                                    </TreeTableView>
+                                 </children>
+                              </AnchorPane>
+                        </content>
+                      </TitledPane>
+                      <TitledPane text="Memory free space">
+                        <content>
+                          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                 <children>
+                                    <TableView fx:id="memoryFreeSpaceTable" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                      <columns>
+                                        <TableColumn fx:id="memoryFreeSpaceTable_base_column" prefWidth="221.0" style="-fx-alignment: CENTER;" text="Base" />
+                                        <TableColumn fx:id="memoryFreeSpaceTable_limit_column" prefWidth="219.0" style="-fx-alignment: CENTER;" text="Limit (Bytes)" />
+                                      </columns>
+                                    </TableView>
+                                 </children>
+                              </AnchorPane>
+                        </content>
+                      </TitledPane>
+                    </panes>
+                  </Accordion>
                </children>
             </AnchorPane>
           <AnchorPane fx:id="canvas_anchorPane" prefHeight="160.0" prefWidth="100.0">
