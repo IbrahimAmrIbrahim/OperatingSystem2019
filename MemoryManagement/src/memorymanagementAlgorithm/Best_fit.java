@@ -190,4 +190,12 @@ public class Best_fit {
         my_memory.compaction_memory();
         my_memory.get_free_Blank().sort_on_limit_small_at_top();
     }
+
+    public void clear_waiting_process() {
+        my_memory.clear_waiting_process();
+    }
+
+    public long get_total_used_size() {
+        return my_memory.get_utlization();
+    }
 }

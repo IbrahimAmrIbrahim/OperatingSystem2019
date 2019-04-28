@@ -189,4 +189,11 @@ public class first_fit {
     public void memoryCompaction() {
         my_memory.compaction_memory();
     }
+    
+    public void clear_waiting_process() {
+        my_memory.clear_waiting_process();
+    }
+    public long get_total_used_size() {
+        return my_memory.get_utlization();
+    }
 }

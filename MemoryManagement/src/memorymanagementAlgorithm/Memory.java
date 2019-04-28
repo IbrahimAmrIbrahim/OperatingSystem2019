@@ -40,8 +40,6 @@ public class Memory {
     }
 
     // remove it, its gonna destroy us 
-   
-
     public void add_runing_process(Process input) {
         waiting_Process.removeElement(input);
         runing_Process.add(input);
@@ -80,6 +78,15 @@ public class Memory {
 
     public Blank get_free_Blank() {
         return free;
+    }
+
+    public long get_utlization() {
+        long number = 0;
+        for (int i = 0; i < allocated_segment.size(); i++) {
+            number += allocated_segment.get(i).getLimit();
+        }
+
+        return number;
     }
 
     //====================== method sections ====================//
@@ -181,6 +188,10 @@ public class Memory {
      */
     public Vector<Process> getRuning_Process() {
         return runing_Process;
+    }
+
+    public void clear_waiting_process() {
+        waiting_Process.clear();
     }
 
     /**

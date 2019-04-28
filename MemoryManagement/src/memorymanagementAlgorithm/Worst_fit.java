@@ -138,7 +138,7 @@ public class Worst_fit {
             return false;
             // error msg the process size is bigger than the memory itself
         }
-       
+
     }
 
     public void deallocate_process(Process input) {
@@ -155,7 +155,7 @@ public class Worst_fit {
                 i--;
             }
         }
-       
+
     }
 
     public void insert_holes(Blank input) {
@@ -190,5 +190,13 @@ public class Worst_fit {
     public void memoryCompaction() {
         my_memory.compaction_memory();
         my_memory.get_free_Blank().sort_on_limit_large_at_top();
+    }
+
+    public void clear_waiting_process() {
+        my_memory.clear_waiting_process();
+    }
+
+    public long get_total_used_size() {
+        return my_memory.get_utlization();
     }
 }
