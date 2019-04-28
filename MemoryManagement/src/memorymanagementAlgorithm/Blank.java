@@ -136,6 +136,12 @@ public class Blank {
         return color;
     }
 
+     public char get_condtion(){
+         return condtion;
+     }
+     public void set_condtion(char input){
+          condtion=input;
+     }
     //=============remove section============================//
     public void remove_free_segment_i(int i) {
         void_vector.remove(i);
@@ -158,6 +164,7 @@ public class Blank {
         void_vector.get(i).print_free();
     }
 
+   
     //===============General methods========================//
     // collect all free with same base + limit = base2 together
     public void resort() {
