@@ -170,23 +170,50 @@ public class MemorySimulationController implements Initializable {
     }
 
     @FXML
+    private void allocateProcess_keyboardEvent(KeyEvent event) throws IOException {
+        if (event.getCode().toString().equals("ENTER")) {
+            allocateProcessDialog();
+        }
+    }
+
+    @FXML
     private void allocateProcess_mouseEvent(MouseEvent event) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("AddProcess.fxml"));
-        Parent root1 = (Parent) fxmlLoader.load();
+        allocateProcessDialog();
+    }
 
-        Process newProcess = new Process();
-        AddProcessController ctrl = fxmlLoader.getController();
-        ctrl.sceneInitialization(myController, newProcess);
+    @FXML
+    private void memoryCompaction_KeyboardEvent(KeyEvent event) {
+        if (event.getCode().toString().equals("ENTER")) {
 
-        Stage stage = new Stage();
-        stage.setScene(new Scene(root1));
-        stage.initModality(Modality.APPLICATION_MODAL);
-        stage.setTitle("Allocate Process");
-        stage.setResizable(false);
-        stage.initStyle(StageStyle.UTILITY);
-        stage.showAndWait();
+            switch (allocationMethod) {
+                case FirstFit:
+                    firstFitAlgorithm.memoryCompaction();
+                    break;
+                case BestFit:
+                    bestFitAlgorithm.memoryCompaction();
+                    break;
+                case WorstFit:
+                    worstFitAlgorithm.memoryCompaction();
+                    break;
+            }
+            draw();
+        }
+    }
 
-        newProcess.print();
+    @FXML
+    private void memoryCompaction_mouseEvent(MouseEvent event) {
+        switch (allocationMethod) {
+            case FirstFit:
+                firstFitAlgorithm.memoryCompaction();
+                break;
+            case BestFit:
+                bestFitAlgorithm.memoryCompaction();
+                break;
+            case WorstFit:
+                worstFitAlgorithm.memoryCompaction();
+                break;
+        }
+        draw();
     }
 
     @FXML
@@ -229,6 +256,37 @@ public class MemorySimulationController implements Initializable {
     @FXML
     private void zoomFit_mouseEvent(MouseEvent event) {
         zoomFit();
+    }
+
+    private void allocateProcessDialog() throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("AddProcess.fxml"));
+        Parent root1 = (Parent) fxmlLoader.load();
+
+        Process newProcess = new Process();
+        AddProcessController ctrl = fxmlLoader.getController();
+        ctrl.sceneInitialization(myController, newProcess);
+
+        Stage stage = new Stage();
+        stage.setScene(new Scene(root1));
+        stage.initModality(Modality.APPLICATION_MODAL);
+        stage.setTitle("Allocate Process");
+        stage.setResizable(false);
+        stage.initStyle(StageStyle.UTILITY);
+        stage.showAndWait();
+
+        switch (allocationMethod) {
+            case FirstFit:
+                firstFitAlgorithm.allocate_process(newProcess);
+                break;
+            case BestFit:
+                bestFitAlgorithm.allocate_process(newProcess);
+                break;
+            case WorstFit:
+                worstFitAlgorithm.allocate_process(newProcess);
+                break;
+        }
+        draw();
+        newProcess.print();
     }
 
     private void canvasReset() {

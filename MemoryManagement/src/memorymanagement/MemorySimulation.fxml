@@ -21,11 +21,12 @@
                       <TreeTableColumn prefWidth="75.0" text="C2" />
                     </columns>
                   </TreeTableView>
-                  <Pane layoutX="-29.0" layoutY="458.0" prefHeight="120.0" prefWidth="383.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0">
+                  <Pane layoutX="-29.0" layoutY="458.0" prefHeight="120.0" prefWidth="475.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0">
                      <children>
-                        <Button fx:id="allocateProcess_btn" layoutX="32.0" layoutY="19.0" mnemonicParsing="false" onMouseClicked="#allocateProcess_mouseEvent" text="Allocate Process" />
-                        <Button fx:id="MemoryConfig_btn" layoutX="75.0" layoutY="72.0" mnemonicParsing="false" text="Memory Hardware Configuration" />
+                        <Button fx:id="allocateProcess_btn" layoutX="32.0" layoutY="19.0" mnemonicParsing="false" onKeyPressed="#allocateProcess_keyboardEvent" onMouseClicked="#allocateProcess_mouseEvent" text="Allocate Process" />
+                        <Button fx:id="MemoryConfig_btn" layoutX="32.0" layoutY="67.0" mnemonicParsing="false" text="Memory Hardware Configuration" />
                         <Button fx:id="clear_btn" layoutX="227.0" layoutY="19.0" mnemonicParsing="false" onMouseClicked="#clear_mouseEvent" prefHeight="31.0" prefWidth="128.0" text="Clear" />
+                        <Button layoutX="291.0" layoutY="67.0" mnemonicParsing="false" onKeyPressed="#memoryCompaction_KeyboardEvent" onMouseClicked="#memoryCompaction_mouseEvent" text="Memory Compaction" />
                      </children>
                   </Pane>
                </children>
