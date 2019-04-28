@@ -13,6 +13,7 @@ import javafx.geometry.Insets;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Accordion;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
@@ -61,6 +62,13 @@ public class MemorySimulationController implements Initializable {
     private Button allocateProcess_btn;
     @FXML
     private Button MemoryConfig_btn;
+    @FXML
+    private Button memoryCompaction_btn;
+    @FXML
+    private Button deallocateAll_btn;
+    @FXML
+    private Button deleteAllWaitingProcesses_btn;
+
     @FXML
     private Button LoadFromFile_btn;
     @FXML
@@ -162,6 +170,9 @@ public class MemorySimulationController implements Initializable {
         allocateProcess_btn.setDisable(true);
         LoadFromFile_btn.setDisable(true);
         zoomGroup.setDisable(true);
+        memoryCompaction_btn.setDisable(true);
+        deallocateAll_btn.setDisable(true);
+        deleteAllWaitingProcesses_btn.setDisable(true);
     }
 
     private void sceneEnable() {
@@ -170,6 +181,9 @@ public class MemorySimulationController implements Initializable {
         allocateProcess_btn.setDisable(false);
         LoadFromFile_btn.setDisable(false);
         zoomGroup.setDisable(false);
+        memoryCompaction_btn.setDisable(false);
+        deallocateAll_btn.setDisable(false);
+        deleteAllWaitingProcesses_btn.setDisable(false);
     }
 
     public void sceneInitialize() throws IOException {
@@ -280,11 +294,59 @@ public class MemorySimulationController implements Initializable {
     }
 
     @FXML
-    private void clear_mouseEvent(MouseEvent event) {
-
+    private void deallocateAll_keyboardEvent(KeyEvent event) {
+        if (event.getCode().toString().equals("ENTER")) {
+            switch (allocationMethod) {
+                case FirstFit:
+                    firstFitAlgorithm.remove_all_runing();
+                    break;
+                case BestFit:
+                    bestFitAlgorithm.remove_all_runing();
+                    break;
+                case WorstFit:
+                    worstFitAlgorithm.remove_all_runing();
+                    break;
+            }
+            draw();
+        }
     }
 
-    private void deleteAllWaittingProcesses(ActionEvent event) {
+    @FXML
+    private void deallocateAll_mouseEvent(MouseEvent event) {
+        switch (allocationMethod) {
+            case FirstFit:
+                firstFitAlgorithm.remove_all_runing();
+                break;
+            case BestFit:
+                bestFitAlgorithm.remove_all_runing();
+                break;
+            case WorstFit:
+                worstFitAlgorithm.remove_all_runing();
+                break;
+        }
+        draw();
+    }
+
+    @FXML
+    private void deleteAllWaitingProcesses_keyboardEvent(KeyEvent event) {
+        if (event.getCode().toString().equals("ENTER")) {
+            switch (allocationMethod) {
+                case FirstFit:
+                    firstFitAlgorithm.clear_waiting_process();
+                    break;
+                case BestFit:
+                    bestFitAlgorithm.clear_waiting_process();
+                    break;
+                case WorstFit:
+                    worstFitAlgorithm.clear_waiting_process();
+                    break;
+            }
+        }
+        tableFill();
+    }
+
+    @FXML
+    private void deleteAllWaitingProcesses_mouseEvent(MouseEvent event) {
         switch (allocationMethod) {
             case FirstFit:
                 firstFitAlgorithm.clear_waiting_process();
@@ -296,10 +358,7 @@ public class MemorySimulationController implements Initializable {
                 worstFitAlgorithm.clear_waiting_process();
                 break;
         }
-    }
-
-    private void allocate_event(ActionEvent event) throws IOException {
-        allocateProcessDialog();
+        tableFill();
     }
 
     @FXML
@@ -338,6 +397,15 @@ public class MemorySimulationController implements Initializable {
         zoomFit();
     }
 
+    private void alertDialog(String msg) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Information Dialog");
+        alert.setHeaderText(null);
+        alert.setContentText(msg);
+
+        alert.showAndWait();
+    }
+
     private void allocateProcessDialog() throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("AddProcess.fxml"));
         Parent root1 = (Parent) fxmlLoader.load();
@@ -356,13 +424,25 @@ public class MemorySimulationController implements Initializable {
 
         switch (allocationMethod) {
             case FirstFit:
-                firstFitAlgorithm.allocate_process(newProcess);
+                if (firstFitAlgorithm.allocate_process(newProcess)) {
+                    alertDialog("This process successfully allocated");
+                } else {
+                    alertDialog("This process can't be allocated, it will be put in waiting  queue");
+                }
                 break;
             case BestFit:
-                bestFitAlgorithm.allocate_process(newProcess);
+                if (bestFitAlgorithm.allocate_process(newProcess)) {
+                    alertDialog("This process successfully allocated");
+                } else {
+                    alertDialog("This process can't be allocated, it will be put in waiting  queue");
+                }
                 break;
             case WorstFit:
-                worstFitAlgorithm.allocate_process(newProcess);
+                if (worstFitAlgorithm.allocate_process(newProcess)) {
+                    alertDialog("This process successfully allocated");
+                } else {
+                    alertDialog("This process can't be allocated, it will be put in waiting  queue");
+                }
                 break;
         }
         draw();
@@ -470,6 +550,7 @@ public class MemorySimulationController implements Initializable {
                                 worstFitAlgorithm.remove_waiting_process(processtoDelete.getProcess());
                                 break;
                         }
+                        tableFill();
                     }
                 });
                 contextMenu.getItems().add(deleteMenuItem);
@@ -737,9 +818,9 @@ public class MemorySimulationController implements Initializable {
                 break;
         }
         MemoryFreeSize_Label.setText(Long.toString(freeSize));
-        MemoryFreePrcentage_Label.setText(Double.toString(((double)freeSize / (double)totalSize) * 100));
+        MemoryFreePrcentage_Label.setText(Double.toString(((double) freeSize / (double) totalSize) * 100));
         MemoryUsed_Label.setText(Long.toString(usedSize));
-        MemoryUsedPercentage_Label.setText(Double.toString(((double)usedSize / (double)totalSize) * 100 ));
+        MemoryUsedPercentage_Label.setText(Double.toString(((double) usedSize / (double) totalSize) * 100));
     }
 
     private void zoomOut() {
