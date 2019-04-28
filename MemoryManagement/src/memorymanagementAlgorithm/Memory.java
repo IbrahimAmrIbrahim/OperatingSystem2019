@@ -40,12 +40,7 @@ public class Memory {
     }
 
     // remove it, its gonna destroy us 
-    //====================on destroy list ============================================//
-    public void add_runing_process_vecotr(Vector<Process> input) {
-        waiting_Process.removeElement(input);
-        runing_Process.addAll(input);
-    }
-    //====================on destroy list ============================================//
+   
 
     public void add_runing_process(Process input) {
         waiting_Process.removeElement(input);

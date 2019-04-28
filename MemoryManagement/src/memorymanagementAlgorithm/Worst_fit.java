@@ -68,7 +68,7 @@ public class Worst_fit {
         deallocate_process(p0);
     }
 
-    public void allocate_process(Process input) {
+    public boolean allocate_process(Process input) {
         //add the process on waiting queue
         my_memory.add_waiting_process(input);
 
@@ -123,22 +123,22 @@ public class Worst_fit {
                 }
                 // add the input to running and remove it from waiting
                 my_memory.add_runing_process(input);
+                return true;
             } // for loop to change the free 
             else {
                 input.set_all_uninserted();
                 // can't be inserted 
                 // error 
                 // still in wait
-                // get the last blank agaain
+                // get the last blank again
                 my_memory.set_free_Blank(clone);
-
+                return false;
             }
         } else {
+            return false;
             // error msg the process size is bigger than the memory itself
         }
-        my_memory.print();
-        System.out.println("----------------------------------");
-
+       
     }
 
     public void deallocate_process(Process input) {
@@ -155,8 +155,7 @@ public class Worst_fit {
                 i--;
             }
         }
-        System.out.println("=====================");
-        my_memory.print();
+       
     }
 
     public void insert_holes(Blank input) {
