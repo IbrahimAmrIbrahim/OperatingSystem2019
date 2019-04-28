@@ -15,6 +15,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Accordion;
 import javafx.scene.control.Button;
 import javafx.scene.control.ContextMenu;
+import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TableColumn;
@@ -61,7 +62,7 @@ public class MemorySimulationController implements Initializable {
     @FXML
     private Button MemoryConfig_btn;
     @FXML
-    private Button clear_btn;
+    private Button LoadFromFile_btn;
     @FXML
     private ScrollPane scrollPane;
     @FXML
@@ -110,6 +111,20 @@ public class MemorySimulationController implements Initializable {
     private TableColumn<TableData, String> memoryFreeSpaceTable_limit_column;
     @FXML
     private Accordion accordionPane;
+    @FXML
+    private Label MemoryTotalSize_Label;
+    @FXML
+    private Label MemoryAlignment_Label;
+    @FXML
+    private Label AllocationMethid_Label;
+    @FXML
+    private Label MemoryFreeSize_Label;
+    @FXML
+    private Label MemoryFreePrcentage_Label;
+    @FXML
+    private Label MemoryUsed_Label;
+    @FXML
+    private Label MemoryUsedPercentage_Label;
 
     public enum memoryAlignmentOptions {
         _8bit, _32bit, _64bit
@@ -135,17 +150,17 @@ public class MemorySimulationController implements Initializable {
         memoryConfigurationChange = false;
         memoryAlignment = memoryAlignmentOptions._8bit;
         allocationMethod = allocationMethodOptions.FirstFit;
-        sceneDisable();
         canvas = new Pane();
         scrollPane.setContent(canvas);
+        tableInitialize();
+        sceneDisable();
     }
 
     private void sceneDisable() {
         accordionPane.setDisable(true);
         scrollPane.setDisable(true);
         allocateProcess_btn.setDisable(true);
-        clear_btn.setDisable(true);
-        MemoryConfig_btn.setDisable(true);
+        LoadFromFile_btn.setDisable(true);
         zoomGroup.setDisable(true);
     }
 
@@ -153,8 +168,7 @@ public class MemorySimulationController implements Initializable {
         accordionPane.setDisable(false);
         scrollPane.setDisable(false);
         allocateProcess_btn.setDisable(false);
-        clear_btn.setDisable(false);
-        MemoryConfig_btn.setDisable(false);
+        LoadFromFile_btn.setDisable(false);
         zoomGroup.setDisable(false);
     }
 
@@ -196,7 +210,6 @@ public class MemorySimulationController implements Initializable {
             stage2.showAndWait();
 
             sceneEnable();
-            tableInitialize();
 
             for (int i = 0; i < freeHoles.get_number_of_free_segments(); i++) {
                 freeHoles.get_segemnt_i(i).setBase((freeHoles.get_segemnt_i(i).getBase() - osReservedSize));
@@ -214,6 +227,7 @@ public class MemorySimulationController implements Initializable {
                     break;
             }
 
+            memoryConfigurationChange = false;
             zoomFit();
 
         }
@@ -234,7 +248,6 @@ public class MemorySimulationController implements Initializable {
     @FXML
     private void memoryCompaction_KeyboardEvent(KeyEvent event) {
         if (event.getCode().toString().equals("ENTER")) {
-
             switch (allocationMethod) {
                 case FirstFit:
                     firstFitAlgorithm.memoryCompaction();
@@ -269,6 +282,24 @@ public class MemorySimulationController implements Initializable {
     @FXML
     private void clear_mouseEvent(MouseEvent event) {
 
+    }
+
+    private void deleteAllWaittingProcesses(ActionEvent event) {
+        switch (allocationMethod) {
+            case FirstFit:
+                firstFitAlgorithm.clear_waiting_process();
+                break;
+            case BestFit:
+                bestFitAlgorithm.clear_waiting_process();
+                break;
+            case WorstFit:
+                worstFitAlgorithm.clear_waiting_process();
+                break;
+        }
+    }
+
+    private void allocate_event(ActionEvent event) throws IOException {
+        allocateProcessDialog();
     }
 
     @FXML
@@ -387,11 +418,11 @@ public class MemorySimulationController implements Initializable {
                 });
                 contextMenu.getItems().add(deallocatedMenuItem);
 
-                Tooltip processTooltip = new Tooltip("To Deallocate process, please right click then click deallocate");
+                Tooltip processTooltip = new Tooltip("To deallocate process, please right click then click deallocate");
                 row.emptyProperty().addListener((obs, wasEmpty, isNowEmpty)
-                        -> row.setContextMenu((isNowEmpty) ? null : (!(row.getItem().getBase().equals("") && !row.getItem().getID().equals("OS Reserved"))) ? null : contextMenu));
+                        -> row.setContextMenu((isNowEmpty) ? null : (!(row.getItem().getLimit().equals("") && !row.getItem().getID().equals("OS Reserved"))) ? null : contextMenu));
                 row.emptyProperty().addListener((obs, wasEmpty, isNowEmpty)
-                        -> row.setTooltip((isNowEmpty) ? null : (!(row.getItem().getBase().equals("") && !row.getItem().getID().equals("OS Reserved"))) ? null : processTooltip));
+                        -> row.setTooltip((isNowEmpty) ? null : (!(row.getItem().getLimit().equals("") && !row.getItem().getID().equals("OS Reserved"))) ? null : processTooltip));
 
                 return row;
             }
@@ -416,6 +447,41 @@ public class MemorySimulationController implements Initializable {
                     }
                 }
             };
+        });
+        waitingProcessTable.setRowFactory(new Callback<TreeTableView<TableData>, TreeTableRow<TableData>>() {
+            @Override
+            public TreeTableRow<TableData> call(TreeTableView<TableData> treeTableView) {
+                final ContextMenu contextMenu = new ContextMenu();
+                final MenuItem deleteMenuItem = new MenuItem("Delete");
+                final TreeTableRow<TableData> row = new TreeTableRow<>();
+
+                deleteMenuItem.setOnAction(new EventHandler<ActionEvent>() {
+                    @Override
+                    public void handle(ActionEvent event) {
+                        TableData processtoDelete = waitingProcessTable.getSelectionModel().getSelectedItem().getValue();
+                        switch (allocationMethod) {
+                            case FirstFit:
+                                firstFitAlgorithm.remove_waiting_process(processtoDelete.getProcess());
+                                break;
+                            case BestFit:
+                                bestFitAlgorithm.remove_waiting_process(processtoDelete.getProcess());
+                                break;
+                            case WorstFit:
+                                worstFitAlgorithm.remove_waiting_process(processtoDelete.getProcess());
+                                break;
+                        }
+                    }
+                });
+                contextMenu.getItems().add(deleteMenuItem);
+
+                Tooltip processTooltip = new Tooltip("To delete process, please right click then click Delete");
+                row.emptyProperty().addListener((obs, wasEmpty, isNowEmpty)
+                        -> row.setContextMenu((isNowEmpty) ? null : (!row.getItem().getLimit().equals("")) ? null : contextMenu));
+                row.emptyProperty().addListener((obs, wasEmpty, isNowEmpty)
+                        -> row.setTooltip((isNowEmpty) ? null : (!row.getItem().getLimit().equals("")) ? null : processTooltip));
+
+                return row;
+            }
         });
 
         memoryFreeSpaceTable_base_column.setCellValueFactory(new PropertyValueFactory<>("base"));
@@ -462,6 +528,8 @@ public class MemorySimulationController implements Initializable {
                 Segment seg = waitProcess_vector.get(i).get_segemnt_i(j);
                 TreeItem<TableData> child = new TreeItem<>(new TableData(("Seg" + Long.toString(seg.getID())),
                         seg.getName(),
+                        "",
+                        Long.toString(seg.getLimit()),
                         waitProcess_vector.get(i).getColor()));
 
                 Node.getChildren().add(child);
@@ -646,6 +714,32 @@ public class MemorySimulationController implements Initializable {
         }
 
         tableFill();
+        MemoryInfo();
+    }
+
+    private void MemoryInfo() {
+        long totalSize = memoryTotalSize + osReservedSize;
+        MemoryTotalSize_Label.setText(Long.toString(totalSize));
+        long freeSize = 0;
+        long usedSize = osReservedSize;
+        switch (allocationMethod) {
+            case FirstFit:
+                freeSize = firstFitAlgorithm.getFreeSpace().get_total_size();
+                usedSize += firstFitAlgorithm.get_total_used_size();
+                break;
+            case BestFit:
+                freeSize = bestFitAlgorithm.getFreeSpace().get_total_size();
+                usedSize += bestFitAlgorithm.get_total_used_size();
+                break;
+            case WorstFit:
+                freeSize = worstFitAlgorithm.getFreeSpace().get_total_size();
+                usedSize += worstFitAlgorithm.get_total_used_size();
+                break;
+        }
+        MemoryFreeSize_Label.setText(Long.toString(freeSize));
+        MemoryFreePrcentage_Label.setText(Double.toString(((double)freeSize / (double)totalSize) * 100));
+        MemoryUsed_Label.setText(Long.toString(usedSize));
+        MemoryUsedPercentage_Label.setText(Double.toString(((double)usedSize / (double)totalSize) * 100 ));
     }
 
     private void zoomOut() {
@@ -706,12 +800,15 @@ public class MemorySimulationController implements Initializable {
         switch (memoryAlignment) {
             case _8bit:
                 memoryWidth = 200;
+                MemoryAlignment_Label.setText("1 Byte (8bit)");
                 break;
             case _32bit:
                 memoryWidth = 400;
+                MemoryAlignment_Label.setText("4 Byte (32bit)");
                 break;
             case _64bit:
                 memoryWidth = 600;
+                MemoryAlignment_Label.setText("8 Byte (64bit)");
                 break;
         }
     }
@@ -733,16 +830,19 @@ public class MemorySimulationController implements Initializable {
                 firstFitAlgorithm = new first_fit(memoryTotalSize);
                 bestFitAlgorithm = null;
                 worstFitAlgorithm = null;
+                AllocationMethid_Label.setText("First Fit");
                 break;
             case BestFit:
                 firstFitAlgorithm = null;
                 bestFitAlgorithm = new Best_fit(memoryTotalSize);
                 worstFitAlgorithm = null;
+                AllocationMethid_Label.setText("Best Fit");
                 break;
             case WorstFit:
                 firstFitAlgorithm = null;
                 bestFitAlgorithm = null;
                 worstFitAlgorithm = new Worst_fit(memoryTotalSize);
+                AllocationMethid_Label.setText("Worst Fit");
                 break;
         }
     }
