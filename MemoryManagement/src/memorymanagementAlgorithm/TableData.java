@@ -1,12 +1,14 @@
 package memorymanagementAlgorithm;
 
+import javafx.scene.paint.Color;
+
 public class TableData {
 
     private String ID;
     private String name;
     private String base;
     private String limit;
-    private String color;
+    private Color color;
     private Process process;
 
     /**
@@ -16,7 +18,7 @@ public class TableData {
      * @param _color
      * @param _process
      */
-    public TableData(String _ID, String _color, Process _process) {
+    public TableData(String _ID, Color _color, Process _process) {
         ID = _ID;
         name = "";
         base = "";
@@ -34,7 +36,7 @@ public class TableData {
      * @param _limit
      * @param _color
      */
-    public TableData(String _ID, String _name, String _base, String _limit, String _color) {
+    public TableData(String _ID, String _name, String _base, String _limit, Color _color) {
         ID = _ID;
         name = _name;
         base = _base;
@@ -50,7 +52,7 @@ public class TableData {
      * @param _name
      * @param _color
      */
-    public TableData(String _ID, String _name, String _color) {
+    public TableData(String _ID, String _name, Color _color) {
         ID = _ID;
         name = _name;
         base = "";
@@ -70,7 +72,7 @@ public class TableData {
         name = "";
         base = _base;
         limit = _limit;
-        color = "";
+        color = null;
         process = null;
     }
 
@@ -133,14 +135,14 @@ public class TableData {
     /**
      * @return the color
      */
-    public String getColor() {
+    public Color getColor() {
         return color;
     }
 
     /**
      * @param color the color to set
      */
-    public void setColor(String color) {
+    public void setColor(Color color) {
         this.color = color;
     }
 

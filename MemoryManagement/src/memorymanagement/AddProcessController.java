@@ -20,6 +20,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TitledPane;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.stage.Stage;
 import memorymanagementAlgorithm.Process;
 
 /**
@@ -101,6 +102,9 @@ public class AddProcessController implements Initializable {
 
     @FXML
     void handleCancelButton(ActionEvent event) {
+        Stage thisStage = (Stage)cancel.getScene().getWindow();
+        thisStage.close();
+        
     }
 
     @FXML

@@ -7,6 +7,7 @@ import java.util.Vector;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Accordion;
@@ -15,6 +16,7 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TreeItem;
+import javafx.scene.control.TreeTableCell;
 import javafx.scene.control.TreeTableColumn;
 import javafx.scene.control.TreeTableView;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -23,6 +25,9 @@ import javafx.scene.effect.DropShadow;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
@@ -77,7 +82,7 @@ public class MemorySimulationController implements Initializable {
     @FXML
     private TreeTableColumn<TableData, String> allocatedProcessesTable_name_column;
     @FXML
-    private TreeTableColumn<TableData, String> allocatedProcessesTable_color_column;
+    private TreeTableColumn<TableData, Color> allocatedProcessesTable_color_column;
     @FXML
     private TreeTableColumn<TableData, String> allocatedProcessesTable_base_column;
     @FXML
@@ -89,7 +94,7 @@ public class MemorySimulationController implements Initializable {
     @FXML
     private TreeTableColumn<TableData, String> waitingProcessesTable_name_column;
     @FXML
-    private TreeTableColumn<TableData, String> waitingProcessesTable_color_column;
+    private TreeTableColumn<TableData, Color> waitingProcessesTable_color_column;
     @FXML
     private TableView<TableData> memoryFreeSpaceTable;
     @FXML
@@ -331,12 +336,46 @@ public class MemorySimulationController implements Initializable {
         allocatedProcessesTable_id_column.setCellValueFactory(new TreeItemPropertyValueFactory<>("ID"));
         allocatedProcessesTable_name_column.setCellValueFactory(new TreeItemPropertyValueFactory<>("name"));
         allocatedProcessesTable_color_column.setCellValueFactory(new TreeItemPropertyValueFactory<>("color"));
+        // Custom rendering of the table cell.
+        allocatedProcessesTable_color_column.setCellFactory(column -> {
+            return new TreeTableCell<TableData, Color>() {
+                @Override
+                protected void updateItem(Color item, boolean empty) {
+                    super.updateItem(item, empty);
+                    if (getTreeTableRow() == null || empty) {
+                        setText(null);
+                        setBackground(new Background(new BackgroundFill(Color.TRANSPARENT, CornerRadii.EMPTY, Insets.EMPTY)));
+                    } else {
+                        setTextFill(Color.WHITE);
+                        setText(item.toString());
+                        setBackground(new Background(new BackgroundFill(item, CornerRadii.EMPTY, Insets.EMPTY)));
+                    }
+                }
+            };
+        });
         allocatedProcessesTable_base_column.setCellValueFactory(new TreeItemPropertyValueFactory<>("base"));
         allocatedProcessesTable_limit_column.setCellValueFactory(new TreeItemPropertyValueFactory<>("limit"));
 
         waitingProcessesTable_id_column.setCellValueFactory(new TreeItemPropertyValueFactory<>("ID"));
         waitingProcessesTable_name_column.setCellValueFactory(new TreeItemPropertyValueFactory<>("name"));
         waitingProcessesTable_color_column.setCellValueFactory(new TreeItemPropertyValueFactory<>("color"));
+        // Custom rendering of the table cell.
+        waitingProcessesTable_color_column.setCellFactory(column -> {
+            return new TreeTableCell<TableData, Color>() {
+                @Override
+                protected void updateItem(Color item, boolean empty) {
+                    super.updateItem(item, empty);
+                    if (getTreeTableRow() == null || empty) {
+                        setText(null);
+                        setBackground(new Background(new BackgroundFill(Color.TRANSPARENT, CornerRadii.EMPTY, Insets.EMPTY)));
+                    } else {
+                        setTextFill(Color.WHITE);
+                        setText(item.toString());
+                        setBackground(new Background(new BackgroundFill(item, CornerRadii.EMPTY, Insets.EMPTY)));
+                    }
+                }
+            };
+        });
 
         memoryFreeSpaceTable_base_column.setCellValueFactory(new PropertyValueFactory<>("base"));
         memoryFreeSpaceTable_limit_column.setCellValueFactory(new PropertyValueFactory<>("limit"));
@@ -347,9 +386,13 @@ public class MemorySimulationController implements Initializable {
         allocatedProcessTable.setRoot(null);
         // Create the root node and add children
         TreeItem<TableData> allocatedTableRootNode = new TreeItem<>();
+        TreeItem<TableData> OSNode = new TreeItem<>(new TableData("OS Reserved",
+                Color.RED,
+                (Process) null));
+        allocatedTableRootNode.getChildren().add(OSNode);
         for (int i = 0; i < allocatedProcess_vector.size(); i++) {
-            TreeItem<TableData> Node = new TreeItem<>(new TableData(("p" + Long.toString(allocatedProcess_vector.get(i).getID())),
-                    allocatedProcess_vector.get(i).getColor().toString(),
+            TreeItem<TableData> Node = new TreeItem<>(new TableData(("P" + Long.toString(allocatedProcess_vector.get(i).getID())),
+                    allocatedProcess_vector.get(i).getColor(),
                     allocatedProcess_vector.get(i)));
             for (int j = 0; j < allocatedProcess_vector.get(i).getSegment_vector().size(); j++) {
                 Segment seg = allocatedProcess_vector.get(i).get_segemnt_i(j);
@@ -357,7 +400,7 @@ public class MemorySimulationController implements Initializable {
                         seg.getName(),
                         Long.toString(seg.getBase()),
                         Long.toString(seg.getLimit()),
-                        allocatedProcess_vector.get(i).getColor().toString()));
+                        allocatedProcess_vector.get(i).getColor()));
 
                 Node.getChildren().add(child);
             }
@@ -371,14 +414,14 @@ public class MemorySimulationController implements Initializable {
         // Create the root node and add children
         TreeItem<TableData> waitingTableRootNode = new TreeItem<>();
         for (int i = 0; i < waitProcess_vector.size(); i++) {
-            TreeItem<TableData> Node = new TreeItem<>(new TableData(("p" + Long.toString(waitProcess_vector.get(i).getID())),
-                    waitProcess_vector.get(i).getColor().toString(),
+            TreeItem<TableData> Node = new TreeItem<>(new TableData(("P" + Long.toString(waitProcess_vector.get(i).getID())),
+                    waitProcess_vector.get(i).getColor(),
                     waitProcess_vector.get(i)));
             for (int j = 0; j < waitProcess_vector.get(i).getSegment_vector().size(); j++) {
                 Segment seg = waitProcess_vector.get(i).get_segemnt_i(j);
                 TreeItem<TableData> child = new TreeItem<>(new TableData(("Seg" + Long.toString(seg.getID())),
                         seg.getName(),
-                        waitProcess_vector.get(i).getColor().toString()));
+                        waitProcess_vector.get(i).getColor()));
 
                 Node.getChildren().add(child);
             }
@@ -550,7 +593,7 @@ public class MemorySimulationController implements Initializable {
 
                 text = new Text();
                 text.setFill(Color.WHITE);
-                text.setText("P" + Long.toString(allocatedProcess_vector.get(i).getID()) + " , S" + Long.toString(drawn.getID()) + "\n"
+                text.setText("P" + Long.toString(allocatedProcess_vector.get(i).getID()) + " , Seg" + Long.toString(drawn.getID()) + "\n"
                         + drawn.getName() + "\n"
                         + "Size: " + Long.toString(drawn.getLimit()));
                 text.setTextAlignment(TextAlignment.CENTER);
