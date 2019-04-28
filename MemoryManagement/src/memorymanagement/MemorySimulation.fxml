@@ -32,7 +32,7 @@
             </AnchorPane>
           <AnchorPane fx:id="canvas_anchorPane" prefHeight="160.0" prefWidth="100.0">
                <children>
-                  <HBox alignment="TOP_RIGHT" layoutX="213.0" layoutY="-36.0" maxHeight="32.0" maxWidth="96.0" minHeight="32.0" minWidth="96.0" prefHeight="32.0" prefWidth="96.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                  <HBox fx:id="zoomGroup" alignment="TOP_RIGHT" layoutX="213.0" layoutY="-36.0" maxHeight="32.0" maxWidth="96.0" minHeight="32.0" minWidth="96.0" prefHeight="32.0" prefWidth="96.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                      <children>
                         <Button maxHeight="32.0" maxWidth="35.0" minHeight="32.0" minWidth="35.0" mnemonicParsing="false" onKeyPressed="#zoomFit_keyboardEvent" onMouseClicked="#zoomFit_mouseEvent" prefHeight="32.0" prefWidth="35.0" text="[ ]" />
                         <Button maxHeight="32.0" maxWidth="32.0" minHeight="32.0" minWidth="32.0" mnemonicParsing="false" onKeyPressed="#zoomOut_keyboardEvent" onMouseClicked="#zoomOut_mouseEvent" prefHeight="32.0" prefWidth="32.0" text="-" />

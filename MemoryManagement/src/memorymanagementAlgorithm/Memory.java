@@ -32,7 +32,6 @@ public class Memory {
 
     //================== set area ===============================//
     public void add_waiting_process(Process input) {
-
         waiting_Process.add(input);
     }
 
@@ -40,7 +39,7 @@ public class Memory {
         waiting_Process.addAll(input);
     }
 
-    // remove it, it;s gonna destroy us 
+    // remove it, its gonna destroy us 
     //====================on destroy list ============================================//
     public void add_runing_process_vecotr(Vector<Process> input) {
         waiting_Process.removeElement(input);
@@ -80,10 +79,10 @@ public class Memory {
         return free.get_total_size();
     }
 
-    public Vector<Process> get_waiting_vector()
-    {
+    public Vector<Process> get_waiting_vector() {
         return waiting_Process;
     }
+
     public Blank get_free_Blank() {
         return free;
     }
@@ -173,5 +172,26 @@ public class Memory {
         }
         free.resort();
 
+    }
+
+    /**
+     * @return the waiting_Process
+     */
+    public Vector<Process> getWaiting_Process() {
+        return waiting_Process;
+    }
+
+    /**
+     * @return the runing_Process
+     */
+    public Vector<Process> getRuning_Process() {
+        return runing_Process;
+    }
+
+    /**
+     * @return the free
+     */
+    public Blank getFree() {
+        return free;
     }
 }

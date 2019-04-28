@@ -16,6 +16,7 @@ import javafx.scene.effect.DropShadow;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -24,9 +25,11 @@ import javafx.scene.text.TextAlignment;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import memorymanagementAlgorithm.Best_fit;
 import memorymanagementAlgorithm.Blank;
 import memorymanagementAlgorithm.Process;
 import memorymanagementAlgorithm.Segment;
+import memorymanagementAlgorithm.Worst_fit;
 import memorymanagementAlgorithm.first_fit;
 
 public class MemorySimulationController implements Initializable {
@@ -44,6 +47,8 @@ public class MemorySimulationController implements Initializable {
     private ScrollPane scrollPane;
     @FXML
     private AnchorPane canvas_anchorPane;
+    @FXML
+    private HBox zoomGroup;
 
     private Pane canvas;
 
@@ -52,6 +57,10 @@ public class MemorySimulationController implements Initializable {
 
     private Vector<Segment> free_vector;
     private Vector<Process> allocatedProcess_vector;
+
+    private first_fit firstFitAlgorithm;
+    private Best_fit bestFitAlgorithm;
+    private Worst_fit worstFitAlgorithm;
 
     public enum memoryAlignmentOptions {
         _8bit, _32bit, _64bit
@@ -88,6 +97,7 @@ public class MemorySimulationController implements Initializable {
         allocateProcess_btn.setDisable(true);
         clear_btn.setDisable(true);
         MemoryConfig_btn.setDisable(true);
+        zoomGroup.setDisable(true);
     }
 
     private void sceneEnable() {
@@ -96,6 +106,7 @@ public class MemorySimulationController implements Initializable {
         allocateProcess_btn.setDisable(false);
         clear_btn.setDisable(false);
         MemoryConfig_btn.setDisable(false);
+        zoomGroup.setDisable(false);
     }
 
     public void sceneInitialize() throws IOException {
@@ -137,38 +148,21 @@ public class MemorySimulationController implements Initializable {
 
             sceneEnable();
 
-            free_vector = freeHoles.get_segment_vector();
+            for (int i = 0; i < freeHoles.get_number_of_free_segments(); i++) {
+                freeHoles.get_segemnt_i(i).setBase((freeHoles.get_segemnt_i(i).getBase() - osReservedSize));
+            }
 
-            Process p0 = new Process();
-            p0.add_Segment(new Segment(1000, 100, "S1", true));
-            p0.add_Segment(new Segment(1200, 100, "S2", true));
-            p0.add_Segment(new Segment(1400, 100, "S3", true));
-            p0.add_Segment(new Segment(1600, 100, "S4", true));
-            p0.add_Segment(new Segment(1800, 100, "S5", true));
-            Process p1 = new Process();
-            p1.add_Segment(new Segment(2000, 100, "S1", true));
-            p1.add_Segment(new Segment(2200, 100, "S2", true));
-            p1.add_Segment(new Segment(2400, 100, "S3", true));
-            p1.add_Segment(new Segment(2600, 100, "S4", true));
-            p1.add_Segment(new Segment(2800, 100, "S5", true));
-            Process p2 = new Process();
-            p2.add_Segment(new Segment(3000, 100, "S1", true));
-            p2.add_Segment(new Segment(3200, 100, "S2", true));
-            p2.add_Segment(new Segment(3400, 100, "S3", true));
-            p2.add_Segment(new Segment(3600, 100, "S4", true));
-            p2.add_Segment(new Segment(3800, 100, "S5", true));
-            Process p3 = new Process();
-            p3.add_Segment(new Segment(4000, 100, "S1", true));
-            p3.add_Segment(new Segment(4200, 100, "S2", true));
-            p3.add_Segment(new Segment(4400, 100, "S3", true));
-            p3.add_Segment(new Segment(4600, 100, "S4", true));
-            p3.add_Segment(new Segment(4800, 100, "S5", true));
-
-            allocatedProcess_vector = new Vector<>();
-            allocatedProcess_vector.add(p0);
-            allocatedProcess_vector.add(p1);
-            allocatedProcess_vector.add(p2);
-            allocatedProcess_vector.add(p3);
+            switch (allocationMethod) {
+                case FirstFit:
+                    firstFitAlgorithm.insert_holes(freeHoles);
+                    break;
+                case BestFit:
+                    bestFitAlgorithm.insert_holes(freeHoles);
+                    break;
+                case WorstFit:
+                    worstFitAlgorithm.insert_holes(freeHoles);
+                    break;
+            }
 
             zoomFit();
 
@@ -333,11 +327,26 @@ public class MemorySimulationController implements Initializable {
         canvasReset();
         canvasInitialization();
 
+        switch (allocationMethod) {
+            case FirstFit:
+                free_vector = firstFitAlgorithm.getFreeSpace().get_segment_vector();
+                allocatedProcess_vector = firstFitAlgorithm.getAllocatedProcessVector();
+                break;
+            case BestFit:
+                free_vector = bestFitAlgorithm.getFreeSpace().get_segment_vector();
+                allocatedProcess_vector = bestFitAlgorithm.getAllocatedProcessVector();
+                break;
+            case WorstFit:
+                free_vector = worstFitAlgorithm.getFreeSpace().get_segment_vector();
+                allocatedProcess_vector = worstFitAlgorithm.getAllocatedProcessVector();
+                break;
+        }
+
         Rectangle rectangle;
         Text text;
 
         for (int i = 0; i < free_vector.size(); i++) {
-            long segBase = free_vector.get(i).getBase();
+            long segBase = free_vector.get(i).getBase() + osReservedSize;
             text = new Text();
             text.setFill(Color.WHITE);
             text.setText(Long.toString(segBase));
@@ -466,6 +475,23 @@ public class MemorySimulationController implements Initializable {
      */
     public void setAllocationMethod(allocationMethodOptions allocationMethod) {
         this.allocationMethod = allocationMethod;
+        switch (allocationMethod) {
+            case FirstFit:
+                firstFitAlgorithm = new first_fit(memoryTotalSize);
+                bestFitAlgorithm = null;
+                worstFitAlgorithm = null;
+                break;
+            case BestFit:
+                firstFitAlgorithm = null;
+                bestFitAlgorithm = new Best_fit(memoryTotalSize);
+                worstFitAlgorithm = null;
+                break;
+            case WorstFit:
+                firstFitAlgorithm = null;
+                bestFitAlgorithm = null;
+                worstFitAlgorithm = new Worst_fit(memoryTotalSize);
+                break;
+        }
     }
 
     /**

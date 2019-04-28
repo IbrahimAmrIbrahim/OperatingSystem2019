@@ -143,15 +143,14 @@ public class Best_fit {
     public void deallocate_process(Process input) {
 
         my_memory.deallocate_process(input);
-        for (int i = 0; i < my_memory.get_waiting_vector().size();i++) {
+        for (int i = 0; i < my_memory.get_waiting_vector().size(); i++) {
 
             int size = my_memory.get_waiting_vector().size();
             allocate_process(my_memory.get_waiting_vector().get(0));
 
             my_memory.get_waiting_vector().removeElement(my_memory.get_waiting_vector().get(my_memory.get_waiting_vector().size() - 1));
 
-            if(size>my_memory.get_waiting_vector().size())
-            {
+            if (size > my_memory.get_waiting_vector().size()) {
                 i--;
             }
         }
@@ -176,4 +175,19 @@ public class Best_fit {
     }
     //==================================//
 
+    public Vector<Process> getAllocatedProcessVector() {
+        return my_memory.getRuning_Process();
+    }
+
+    public Vector<Process> getWaitingProcessVector() {
+        return my_memory.getWaiting_Process();
+    }
+
+    public Blank getFreeSpace() {
+        return my_memory.getFree();
+    }
+
+    public void memoryCompaction() {
+        my_memory.compaction_memory();
+    }
 }

@@ -84,14 +84,13 @@ public class Process {
         this.Segment_vector = Segment_vector;
     }
 
-    
-    
     public void set_all_uninserted() {
         for (int i = 0; i < getSegment_vector().size(); i++) {
             getSegment_vector().get(i).setInserted(false);
         }
-      
+
     }
+
     //==============get section==============================//
     // return the number of segments
     public long get_number_of_segments() {
@@ -140,7 +139,6 @@ public class Process {
         return Segment_vector;
     }
 
-    
     /**
      * @return the inserted
      */
