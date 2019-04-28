@@ -40,13 +40,6 @@ public class Memory {
     }
 
     // remove it, its gonna destroy us 
-    //====================on destroy list ============================================//
-    public void add_runing_process_vecotr(Vector<Process> input) {
-        waiting_Process.removeElement(input);
-        runing_Process.addAll(input);
-    }
-    //====================on destroy list ============================================//
-
     public void add_runing_process(Process input) {
         waiting_Process.removeElement(input);
         runing_Process.add(input);
@@ -87,10 +80,26 @@ public class Memory {
         return free;
     }
 
+    public long get_utlization() {
+        long number = 0;
+        for (int i = 0; i < allocated_segment.size(); i++) {
+            number += allocated_segment.get(i).getLimit();
+        }
+
+        return number;
+    }
+
     //====================== method sections ====================//
     public void adding_old_process() {// the free is sorted on base
 
-        //this code work when i have 1 segment or more free and must be at first location
+        if (free.get_segemnt_i(0).getBase() > 0) {
+            long old_base2 = 0;
+            long old_limit2 = free.get_segemnt_i(0).getBase() - old_base2;
+            Process old_process2 = new Process(new Segment(old_base2, old_limit2, "old process", true));
+            runing_Process.add(old_process2);
+            allocated_segment.add(old_process2.get_segemnt_i(0));
+        }
+
         //============between 2 free ========================//
         for (int i = 0; i < free.get_number_of_free_segments() - 1; i++) {
             long old_base = free.get_segemnt_i(i).getBase() + free.get_segemnt_i(i).getLimit();
@@ -106,13 +115,6 @@ public class Memory {
         if (free.get_number_of_free_segments() > 0) {
             last_free_address = (free.get_segemnt_i(free.get_number_of_free_segments() - 1).getBase() + free.get_segemnt_i(free.get_number_of_free_segments() - 1).getLimit());
             // if the free not at the first location
-            if (free.get_segemnt_i(0).getBase() > 0) {
-                long old_base = 0;
-                long old_limit = free.get_segemnt_i(0).getBase() - old_base;
-                Process old_process = new Process(new Segment(old_base, old_limit, "old process", true));
-                runing_Process.add(old_process);
-                allocated_segment.add(old_process.get_segemnt_i(0));
-            }
 
         }
         //for 1 segment
@@ -122,6 +124,7 @@ public class Memory {
             Process old_process = new Process(new Segment(old_base, old_limit, "old process", true));
             runing_Process.add(old_process);
             allocated_segment.add(old_process.get_segemnt_i(0));
+
         }
         // for no segment 
         if (free.get_number_of_free_segments() == 0) {
@@ -186,6 +189,10 @@ public class Memory {
      */
     public Vector<Process> getRuning_Process() {
         return runing_Process;
+    }
+
+    public void clear_waiting_process() {
+        waiting_Process.clear();
     }
 
     /**

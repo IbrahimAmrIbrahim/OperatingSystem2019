@@ -21,54 +21,9 @@ public class Worst_fit {
     }
 
     //=======================methods ====================//
-    public void test() {
-        my_memory = new Memory(10000);
-        Blank b = new Blank();
-        b.add_free_segment(new Segment(100, 100, "Free", false));
+  
 
-        b.add_free_segment(new Segment(400, 100, "Free", false));
-        b.add_free_segment(new Segment(600, 100, "Free", false));
-        b.add_free_segment(new Segment(800, 100, "Free", false));
-        b.add_free_segment(new Segment(1000, 100, "Free", false));
-
-        b.add_free_segment(new Segment(1200, 400, "Free", false));
-
-        b.add_free_segment(new Segment(1800, 50, "Free", false));
-        b.add_free_segment(new Segment(2000, 50, "Free", false));
-        insert_holes(b);
-        Process p0 = new Process();
-        p0.add_Segment(new Segment(100, "S11", true));
-        p0.add_Segment(new Segment(100, "S21", true));
-        p0.add_Segment(new Segment(100, "S31", true));
-        p0.add_Segment(new Segment(100, "S41", true));
-        p0.add_Segment(new Segment(100, "S51", true));
-        Process p1 = new Process();
-        p1.add_Segment(new Segment(100, "S12", true));
-        p1.add_Segment(new Segment(100, "S22", true));
-        p1.add_Segment(new Segment(100, "S32", true));
-        p1.add_Segment(new Segment(100, "S42", true));
-        p1.add_Segment(new Segment(100, "S52", true));
-        Process p2 = new Process();
-        p2.add_Segment(new Segment(100, "S13", true));
-        p2.add_Segment(new Segment(100, "S23", true));
-        p2.add_Segment(new Segment(100, "S33", true));
-        p2.add_Segment(new Segment(100, "S43", true));
-        p2.add_Segment(new Segment(100, "S53", true));
-        Process p3 = new Process();
-        p3.add_Segment(new Segment(100, "S14", true));
-        p3.add_Segment(new Segment(100, "S24", true));
-        p3.add_Segment(new Segment(100, "S34", true));
-        p3.add_Segment(new Segment(100, "S44", true));
-        p3.add_Segment(new Segment(100, "S54", true));
-
-        allocate_process(p0);
-        allocate_process(p1);
-        allocate_process(p2);
-        allocate_process(p3);
-        deallocate_process(p0);
-    }
-
-    public void allocate_process(Process input) {
+    public boolean allocate_process(Process input) {
         //add the process on waiting queue
         my_memory.add_waiting_process(input);
 
@@ -123,21 +78,21 @@ public class Worst_fit {
                 }
                 // add the input to running and remove it from waiting
                 my_memory.add_runing_process(input);
+                return true;
             } // for loop to change the free 
             else {
                 input.set_all_uninserted();
                 // can't be inserted 
                 // error 
                 // still in wait
-                // get the last blank agaain
+                // get the last blank again
                 my_memory.set_free_Blank(clone);
-
+                return false;
             }
         } else {
+            return false;
             // error msg the process size is bigger than the memory itself
         }
-        my_memory.print();
-        System.out.println("----------------------------------");
 
     }
 
@@ -155,8 +110,7 @@ public class Worst_fit {
                 i--;
             }
         }
-        System.out.println("=====================");
-        my_memory.print();
+
     }
 
     public void insert_holes(Blank input) {
@@ -191,5 +145,13 @@ public class Worst_fit {
     public void memoryCompaction() {
         my_memory.compaction_memory();
         my_memory.get_free_Blank().sort_on_limit_large_at_top();
+    }
+
+    public void clear_waiting_process() {
+        my_memory.clear_waiting_process();
+    }
+
+    public long get_total_used_size() {
+        return my_memory.get_utlization();
     }
 }
