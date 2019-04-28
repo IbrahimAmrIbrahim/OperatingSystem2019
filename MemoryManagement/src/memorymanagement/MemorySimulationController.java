@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.Vector;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -12,12 +14,15 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Accordion;
 import javafx.scene.control.Button;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeTableCell;
 import javafx.scene.control.TreeTableColumn;
+import javafx.scene.control.TreeTableRow;
 import javafx.scene.control.TreeTableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TreeItemPropertyValueFactory;
@@ -37,6 +42,7 @@ import javafx.scene.text.TextAlignment;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javafx.util.Callback;
 import memorymanagementAlgorithm.Best_fit;
 import memorymanagementAlgorithm.Blank;
 import memorymanagementAlgorithm.Process;
@@ -261,8 +267,7 @@ public class MemorySimulationController implements Initializable {
 
     @FXML
     private void clear_mouseEvent(MouseEvent event) {
-        first_fit a1 = new first_fit(2000);
-        a1.test();
+
     }
 
     @FXML
@@ -329,7 +334,6 @@ public class MemorySimulationController implements Initializable {
                 break;
         }
         draw();
-        newProcess.print();
     }
 
     private void tableInitialize() {
@@ -355,6 +359,39 @@ public class MemorySimulationController implements Initializable {
         });
         allocatedProcessesTable_base_column.setCellValueFactory(new TreeItemPropertyValueFactory<>("base"));
         allocatedProcessesTable_limit_column.setCellValueFactory(new TreeItemPropertyValueFactory<>("limit"));
+        allocatedProcessTable.setRowFactory(new Callback<TreeTableView<TableData>, TreeTableRow<TableData>>() {
+            @Override
+            public TreeTableRow<TableData> call(TreeTableView<TableData> treeTableView) {
+                final ContextMenu contextMenu = new ContextMenu();
+                final MenuItem deallocatedMenuItem = new MenuItem("Dellocate");
+                final TreeTableRow<TableData> row = new TreeTableRow<>();
+
+                deallocatedMenuItem.setOnAction(new EventHandler<ActionEvent>() {
+                    @Override
+                    public void handle(ActionEvent event) {
+                        TableData processtoDeallocate = allocatedProcessTable.getSelectionModel().getSelectedItem().getValue();
+                        switch (allocationMethod) {
+                            case FirstFit:
+                                firstFitAlgorithm.deallocate_process(processtoDeallocate.getProcess());
+                                break;
+                            case BestFit:
+                                bestFitAlgorithm.deallocate_process(processtoDeallocate.getProcess());
+                                break;
+                            case WorstFit:
+                                worstFitAlgorithm.deallocate_process(processtoDeallocate.getProcess());
+                                break;
+                        }
+                        draw();
+                    }
+                });
+                contextMenu.getItems().add(deallocatedMenuItem);
+
+                row.emptyProperty().addListener((obs, wasEmpty, isNowEmpty)
+                        -> row.setContextMenu((isNowEmpty) ? null : (!(row.getItem().getBase().equals("") && !row.getItem().getID().equals("OS Reserved"))) ? null : contextMenu));
+
+                return row;
+            }
+        });
 
         waitingProcessesTable_id_column.setCellValueFactory(new TreeItemPropertyValueFactory<>("ID"));
         waitingProcessesTable_name_column.setCellValueFactory(new TreeItemPropertyValueFactory<>("name"));
