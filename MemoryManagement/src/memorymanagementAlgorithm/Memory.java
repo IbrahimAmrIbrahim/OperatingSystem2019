@@ -160,7 +160,8 @@ public class Memory {
         all i need to do is every process base is biger than the free trade it with the free 
         by changing the base 
          */
-
+        char t = free.get_condtion();
+        free.sort_on_base();
         sort_segment_vector(allocated_segment);
         for (int i = 0; i < free.get_number_of_free_segments(); i++) {
             // for every single free location
@@ -174,6 +175,14 @@ public class Memory {
 
         }
         free.resort();
+        free.set_condtion(t);
+        if (free.get_condtion() == 'b') {
+            free.sort_on_base();
+        } else if (free.get_condtion() == 'l') {
+            free.sort_on_limit_large_at_top();
+        } else if (free.get_condtion() == 's') {
+            free.sort_on_limit_small_at_top();
+        }
 
     }
 
