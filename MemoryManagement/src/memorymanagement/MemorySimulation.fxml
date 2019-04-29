@@ -26,7 +26,7 @@
                   <Pane layoutX="-29.0" layoutY="458.0" prefHeight="180.0" prefWidth="475.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0">
                      <children>
                         <Button fx:id="allocateProcess_btn" layoutX="15.0" layoutY="9.0" mnemonicParsing="false" onKeyPressed="#allocateProcess_keyboardEvent" onMouseClicked="#allocateProcess_mouseEvent" prefHeight="31.0" prefWidth="214.0" text="Allocate Process" />
-                        <Button fx:id="MemoryConfig_btn" layoutX="118.0" layoutY="140.0" mnemonicParsing="false" text="Memory Hardware Configuration" />
+                        <Button fx:id="MemoryConfig_btn" layoutX="118.0" layoutY="140.0" mnemonicParsing="false" onKeyPressed="#memoryHardwareConfiguration_keyboardEvent" onMouseClicked="#memoryHardwareConfiguration_mouseEvent" text="Memory Hardware Configuration" />
                         <Button fx:id="LoadFromFile_btn" layoutX="247.0" layoutY="9.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="214.0" text="Load Processes From File" />
                         <Button fx:id="memoryCompaction_btn" layoutX="118.0" layoutY="98.0" mnemonicParsing="false" onKeyPressed="#memoryCompaction_KeyboardEvent" onMouseClicked="#memoryCompaction_mouseEvent" prefHeight="31.0" prefWidth="239.0" text="Memory Compaction" />
                         <Button fx:id="deallocateAll_btn" layoutX="15.0" layoutY="52.0" mnemonicParsing="false" onKeyPressed="#deallocateAll_keyboardEvent" onMouseClicked="#deallocateAll_mouseEvent" prefHeight="31.0" prefWidth="214.0" text="Deallocate All" />
@@ -58,9 +58,10 @@
                                  <children>
                                     <TreeTableView fx:id="waitingProcessTable" layoutX="82.0" layoutY="14.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                       <columns>
-                                        <TreeTableColumn fx:id="waitingProcessesTable_id_column" prefWidth="146.0" style="-fx-alignment: CENTER;" text="ID" />
-                                        <TreeTableColumn fx:id="waitingProcessesTable_name_column" minWidth="4.0" prefWidth="142.0" style="-fx-alignment: CENTER;" text="Name" />
-                                          <TreeTableColumn fx:id="waitingProcessesTable_color_column" minWidth="0.0" prefWidth="138.0" style="-fx-alignment: CENTER;" text="Color" />
+                                        <TreeTableColumn fx:id="waitingProcessesTable_id_column" prefWidth="97.0" style="-fx-alignment: CENTER;" text="ID" />
+                                        <TreeTableColumn fx:id="waitingProcessesTable_name_column" minWidth="4.0" prefWidth="102.0" style="-fx-alignment: CENTER;" text="Name" />
+                                          <TreeTableColumn fx:id="waitingProcessesTable_color_column" minWidth="0.0" prefWidth="126.0" style="-fx-alignment: CENTER;" text="Color" />
+                                          <TreeTableColumn fx:id="waitingProcessesTable_limit_column" prefWidth="117.0" style="-fx-alignment: CENTER;" text="Limit (Bytes)" />
                                       </columns>
                                     </TreeTableView>
                                  </children>

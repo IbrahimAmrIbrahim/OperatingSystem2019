@@ -112,6 +112,8 @@ public class MemorySimulationController implements Initializable {
     @FXML
     private TreeTableColumn<TableData, Color> waitingProcessesTable_color_column;
     @FXML
+    private TreeTableColumn<TableData, String> waitingProcessesTable_limit_column;
+    @FXML
     private TableView<TableData> memoryFreeSpaceTable;
     @FXML
     private TableColumn<TableData, String> memoryFreeSpaceTable_base_column;
@@ -151,13 +153,7 @@ public class MemorySimulationController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        memoryTotalSize = 0;
-        osReservedSize = 0;
-        memoryWidth = 200;
-        byteHeigt = 8;
         memoryConfigurationChange = false;
-        memoryAlignment = memoryAlignmentOptions._8bit;
-        allocationMethod = allocationMethodOptions.FirstFit;
         canvas = new Pane();
         scrollPane.setContent(canvas);
         tableInitialize();
@@ -240,10 +236,8 @@ public class MemorySimulationController implements Initializable {
                     worstFitAlgorithm.insert_holes(freeHoles);
                     break;
             }
-
             memoryConfigurationChange = false;
             zoomFit();
-
         }
     }
 
@@ -341,8 +335,8 @@ public class MemorySimulationController implements Initializable {
                     worstFitAlgorithm.clear_waiting_process();
                     break;
             }
+            tableFill();
         }
-        tableFill();
     }
 
     @FXML
@@ -359,6 +353,18 @@ public class MemorySimulationController implements Initializable {
                 break;
         }
         tableFill();
+    }
+
+    @FXML
+    private void memoryHardwareConfiguration_keyboardEvent(KeyEvent event) throws IOException {
+        if (event.getCode().toString().equals("ENTER")) {
+            memoryHardwareConfigDialog();
+        }
+    }
+
+    @FXML
+    private void memoryHardwareConfiguration_mouseEvent(MouseEvent event) throws IOException {
+        memoryHardwareConfigDialog();
     }
 
     @FXML
@@ -528,6 +534,7 @@ public class MemorySimulationController implements Initializable {
                 }
             };
         });
+        waitingProcessesTable_limit_column.setCellValueFactory(new TreeItemPropertyValueFactory<>("limit"));
         waitingProcessTable.setRowFactory(new Callback<TreeTableView<TableData>, TreeTableRow<TableData>>() {
             @Override
             public TreeTableRow<TableData> call(TreeTableView<TableData> treeTableView) {
@@ -818,9 +825,9 @@ public class MemorySimulationController implements Initializable {
                 break;
         }
         MemoryFreeSize_Label.setText(Long.toString(freeSize));
-        MemoryFreePrcentage_Label.setText(Double.toString(((double) freeSize / (double) totalSize) * 100));
+        MemoryFreePrcentage_Label.setText(String.format("%.5g%n", ((double) freeSize / (double) totalSize) * 100));
         MemoryUsed_Label.setText(Long.toString(usedSize));
-        MemoryUsedPercentage_Label.setText(Double.toString(((double) usedSize / (double) totalSize) * 100));
+        MemoryUsedPercentage_Label.setText(String.format("%.5g%n", ((double) usedSize / (double) totalSize) * 100));
     }
 
     private void zoomOut() {
