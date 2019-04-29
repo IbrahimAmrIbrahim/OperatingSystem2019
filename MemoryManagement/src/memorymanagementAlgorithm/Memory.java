@@ -92,12 +92,14 @@ public class Memory {
     //====================== method sections ====================//
     public void adding_old_process() {// the free is sorted on base
 
-        if (free.get_segemnt_i(0).getBase() > 0) {
-            long old_base2 = 0;
-            long old_limit2 = free.get_segemnt_i(0).getBase() - old_base2;
-            Process old_process2 = new Process(new Segment(old_base2, old_limit2, "old process", true));
-            runing_Process.add(old_process2);
-            allocated_segment.add(old_process2.get_segemnt_i(0));
+        if (free.get_number_of_free_segments() > 0) {
+            if (free.get_segemnt_i(0).getBase() > 0) {
+                long old_base2 = 0;
+                long old_limit2 = free.get_segemnt_i(0).getBase() - old_base2;
+                Process old_process2 = new Process(new Segment(old_base2, old_limit2, "old process", true));
+                runing_Process.add(old_process2);
+                allocated_segment.add(old_process2.get_segemnt_i(0));
+            }
         }
 
         //============between 2 free ========================//
