@@ -131,9 +131,6 @@ public class AddProcessController implements Initializable {
         } else if (selectedOption.equals("Delete")) {
             segmentsTable.getItems().remove(selectedSegment);
             newProcess.remove_Segment_i((int) selectedSegment.getID());
-            for (int k = (int) selectedSegment.getID(); k < newProcess.get_number_of_segments(); k++) {
-
-            }
         }
     }
 
@@ -148,11 +145,11 @@ public class AddProcessController implements Initializable {
 
     @FXML
     void handleKeyCancelButton(KeyEvent event) {
-//        if (cancel.getText().equals("Cancel")) {
-//            parentCtrl.setValidProcess(false);
-//        } else if (cancel.getText().equals("Done")) {
-//            parentCtrl.setValidProcess(true);
-//        }
+        if (cancel.getText().equals("Cancel")) {
+            parentCtrl.setValidProcess(false);
+        } else if (cancel.getText().equals("Done")) {
+            parentCtrl.setValidProcess(true);
+        }
         if (event.getCode().equals(KeyCode.ENTER)) {
             Stage thisStage = (Stage) cancel.getScene().getWindow();
             thisStage.close();
@@ -161,11 +158,11 @@ public class AddProcessController implements Initializable {
 
     @FXML
     void handleCancelButton(ActionEvent event) {
-//        if (cancel.getText().equals("Cancel")) {
-//            parentCtrl.setValidProcess(false);
-//        } else if (cancel.getText().equals("Done")) {
-//            parentCtrl.setValidProcess(true);
-//        }
+        if (cancel.getText().equals("Cancel")) {
+            parentCtrl.setValidProcess(false);
+        } else if (cancel.getText().equals("Done")) {
+            parentCtrl.setValidProcess(true);
+        }
         Stage thisStage = (Stage) cancel.getScene().getWindow();
         thisStage.close();
     }
