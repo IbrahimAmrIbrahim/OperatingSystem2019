@@ -385,6 +385,33 @@ public class AddProcessController implements Initializable {
     }
 
     @FXML
+    void handleKeySegmentNumberConfirmTextfeild(KeyEvent event) {
+        if (event.getCode().equals(KeyCode.ENTER)) {
+            try {
+                numberOfSegments = Integer.valueOf(numberInputed.getText());
+                labelsegmentName.setDisable(false);
+                nameInputed.setDisable(false);
+                labelsegmentSize.setDisable(false);
+                sizeInputed.setDisable(false);
+                segmentsTable.setDisable(false);
+                confirmSegment.setDisable(false);
+                confirmNumber.setDisable(true);
+                numberInputed.setDisable(true);
+                sizeUnit_choiceBox.setDisable(false);
+
+                labelsegmentName.setText("Segment 0 name");
+                labelsegmentSize.setText("Segment 0 size");
+
+                SegmentsArray = new Segment[numberOfSegments];
+            } catch (NumberFormatException | NullPointerException nfe) {
+                Alert WrongEntry = new Alert(AlertType.ERROR);
+                WrongEntry.setContentText("Input must be an Integer");
+                WrongEntry.show();
+            }
+        }
+    }
+
+    @FXML
     void handleKeySegmentNumberConfirmButton(KeyEvent event) {
         if (event.getCode().equals(KeyCode.ENTER)) {
             try {
