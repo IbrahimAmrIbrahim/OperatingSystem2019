@@ -118,10 +118,17 @@ public class AddProcessController implements Initializable {
                 confirmSegment.setDisable(false);
                 sizeUnit_choiceBox.setDisable(false);
 
+                nameInputed.setText(selectedSegment.getName());
+                sizeInputed.setText(Long.toString(selectedSegment.getLimit()));
+
                 labelsegmentName.setText("Segment " + Integer.toString((int) selectedSegment.getID()) + " name");
                 labelsegmentSize.setText("Segment " + Integer.toString((int) selectedSegment.getID()) + " size");
 
             } else {
+                
+                nameInputed.setText(selectedSegment.getName());
+                sizeInputed.setText(Long.toString(selectedSegment.getLimit()));
+                
                 labelsegmentName.setText("Segment " + Integer.toString((int) selectedSegment.getID()) + " name");
                 labelsegmentSize.setText("Segment " + Integer.toString((int) selectedSegment.getID()) + " size");
 
@@ -130,7 +137,7 @@ public class AddProcessController implements Initializable {
             segmentIndex--;
             segmentsTable.getItems().remove(selectedSegment);
             for (int k = 0; k < newProcess.get_number_of_segments(); k++) {
-                if(SegmentsArray[k].equals(selectedSegment)){
+                if (SegmentsArray[k].equals(selectedSegment)) {
                     newProcess.remove_Segment_i(k);
                 }
             }
@@ -241,6 +248,10 @@ public class AddProcessController implements Initializable {
                 if (editing) {
                     selectedSegment.setLimit(tempSize);
                     selectedSegment.setName(nameInputed.getText());
+                    segmentsTable.refresh();
+
+                    nameInputed.setText("");
+                    sizeInputed.setText("");
 
                     editing = false;
                 } else {
@@ -345,6 +356,10 @@ public class AddProcessController implements Initializable {
                 selectedSegment.setLimit(tempSize);
                 selectedSegment.setName(nameInputed.getText());
                 segmentsTable.refresh();
+
+                nameInputed.setText("");
+                sizeInputed.setText("");
+
                 editing = false;
             } else {
                 SegmentsArray[segmentIndex] = new Segment(tempSize, nameInputed.getText(), true);
