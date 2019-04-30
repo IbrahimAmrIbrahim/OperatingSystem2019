@@ -1,10 +1,13 @@
 package memorymanagement;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.Scanner;
 import java.util.Vector;
 import java.util.function.UnaryOperator;
 import javafx.beans.binding.Bindings;
@@ -27,6 +30,7 @@ import javafx.scene.control.TextFormatter;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import memorymanagementAlgorithm.Blank;
@@ -284,6 +288,18 @@ public class MemoryInitializationController implements Initializable {
         }
     }
 
+    @FXML
+    private void loadFromFile_keyboardEvent(KeyEvent event) throws FileNotFoundException {
+        if (event.getCode().toString().equals("ENTER")) {
+            loadFromFile();
+        }
+    }
+
+    @FXML
+    private void loadFromFile_mouseEvent(MouseEvent event) throws FileNotFoundException {
+        loadFromFile();
+    }
+
     private void addHole() {
         long baseAddress = -1;
         try {
@@ -411,6 +427,53 @@ public class MemoryInitializationController implements Initializable {
 
         baseAddress_txt.clear();
         limit_txt.clear();
+    }
+
+    private void alertDialog(String msg) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Information Dialog");
+        alert.setHeaderText(null);
+        alert.setContentText(msg);
+
+        alert.showAndWait();
+    }
+
+    private void loadFromFile() throws FileNotFoundException {
+        alertDialog("The text file must contain each hole in a separate line and each hole must be in the format (BaseAddress Limit).\n"
+                + "Limit in Bytes.");
+
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Open Source File");
+        fileChooser.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter("Text file", "*.txt")
+        );
+        fileChooser.setInitialDirectory(
+                new File(System.getProperty("user.dir"))
+        );
+        File file = fileChooser.showOpenDialog(cancel_btn.getScene().getWindow());
+        if (file != null) {
+            Scanner scanner = new Scanner(file);
+            while (scanner.hasNextLine()) {
+                Scanner line = new Scanner(scanner.nextLine());
+
+                long baseAddress = 0;
+                long limit = 0;
+                for (int i = 0; line.hasNextLong(); i++) {
+                    switch (i) {
+                        case 0:
+                            baseAddress = line.nextLong();
+                            break;
+                        case 1:
+                            limit = line.nextLong();
+                            break;
+                    }
+                }
+                Segment newHole = new Segment(baseAddress, limit, "Free", false);
+                free_vector.add(newHole);
+                memoryHolesTable.getItems().add(newHole);
+            }
+            scanner.close();
+        }
     }
 
     private void deleteHole(Segment deletedHole) {

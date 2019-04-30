@@ -58,6 +58,7 @@ public class Blank {
 
         // sort on base
         //====================safe section=================================================================================//
+        
         if (condtion == 'b') {
             sort_on_base();
         } else if (condtion == 'l') {
@@ -82,13 +83,8 @@ public class Blank {
         }
         void_vector.addAll(input);
         //====================safe section=================================================================================//
-        if (condtion == 'b') {
-            sort_on_base();
-        } else if (condtion == 'l') {
-            sort_on_limit_large_at_top();
-        } else if (condtion == 's') {
-            sort_on_limit_small_at_top();
-        }
+        char t = condtion;
+        sort_on_base();
         for (int i = 0; i < void_vector.size() - 1; i++) {
             if (void_vector.get(i).getBase() + void_vector.get(i).getLimit() == void_vector.get(i + 1).getBase()) {
                 void_vector.get(i).setLimit(void_vector.get(i).getLimit() + void_vector.get(i + 1).getLimit());
@@ -96,7 +92,14 @@ public class Blank {
                 i--;
             }
         }
-
+        condtion = t;
+        if (condtion == 'b') {
+            sort_on_base();
+        } else if (condtion == 'l') {
+            sort_on_limit_large_at_top();
+        } else if (condtion == 's') {
+            sort_on_limit_small_at_top();
+        }
     }
 
     public void copy(Blank input) {
@@ -133,6 +136,12 @@ public class Blank {
         return color;
     }
 
+     public char get_condtion(){
+         return condtion;
+     }
+     public void set_condtion(char input){
+          condtion=input;
+     }
     //=============remove section============================//
     public void remove_free_segment_i(int i) {
         void_vector.remove(i);
@@ -155,6 +164,7 @@ public class Blank {
         void_vector.get(i).print_free();
     }
 
+   
     //===============General methods========================//
     // collect all free with same base + limit = base2 together
     public void resort() {
@@ -177,11 +187,13 @@ public class Blank {
     }
 
     public void sort_on_limit_small_at_top() {
+        sort_on_base();
         condtion = 's';
         Collections.sort(void_vector, (a, b) -> a.getLimit() < b.getLimit() ? -1 : a.getLimit() == b.getLimit() ? 0 : 1);
     }
 
     public void sort_on_limit_large_at_top() {
+        sort_on_base();
         condtion = 'l';
         Collections.sort(void_vector, (a, b) -> a.getLimit() > b.getLimit() ? -1 : a.getLimit() == b.getLimit() ? 0 : 1);
     }
