@@ -120,7 +120,7 @@ public class AddProcessController implements Initializable {
                 sizeUnit_choiceBox.setDisable(false);
 
                 sizeUnit_choiceBox.setValue("Byte");
-                
+
                 nameInputed.setText(selectedSegment.getName());
                 sizeInputed.setText(Long.toString(selectedSegment.getLimit()));
 
@@ -128,12 +128,12 @@ public class AddProcessController implements Initializable {
                 labelsegmentSize.setText("Segment " + Integer.toString((int) selectedSegment.getID()) + " size");
 
             } else {
-                
+
                 sizeUnit_choiceBox.setValue("Byte");
-                
+
                 nameInputed.setText(selectedSegment.getName());
                 sizeInputed.setText(Long.toString(selectedSegment.getLimit()));
-                
+
                 labelsegmentName.setText("Segment " + Integer.toString((int) selectedSegment.getID()) + " name");
                 labelsegmentSize.setText("Segment " + Integer.toString((int) selectedSegment.getID()) + " size");
 
@@ -251,7 +251,7 @@ public class AddProcessController implements Initializable {
                         break;
                 }
                 if (editing) {
-                    selectedSegment.setLimit(tempSize);
+                    selectedSegment.setLimit(tempSize - selectedSegment.getLimit());
                     selectedSegment.setName(nameInputed.getText());
                     segmentsTable.refresh();
 
@@ -296,53 +296,58 @@ public class AddProcessController implements Initializable {
             Double tempSizeD = Double.valueOf(sizeInputed.getText());
             Long tempSize = Math.round(tempSizeD);
             String selectedValue = sizeUnit_choiceBox.getValue();
-
-            switch (selectedValue) {
-                case "Byte":
-                    if (newProcess.get_total_size() + tempSize > (maxSize)) {
-                        errorDialog("Total Memory Size exceeded the maximum limit allowed.");
-                        return;
-                    } else {
-                        tempSize = Math.round(tempSizeD);
-                    }
-                    break;
-                case "KB":
-                    if (newProcess.get_total_size() + (tempSize * 1024L) > (maxSize)) {
-                        errorDialog("Total Memory Size exceeded the maximum limit allowed.");
-                        return;
-                    } else {
-                        tempSize = Math.round(tempSizeD * 1024.0);
-                    }
-
-                    break;
-                case "MB":
-                    if (newProcess.get_total_size() + (tempSize * 1024L * 1024L) > (maxSize)) {
-                        errorDialog("Total Memory Size exceeded the maximum limit allowed.");
-                        return;
-                    } else {
-                        tempSize = Math.round(tempSizeD * 1024.0 * 1024.0);
-                    }
-
-                    break;
-                case "GB":
-                    if (newProcess.get_total_size() + (tempSize * 1024L * 1024L * 1024L) > (maxSize)) {
-                        errorDialog("Total Memory Size exceeded the maximum limit allowed.");
-                        return;
-                    } else {
-                        tempSize = Math.round(tempSizeD * 1024.0 * 1024.0 * 1024.0);
-                    }
-
-                    break;
-                case "TB":
-                    if (newProcess.get_total_size() + (tempSize * 1024L * 1024L * 1024L * 1024L) > maxSize) {
-                        errorDialog("Total Memory Size exceeded the maximum limit allowed.");
-                        return;
-                    } else {
-                        tempSize = Math.round(tempSizeD * 1024.0 * 1024.0 * 1024.0 * 1024.0);
-                    }
-
-                    break;
+            Long forEditing = 0L;
+            if (editing) {
+                forEditing = newProcess.get_total_size() - selectedSegment.getLimit();
+            }else{
+                forEditing = newProcess.get_total_size();
             }
+                switch (selectedValue) {
+                    case "Byte":
+                        if (forEditing + tempSize > (maxSize)) {
+                            errorDialog("Total Memory Size exceeded the maximum limit allowed.");
+                            return;
+                        } else {
+                            tempSize = Math.round(tempSizeD);
+                        }
+                        break;
+                    case "KB":
+                        if (forEditing + (tempSize * 1024L) > (maxSize)) {
+                            errorDialog("Total Memory Size exceeded the maximum limit allowed.");
+                            return;
+                        } else {
+                            tempSize = Math.round(tempSizeD * 1024.0);
+                        }
+
+                        break;
+                    case "MB":
+                        if (forEditing + (tempSize * 1024L * 1024L) > (maxSize)) {
+                            errorDialog("Total Memory Size exceeded the maximum limit allowed.");
+                            return;
+                        } else {
+                            tempSize = Math.round(tempSizeD * 1024.0 * 1024.0);
+                        }
+
+                        break;
+                    case "GB":
+                        if (forEditing + (tempSize * 1024L * 1024L * 1024L) > (maxSize)) {
+                            errorDialog("Total Memory Size exceeded the maximum limit allowed.");
+                            return;
+                        } else {
+                            tempSize = Math.round(tempSizeD * 1024.0 * 1024.0 * 1024.0);
+                        }
+
+                        break;
+                    case "TB":
+                        if (forEditing + (tempSize * 1024L * 1024L * 1024L * 1024L) > maxSize) {
+                            errorDialog("Total Memory Size exceeded the maximum limit allowed.");
+                            return;
+                        } else {
+                            tempSize = Math.round(tempSizeD * 1024.0 * 1024.0 * 1024.0 * 1024.0);
+                        }
+
+                        break;
+                }
             switch (option) {
                 case _8bit:
                     break;
@@ -358,6 +363,7 @@ public class AddProcessController implements Initializable {
                     break;
             }
             if (editing) {
+
                 selectedSegment.setLimit(tempSize);
                 selectedSegment.setName(nameInputed.getText());
                 segmentsTable.refresh();
@@ -400,7 +406,6 @@ public class AddProcessController implements Initializable {
     void handlecSegmentNameConfirmation(ActionEvent event) {
 
     }
-
 
     @FXML
     void handleKeySegmentNumberConfirmTextfeild(KeyEvent event) {
