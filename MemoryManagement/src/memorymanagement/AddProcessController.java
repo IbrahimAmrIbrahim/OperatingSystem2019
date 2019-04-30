@@ -139,6 +139,14 @@ public class AddProcessController implements Initializable {
 
             }
         } else if (selectedOption.equals("Delete")) {
+            if (labelsegmentName.isDisabled()) {
+                labelsegmentName.setDisable(false);
+                nameInputed.setDisable(false);
+                labelsegmentSize.setDisable(false);
+                sizeInputed.setDisable(false);
+                confirmSegment.setDisable(false);
+                sizeUnit_choiceBox.setDisable(false);
+            }
             segmentIndex--;
             segmentsTable.getItems().remove(selectedSegment);
             for (int k = 0; k < newProcess.get_number_of_segments(); k++) {
@@ -299,55 +307,55 @@ public class AddProcessController implements Initializable {
             Long forEditing = 0L;
             if (editing) {
                 forEditing = newProcess.get_total_size() - selectedSegment.getLimit();
-            }else{
+            } else {
                 forEditing = newProcess.get_total_size();
             }
-                switch (selectedValue) {
-                    case "Byte":
-                        if (forEditing + tempSize > (maxSize)) {
-                            errorDialog("Total Memory Size exceeded the maximum limit allowed.");
-                            return;
-                        } else {
-                            tempSize = Math.round(tempSizeD);
-                        }
-                        break;
-                    case "KB":
-                        if (forEditing + (tempSize * 1024L) > (maxSize)) {
-                            errorDialog("Total Memory Size exceeded the maximum limit allowed.");
-                            return;
-                        } else {
-                            tempSize = Math.round(tempSizeD * 1024.0);
-                        }
+            switch (selectedValue) {
+                case "Byte":
+                    if (forEditing + tempSize > (maxSize)) {
+                        errorDialog("Total Memory Size exceeded the maximum limit allowed.");
+                        return;
+                    } else {
+                        tempSize = Math.round(tempSizeD);
+                    }
+                    break;
+                case "KB":
+                    if (forEditing + (tempSize * 1024L) > (maxSize)) {
+                        errorDialog("Total Memory Size exceeded the maximum limit allowed.");
+                        return;
+                    } else {
+                        tempSize = Math.round(tempSizeD * 1024.0);
+                    }
 
-                        break;
-                    case "MB":
-                        if (forEditing + (tempSize * 1024L * 1024L) > (maxSize)) {
-                            errorDialog("Total Memory Size exceeded the maximum limit allowed.");
-                            return;
-                        } else {
-                            tempSize = Math.round(tempSizeD * 1024.0 * 1024.0);
-                        }
+                    break;
+                case "MB":
+                    if (forEditing + (tempSize * 1024L * 1024L) > (maxSize)) {
+                        errorDialog("Total Memory Size exceeded the maximum limit allowed.");
+                        return;
+                    } else {
+                        tempSize = Math.round(tempSizeD * 1024.0 * 1024.0);
+                    }
 
-                        break;
-                    case "GB":
-                        if (forEditing + (tempSize * 1024L * 1024L * 1024L) > (maxSize)) {
-                            errorDialog("Total Memory Size exceeded the maximum limit allowed.");
-                            return;
-                        } else {
-                            tempSize = Math.round(tempSizeD * 1024.0 * 1024.0 * 1024.0);
-                        }
+                    break;
+                case "GB":
+                    if (forEditing + (tempSize * 1024L * 1024L * 1024L) > (maxSize)) {
+                        errorDialog("Total Memory Size exceeded the maximum limit allowed.");
+                        return;
+                    } else {
+                        tempSize = Math.round(tempSizeD * 1024.0 * 1024.0 * 1024.0);
+                    }
 
-                        break;
-                    case "TB":
-                        if (forEditing + (tempSize * 1024L * 1024L * 1024L * 1024L) > maxSize) {
-                            errorDialog("Total Memory Size exceeded the maximum limit allowed.");
-                            return;
-                        } else {
-                            tempSize = Math.round(tempSizeD * 1024.0 * 1024.0 * 1024.0 * 1024.0);
-                        }
+                    break;
+                case "TB":
+                    if (forEditing + (tempSize * 1024L * 1024L * 1024L * 1024L) > maxSize) {
+                        errorDialog("Total Memory Size exceeded the maximum limit allowed.");
+                        return;
+                    } else {
+                        tempSize = Math.round(tempSizeD * 1024.0 * 1024.0 * 1024.0 * 1024.0);
+                    }
 
-                        break;
-                }
+                    break;
+            }
             switch (option) {
                 case _8bit:
                     break;
