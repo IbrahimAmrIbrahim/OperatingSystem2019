@@ -150,6 +150,8 @@ public class MemorySimulationController implements Initializable {
     private allocationMethodOptions allocationMethod;
 
     private boolean memoryConfigurationChange;
+    private boolean validProcess;
+    Process newProcess;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -180,6 +182,7 @@ public class MemorySimulationController implements Initializable {
         memoryCompaction_btn.setDisable(false);
         deallocateAll_btn.setDisable(false);
         deleteAllWaitingProcesses_btn.setDisable(false);
+        validProcess = true;
     }
 
     public void sceneInitialize() throws IOException {
@@ -416,7 +419,12 @@ public class MemorySimulationController implements Initializable {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("AddProcess.fxml"));
         Parent root1 = (Parent) fxmlLoader.load();
 
-        Process newProcess = new Process();
+        if (validProcess) {
+            newProcess = new Process();
+        } else {
+            newProcess.clear_segment_vector();
+        }
+
         AddProcessController ctrl = fxmlLoader.getController();
         ctrl.sceneInitialization(myController, newProcess);
 
@@ -428,30 +436,32 @@ public class MemorySimulationController implements Initializable {
         stage.initStyle(StageStyle.UTILITY);
         stage.showAndWait();
 
-        switch (allocationMethod) {
-            case FirstFit:
-                if (firstFitAlgorithm.allocate_process(newProcess)) {
-                    alertDialog("This process successfully allocated");
-                } else {
-                    alertDialog("This process can't be allocated, it will be put in waiting  queue");
-                }
-                break;
-            case BestFit:
-                if (bestFitAlgorithm.allocate_process(newProcess)) {
-                    alertDialog("This process successfully allocated");
-                } else {
-                    alertDialog("This process can't be allocated, it will be put in waiting  queue");
-                }
-                break;
-            case WorstFit:
-                if (worstFitAlgorithm.allocate_process(newProcess)) {
-                    alertDialog("This process successfully allocated");
-                } else {
-                    alertDialog("This process can't be allocated, it will be put in waiting  queue");
-                }
-                break;
+        if (validProcess) {
+            switch (allocationMethod) {
+                case FirstFit:
+                    if (firstFitAlgorithm.allocate_process(newProcess)) {
+                        alertDialog("This process successfully allocated");
+                    } else {
+                        alertDialog("This process can't be allocated, it will be put in waiting queue");
+                    }
+                    break;
+                case BestFit:
+                    if (bestFitAlgorithm.allocate_process(newProcess)) {
+                        alertDialog("This process successfully allocated");
+                    } else {
+                        alertDialog("This process can't be allocated, it will be put in waiting queue");
+                    }
+                    break;
+                case WorstFit:
+                    if (worstFitAlgorithm.allocate_process(newProcess)) {
+                        alertDialog("This process successfully allocated");
+                    } else {
+                        alertDialog("This process can't be allocated, it will be put in waiting queue");
+                    }
+                    break;
+            }
+            draw();
         }
-        draw();
     }
 
     private void tableInitialize() {
@@ -947,5 +957,12 @@ public class MemorySimulationController implements Initializable {
      */
     public void setMemoryConfigurationChange(boolean memoryConfigurationChange) {
         this.memoryConfigurationChange = memoryConfigurationChange;
+    }
+
+    /**
+     * @param validProcess the validProcess to set
+     */
+    public void setValidProcess(boolean validProcess) {
+        this.validProcess = validProcess;
     }
 }
