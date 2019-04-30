@@ -13,7 +13,7 @@ import java.util.*;
  */
 public class Memory {
 
-    private Vector<Process> Process;// all process
+ 
     private Vector<Segment> allocated_segment;// segment inserted on memory
     private Vector<Process> waiting_Process;// process on waiting 
     private Vector<Process> runing_Process;// process on waiting 
@@ -23,7 +23,7 @@ public class Memory {
     //=============================constructor====================================//
     public Memory(long size_) {
         size = size_;
-        Process = new Vector<Process>();
+    
         allocated_segment = new Vector<Segment>();
         waiting_Process = new Vector<Process>();
         runing_Process = new Vector<Process>();
