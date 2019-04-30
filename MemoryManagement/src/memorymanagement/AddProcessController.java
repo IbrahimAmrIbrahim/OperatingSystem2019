@@ -23,6 +23,7 @@ import javafx.scene.control.TitledPane;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import memorymanagementAlgorithm.Process;
 
@@ -118,6 +119,8 @@ public class AddProcessController implements Initializable {
                 confirmSegment.setDisable(false);
                 sizeUnit_choiceBox.setDisable(false);
 
+                sizeUnit_choiceBox.setValue("Byte");
+                
                 nameInputed.setText(selectedSegment.getName());
                 sizeInputed.setText(Long.toString(selectedSegment.getLimit()));
 
@@ -125,6 +128,8 @@ public class AddProcessController implements Initializable {
                 labelsegmentSize.setText("Segment " + Integer.toString((int) selectedSegment.getID()) + " size");
 
             } else {
+                
+                sizeUnit_choiceBox.setValue("Byte");
                 
                 nameInputed.setText(selectedSegment.getName());
                 sizeInputed.setText(Long.toString(selectedSegment.getLimit()));
@@ -167,7 +172,7 @@ public class AddProcessController implements Initializable {
     }
 
     @FXML
-    void handleCancelButton(ActionEvent event) {
+    void handleCancelButton(MouseEvent event) {
         if (cancel.getText().equals("Cancel")) {
             parentCtrl.setValidProcess(false);
         } else if (cancel.getText().equals("Done")) {
@@ -286,7 +291,7 @@ public class AddProcessController implements Initializable {
     }
 
     @FXML
-    void handleSegmentConfirmation(ActionEvent event) {
+    void handleSegmentConfirmation(MouseEvent event) {
         try {
             Double tempSizeD = Double.valueOf(sizeInputed.getText());
             Long tempSize = Math.round(tempSizeD);
@@ -396,8 +401,6 @@ public class AddProcessController implements Initializable {
 
     }
 
-    void InputRequiredSegments(int NumberOfSegments) {
-    }
 
     @FXML
     void handleKeySegmentNumberConfirmTextfeild(KeyEvent event) {
@@ -454,7 +457,7 @@ public class AddProcessController implements Initializable {
     }
 
     @FXML
-    void handlecSegmentNumberConfirmation(ActionEvent event) {
+    void handlecSegmentNumberConfirmation(MouseEvent event) {
         try {
             numberOfSegments = Integer.valueOf(numberInputed.getText());
             labelsegmentName.setDisable(false);

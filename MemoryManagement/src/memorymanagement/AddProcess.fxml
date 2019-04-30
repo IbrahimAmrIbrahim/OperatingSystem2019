@@ -34,7 +34,7 @@
                         </HBox>
                         <HBox alignment="CENTER" prefWidth="160.0" HBox.hgrow="ALWAYS">
                            <children>
-                              <Button fx:id="confirmNumber" alignment="CENTER" contentDisplay="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handlecSegmentNumberConfirmation" onKeyReleased="#handleKeySegmentNumberConfirmButton" prefHeight="29.0" prefWidth="135.0" text="Confirm">
+                              <Button fx:id="confirmNumber" alignment="CENTER" contentDisplay="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onKeyReleased="#handleKeySegmentNumberConfirmButton" onMouseClicked="#handlecSegmentNumberConfirmation" prefHeight="29.0" prefWidth="135.0" text="Confirm">
                                  <HBox.margin>
                                     <Insets />
                                  </HBox.margin>
@@ -81,12 +81,12 @@
                      <children>
                         <HBox alignment="CENTER" prefHeight="100.0" prefWidth="163.0">
                            <children>
-                              <Button fx:id="confirmSegment" disable="true" mnemonicParsing="false" onAction="#handleSegmentConfirmation" onKeyReleased="#handleKeySegmentConfirmButton" text="Confirm Segment" />
+                              <Button fx:id="confirmSegment" disable="true" mnemonicParsing="false" onKeyReleased="#handleKeySegmentConfirmButton" onMouseClicked="#handleSegmentConfirmation" text="Confirm Segment" />
                            </children>
                         </HBox>
                         <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
                            <children>
-                              <Button fx:id="cancel" mnemonicParsing="false" onAction="#handleCancelButton" onKeyReleased="#handleKeyCancelButton" text="Cancel" />
+                              <Button fx:id="cancel" mnemonicParsing="false" onKeyReleased="#handleKeyCancelButton" onMouseClicked="#handleCancelButton" text="Cancel" />
                            </children>
                         </HBox>
                      </children>
