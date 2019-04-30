@@ -121,16 +121,19 @@ public class AddProcessController implements Initializable {
                 labelsegmentName.setText("Segment " + Integer.toString((int) selectedSegment.getID()) + " name");
                 labelsegmentSize.setText("Segment " + Integer.toString((int) selectedSegment.getID()) + " size");
 
-                //segmentsTable.getItems().remove(selectedSegment);
             } else {
                 labelsegmentName.setText("Segment " + Integer.toString((int) selectedSegment.getID()) + " name");
                 labelsegmentSize.setText("Segment " + Integer.toString((int) selectedSegment.getID()) + " size");
 
-                //segmentsTable.getItems().remove(selectedSegment);
             }
         } else if (selectedOption.equals("Delete")) {
+            segmentIndex--;
             segmentsTable.getItems().remove(selectedSegment);
-            newProcess.remove_Segment_i((int) selectedSegment.getID());
+            for (int k = 0; k < newProcess.get_number_of_segments(); k++) {
+                if(SegmentsArray[k].equals(selectedSegment)){
+                    newProcess.remove_Segment_i(k);
+                }
+            }
         }
     }
 
@@ -341,7 +344,7 @@ public class AddProcessController implements Initializable {
             if (editing) {
                 selectedSegment.setLimit(tempSize);
                 selectedSegment.setName(nameInputed.getText());
-
+                segmentsTable.refresh();
                 editing = false;
             } else {
                 SegmentsArray[segmentIndex] = new Segment(tempSize, nameInputed.getText(), true);
