@@ -23,6 +23,7 @@ import javafx.scene.control.TitledPane;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import memorymanagementAlgorithm.Process;
 
@@ -118,6 +119,8 @@ public class AddProcessController implements Initializable {
                 confirmSegment.setDisable(false);
                 sizeUnit_choiceBox.setDisable(false);
 
+                sizeUnit_choiceBox.setValue("Byte");
+
                 nameInputed.setText(selectedSegment.getName());
                 sizeInputed.setText(Long.toString(selectedSegment.getLimit()));
 
@@ -125,10 +128,12 @@ public class AddProcessController implements Initializable {
                 labelsegmentSize.setText("Segment " + Integer.toString((int) selectedSegment.getID()) + " size");
 
             } else {
-                
+
+                sizeUnit_choiceBox.setValue("Byte");
+
                 nameInputed.setText(selectedSegment.getName());
                 sizeInputed.setText(Long.toString(selectedSegment.getLimit()));
-                
+
                 labelsegmentName.setText("Segment " + Integer.toString((int) selectedSegment.getID()) + " name");
                 labelsegmentSize.setText("Segment " + Integer.toString((int) selectedSegment.getID()) + " size");
 
@@ -167,7 +172,7 @@ public class AddProcessController implements Initializable {
     }
 
     @FXML
-    void handleCancelButton(ActionEvent event) {
+    void handleCancelButton(MouseEvent event) {
         if (cancel.getText().equals("Cancel")) {
             parentCtrl.setValidProcess(false);
         } else if (cancel.getText().equals("Done")) {
@@ -246,7 +251,7 @@ public class AddProcessController implements Initializable {
                         break;
                 }
                 if (editing) {
-                    selectedSegment.setLimit(tempSize);
+                    selectedSegment.setLimit(tempSize - selectedSegment.getLimit());
                     selectedSegment.setName(nameInputed.getText());
                     segmentsTable.refresh();
 
@@ -286,58 +291,63 @@ public class AddProcessController implements Initializable {
     }
 
     @FXML
-    void handleSegmentConfirmation(ActionEvent event) {
+    void handleSegmentConfirmation(MouseEvent event) {
         try {
             Double tempSizeD = Double.valueOf(sizeInputed.getText());
             Long tempSize = Math.round(tempSizeD);
             String selectedValue = sizeUnit_choiceBox.getValue();
-
-            switch (selectedValue) {
-                case "Byte":
-                    if (newProcess.get_total_size() + tempSize > (maxSize)) {
-                        errorDialog("Total Memory Size exceeded the maximum limit allowed.");
-                        return;
-                    } else {
-                        tempSize = Math.round(tempSizeD);
-                    }
-                    break;
-                case "KB":
-                    if (newProcess.get_total_size() + (tempSize * 1024L) > (maxSize)) {
-                        errorDialog("Total Memory Size exceeded the maximum limit allowed.");
-                        return;
-                    } else {
-                        tempSize = Math.round(tempSizeD * 1024.0);
-                    }
-
-                    break;
-                case "MB":
-                    if (newProcess.get_total_size() + (tempSize * 1024L * 1024L) > (maxSize)) {
-                        errorDialog("Total Memory Size exceeded the maximum limit allowed.");
-                        return;
-                    } else {
-                        tempSize = Math.round(tempSizeD * 1024.0 * 1024.0);
-                    }
-
-                    break;
-                case "GB":
-                    if (newProcess.get_total_size() + (tempSize * 1024L * 1024L * 1024L) > (maxSize)) {
-                        errorDialog("Total Memory Size exceeded the maximum limit allowed.");
-                        return;
-                    } else {
-                        tempSize = Math.round(tempSizeD * 1024.0 * 1024.0 * 1024.0);
-                    }
-
-                    break;
-                case "TB":
-                    if (newProcess.get_total_size() + (tempSize * 1024L * 1024L * 1024L * 1024L) > maxSize) {
-                        errorDialog("Total Memory Size exceeded the maximum limit allowed.");
-                        return;
-                    } else {
-                        tempSize = Math.round(tempSizeD * 1024.0 * 1024.0 * 1024.0 * 1024.0);
-                    }
-
-                    break;
+            Long forEditing = 0L;
+            if (editing) {
+                forEditing = newProcess.get_total_size() - selectedSegment.getLimit();
+            }else{
+                forEditing = newProcess.get_total_size();
             }
+                switch (selectedValue) {
+                    case "Byte":
+                        if (forEditing + tempSize > (maxSize)) {
+                            errorDialog("Total Memory Size exceeded the maximum limit allowed.");
+                            return;
+                        } else {
+                            tempSize = Math.round(tempSizeD);
+                        }
+                        break;
+                    case "KB":
+                        if (forEditing + (tempSize * 1024L) > (maxSize)) {
+                            errorDialog("Total Memory Size exceeded the maximum limit allowed.");
+                            return;
+                        } else {
+                            tempSize = Math.round(tempSizeD * 1024.0);
+                        }
+
+                        break;
+                    case "MB":
+                        if (forEditing + (tempSize * 1024L * 1024L) > (maxSize)) {
+                            errorDialog("Total Memory Size exceeded the maximum limit allowed.");
+                            return;
+                        } else {
+                            tempSize = Math.round(tempSizeD * 1024.0 * 1024.0);
+                        }
+
+                        break;
+                    case "GB":
+                        if (forEditing + (tempSize * 1024L * 1024L * 1024L) > (maxSize)) {
+                            errorDialog("Total Memory Size exceeded the maximum limit allowed.");
+                            return;
+                        } else {
+                            tempSize = Math.round(tempSizeD * 1024.0 * 1024.0 * 1024.0);
+                        }
+
+                        break;
+                    case "TB":
+                        if (forEditing + (tempSize * 1024L * 1024L * 1024L * 1024L) > maxSize) {
+                            errorDialog("Total Memory Size exceeded the maximum limit allowed.");
+                            return;
+                        } else {
+                            tempSize = Math.round(tempSizeD * 1024.0 * 1024.0 * 1024.0 * 1024.0);
+                        }
+
+                        break;
+                }
             switch (option) {
                 case _8bit:
                     break;
@@ -353,6 +363,7 @@ public class AddProcessController implements Initializable {
                     break;
             }
             if (editing) {
+
                 selectedSegment.setLimit(tempSize);
                 selectedSegment.setName(nameInputed.getText());
                 segmentsTable.refresh();
@@ -394,9 +405,6 @@ public class AddProcessController implements Initializable {
     @FXML
     void handlecSegmentNameConfirmation(ActionEvent event) {
 
-    }
-
-    void InputRequiredSegments(int NumberOfSegments) {
     }
 
     @FXML
@@ -454,7 +462,7 @@ public class AddProcessController implements Initializable {
     }
 
     @FXML
-    void handlecSegmentNumberConfirmation(ActionEvent event) {
+    void handlecSegmentNumberConfirmation(MouseEvent event) {
         try {
             numberOfSegments = Integer.valueOf(numberInputed.getText());
             labelsegmentName.setDisable(false);
