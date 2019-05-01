@@ -137,6 +137,7 @@ public class MemoryInitializationController implements Initializable {
                         deleteHole(editedHole);
                         baseAddress_txt.setText(Long.toString(editedHole.getBase()));
                         limit_txt.setText(Long.toString(editedHole.getLimit()));
+                        limitUnit_choiceBox.setValue("Byte");
                         add_edit_btn.setText("Edit");
                         isEdit = true;
                     }
@@ -439,8 +440,8 @@ public class MemoryInitializationController implements Initializable {
     }
 
     private void loadFromFile() throws FileNotFoundException {
-        alertDialog("The text file must contain each hole in a separate line and each hole must be in the format (BaseAddress Limit).\n"
-                + "Limit in Bytes.");
+        alertDialog("The text file must contain each hole in a separate line and each hole must be in the format (BaseAddress Limit Limit_Unit).\n"
+                + "{B for Bytes, KB, MB, GB, TB}");
 
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Open Source File");
@@ -453,24 +454,182 @@ public class MemoryInitializationController implements Initializable {
         File file = fileChooser.showOpenDialog(cancel_btn.getScene().getWindow());
         if (file != null) {
             Scanner scanner = new Scanner(file);
-            while (scanner.hasNextLine()) {
+            for (int k = 0; scanner.hasNextLine(); k++) {
                 Scanner line = new Scanner(scanner.nextLine());
 
-                long baseAddress = 0;
-                long limit = 0;
-                for (int i = 0; line.hasNextLong(); i++) {
+                String baseAddressRead = "";
+                String limitRead = "";
+                String unitRaed = "";
+
+                boolean holeValid = true;
+                long baseAddress = -1;
+                long limit = -1;
+
+                int i;
+                for (i = 0; line.hasNext(); i++) {
                     switch (i) {
                         case 0:
-                            baseAddress = line.nextLong();
+                            baseAddressRead = line.next();
+                            try {
+                                baseAddress = Long.valueOf(baseAddressRead);
+                            } catch (Exception e) {
+                                errorDialog("Base Address is empty or it exceeded the max limit allowed.\n"
+                                        + "Error in hole " + Integer.valueOf(k));
+                                holeValid = false;
+                                break;
+                            }
+                            if (baseAddress < parentCtrl.getOsReservedSize()) {
+                                errorDialog("Base Address overlapped with the OS memory size.\n"
+                                        + "Error in hole " + Integer.valueOf(k));
+                                holeValid = false;
+                                break;
+                            }
+                            switch (parentCtrl.getMemoryAlignment()) {
+                                case _8bit:
+                                    break;
+                                case _32bit:
+                                    if ((baseAddress % 4L != 0)) {
+                                        errorDialog("Base Address must be divisible by 4.\n"
+                                                + "Error in hole " + Integer.valueOf(k));
+                                        holeValid = false;
+                                    }
+                                    break;
+                                case _64bit:
+                                    if ((baseAddress % 8L != 0)) {
+                                        errorDialog("Base Address must be divisible by 8.\n"
+                                                + "Error in hole " + Integer.valueOf(k));
+                                        holeValid = false;
+                                    }
+                                    break;
+                            }
                             break;
                         case 1:
-                            limit = line.nextLong();
+                            limitRead = line.next();
+                            if (line.hasNext()) {
+                                unitRaed = line.next();
+                            } else {
+                                errorDialog("Error in hole " + Integer.valueOf(k) + " input.");
+                                holeValid = false;
+                                break;
+                            }
+                            double limitDouble = -1;
+                            try {
+                                limitDouble = Double.valueOf(limitRead);
+                            } catch (Exception e) {
+                                errorDialog("Size is empty, wrong input or it exceeded the max limit allowed.\n"
+                                        + "Error in hole " + Integer.valueOf(k));
+                                holeValid = false;
+                                break;
+                            }
+                            if (limitDouble == 0) {
+                                errorDialog("Size can't equal to zero.\n"
+                                        + "Error in hole " + Integer.valueOf(k));
+                                holeValid = false;
+                                break;
+                            }
+                            String limitUnit = unitRaed;
+                            switch (limitUnit) {
+                                case "B":
+                                    if (limitDouble > (Long.MAX_VALUE)) {
+                                        errorDialog("Total Memory Size exceeded the max limit allowed.\n"
+                                                + "Error in hole " + Integer.valueOf(k));
+                                        holeValid = false;
+                                    } else {
+                                        limit = Math.round(limitDouble);
+                                    }
+                                    break;
+                                case "KB":
+                                    if (limitDouble > (Long.MAX_VALUE / 1024d)) {
+                                        errorDialog("Total Memory Size exceeded the max limit allowed.\n"
+                                                + "Error in hole " + Integer.valueOf(k));
+                                        holeValid = false;
+                                    } else {
+                                        limit = Math.round(limitDouble * 1024d);
+                                    }
+                                    break;
+                                case "MB":
+                                    if (limitDouble > (Long.MAX_VALUE / (1024d * 1024d))) {
+                                        errorDialog("Total Memory Size exceeded the max limit allowed.\n"
+                                                + "Error in hole " + Integer.valueOf(k));
+                                        holeValid = false;
+                                    } else {
+                                        limit = Math.round(limitDouble * (1024d * 1024d));
+                                    }
+                                    break;
+                                case "GB":
+                                    if (limitDouble > (Long.MAX_VALUE / (1024d * 1024d * 1024d))) {
+                                        errorDialog("Total Memory Size exceeded the max limit allowed.\n"
+                                                + "Error in hole " + Integer.valueOf(k));
+                                        holeValid = false;
+                                    } else {
+                                        limit = Math.round(limitDouble * (1024d * 1024d * 1024d));
+                                    }
+                                    break;
+                                case "TB":
+                                    if (limitDouble > (Long.MAX_VALUE / (1024d * 1024d * 1024d * 1024d))) {
+                                        errorDialog("Total Memory Size exceeded the max limit allowed.\n"
+                                                + "Error in hole " + Integer.valueOf(k));
+                                        holeValid = false;
+                                    } else {
+                                        limit = Math.round(limitDouble * (1024d * 1024d * 1024d * 1024d));
+                                    }
+                                    break;
+                                default:
+                                    errorDialog("Error in limit unit.\n"
+                                            + "Error in hole " + Integer.valueOf(k));
+                                    holeValid = false;
+                                    break;
+                            }
+                            if (holeValid == false) {
+                                break;
+                            }
+                            switch (parentCtrl.getMemoryAlignment()) {
+                                case _8bit:
+                                    break;
+                                case _32bit:
+                                    if ((limit % 4L != 0)) {
+                                        limit += 4 - (limit % 4L);
+                                    }
+                                    break;
+                                case _64bit:
+                                    if ((limit % 8L != 0)) {
+                                        limit += 8 - (limit % 8L);
+                                    }
+                                    break;
+                            }
+
+                            if ((baseAddress + limit) > (parentCtrl.getOsReservedSize() + parentCtrl.getMemoryTotalSize())) {
+                                errorDialog("This hole exceeeded total memory size.\n"
+                                        + "Error in hole " + Integer.valueOf(k));
+                                holeValid = false;
+                                break;
+                            }
+
+                            for (int j = 0; j < free_vector.size(); j++) {
+                                if ((free_vector.get(j).getBase() >= baseAddress) && (free_vector.get(j).getBase() < (baseAddress + limit))) {
+                                    errorDialog("This hole overlapped with onther hole.\n"
+                                            + "Error in hole " + Integer.valueOf(k));
+                                    holeValid = false;
+                                    break;
+                                }
+                                if ((free_vector.get(j).getBase() <= baseAddress) && ((free_vector.get(j).getBase() + free_vector.get(j).getLimit()) > baseAddress)) {
+                                    errorDialog("This hole overlapped with onther hole.\n"
+                                            + "Error in hole " + Integer.valueOf(k));
+                                    holeValid = false;
+                                    break;
+                                }
+                            }
                             break;
                     }
+                    if (holeValid == false) {
+                        break;
+                    }
                 }
-                Segment newHole = new Segment(baseAddress, limit, "Free", false);
-                free_vector.add(newHole);
-                memoryHolesTable.getItems().add(newHole);
+                if (holeValid && i == 2) {
+                    Segment newHole = new Segment(baseAddress, limit, "Free", false);
+                    free_vector.add(newHole);
+                    memoryHolesTable.getItems().add(newHole);
+                }
             }
             scanner.close();
         }

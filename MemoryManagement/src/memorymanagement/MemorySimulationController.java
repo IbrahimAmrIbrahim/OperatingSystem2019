@@ -1,8 +1,11 @@
 package memorymanagement;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.Scanner;
 import java.util.Vector;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -42,6 +45,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
+import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -183,6 +187,7 @@ public class MemorySimulationController implements Initializable {
         deallocateAll_btn.setDisable(false);
         deleteAllWaitingProcesses_btn.setDisable(false);
         validProcess = true;
+        Process.setPROCESS_ID(0);
     }
 
     public void sceneInitialize() throws IOException {
@@ -239,7 +244,6 @@ public class MemorySimulationController implements Initializable {
                     worstFitAlgorithm.insert_holes(freeHoles);
                     break;
             }
-            memoryConfigurationChange = false;
             zoomFit();
         }
     }
@@ -406,6 +410,30 @@ public class MemorySimulationController implements Initializable {
         zoomFit();
     }
 
+    @FXML
+    private void loadProcessesFromFile_keyboardEvent(KeyEvent event) throws FileNotFoundException {
+        loadFromFile();
+    }
+
+    @FXML
+    private void loadProcessesFromFile_mouseEvent(MouseEvent event) throws FileNotFoundException {
+        loadFromFile();
+    }
+
+    /**
+     * For Open Error Messages.
+     *
+     * @param msg Question string
+     */
+    private void errorDialog(String msg) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Error Dialog");
+        alert.setHeaderText(null);
+        alert.setContentText(msg);
+
+        alert.showAndWait();
+    }
+
     private void alertDialog(String msg) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Information Dialog");
@@ -413,6 +441,184 @@ public class MemorySimulationController implements Initializable {
         alert.setContentText(msg);
 
         alert.showAndWait();
+    }
+
+    private void loadFromFile() throws FileNotFoundException {
+        alertDialog("The text file must contain each pocess in a separate line and each pocess must be in the format (Seg0_Name Seg0_Limit Seg0_Limit_Unit Seg1_Name Seg1_Limit Seg1_Limit_Unit ...).\n"
+                + "{B for Bytes, KB, MB, GB, TB}");
+
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Open Source File");
+        fileChooser.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter("Text file", "*.txt")
+        );
+        fileChooser.setInitialDirectory(
+                new File(System.getProperty("user.dir"))
+        );
+        File file = fileChooser.showOpenDialog(LoadFromFile_btn.getScene().getWindow());
+        if (file != null) {
+            Scanner scanner = new Scanner(file);
+            for (int k = 0; scanner.hasNextLine(); k++) {
+                Scanner line = new Scanner(scanner.nextLine());
+
+                if (validProcess) {
+                    newProcess = new Process();
+                } else {
+                    newProcess.clear_segment_vector();
+                }
+
+                validProcess = true;
+                Segment.setSEGMENT_ID(0);
+
+                for (int i = 0; line.hasNext(); i++) {
+
+                    String segNameRead = "";
+                    String segLimitRead = "";
+                    String segLimitUnitRead = "";
+                    long limit = -1;
+
+                    segNameRead = line.next();
+                    if (line.hasNext()) {
+                        segLimitRead = line.next();
+                    } else {
+                        errorDialog("Error in Process " + Integer.valueOf(k) + " Input");
+                        validProcess = false;
+                        break;
+                    }
+                    if (line.hasNext()) {
+                        segLimitUnitRead = line.next();
+                    } else {
+                        errorDialog("Error in Process " + Integer.valueOf(k) + " Input");
+                        validProcess = false;
+                        break;
+                    }
+
+                    double limitDouble = -1;
+                    try {
+                        limitDouble = Double.valueOf(segLimitRead);
+                    } catch (Exception e) {
+                        errorDialog("Size is empty, wrong input or it exceeded the max limit allowed.\n"
+                                + "Error in Process " + Integer.valueOf(k) + ", Seg " + Integer.valueOf(i));
+                        validProcess = false;
+                        break;
+                    }
+                    if (limitDouble == 0) {
+                        errorDialog("Size can't equal to zero.\n"
+                                + "Error in Process " + Integer.valueOf(k) + ", Seg " + Integer.valueOf(i));
+                        validProcess = false;
+                        break;
+                    }
+                    String limitUnit = segLimitUnitRead;
+                    switch (limitUnit) {
+                        case "B":
+                            if (limitDouble > (Long.MAX_VALUE)) {
+                                errorDialog("Total Memory Size exceeded the max limit allowed.\n"
+                                        + "Error in Process " + Integer.valueOf(k) + ", Seg " + Integer.valueOf(i));
+                                validProcess = false;
+                            } else {
+                                limit = Math.round(limitDouble);
+                            }
+                            break;
+                        case "KB":
+                            if (limitDouble > (Long.MAX_VALUE / 1024d)) {
+                                errorDialog("Total Memory Size exceeded the max limit allowed.\n"
+                                        + "Error in Process " + Integer.valueOf(k) + ", Seg " + Integer.valueOf(i));
+                                validProcess = false;
+                            } else {
+                                limit = Math.round(limitDouble * 1024d);
+                            }
+                            break;
+                        case "MB":
+                            if (limitDouble > (Long.MAX_VALUE / (1024d * 1024d))) {
+                                errorDialog("Total Memory Size exceeded the max limit allowed.\n"
+                                        + "Error in Process " + Integer.valueOf(k) + ", Seg " + Integer.valueOf(i));
+                                validProcess = false;
+                            } else {
+                                limit = Math.round(limitDouble * (1024d * 1024d));
+                            }
+                            break;
+                        case "GB":
+                            if (limitDouble > (Long.MAX_VALUE / (1024d * 1024d * 1024d))) {
+                                errorDialog("Total Memory Size exceeded the max limit allowed.\n"
+                                        + "Error in Process " + Integer.valueOf(k) + ", Seg " + Integer.valueOf(i));
+                                validProcess = false;
+                            } else {
+                                limit = Math.round(limitDouble * (1024d * 1024d * 1024d));
+                            }
+                            break;
+                        case "TB":
+                            if (limitDouble > (Long.MAX_VALUE / (1024d * 1024d * 1024d * 1024d))) {
+                                errorDialog("Total Memory Size exceeded the max limit allowed.\n"
+                                        + "Error in Process " + Integer.valueOf(k) + ", Seg " + Integer.valueOf(i));
+                                validProcess = false;
+                            } else {
+                                limit = Math.round(limitDouble * (1024d * 1024d * 1024d * 1024d));
+                            }
+                            break;
+                        default:
+                            errorDialog("Error in limit unit.\n"
+                                    + "Error in Process " + Integer.valueOf(k) + ", Seg " + Integer.valueOf(i));
+                            validProcess = false;
+                            break;
+                    }
+                    if (validProcess == false) {
+                        break;
+                    }
+                    switch (memoryAlignment) {
+                        case _8bit:
+                            break;
+                        case _32bit:
+                            if ((limit % 4L != 0)) {
+                                limit += 4 - (limit % 4L);
+                            }
+                            break;
+                        case _64bit:
+                            if ((limit % 8L != 0)) {
+                                limit += 8 - (limit % 8L);
+                            }
+                            break;
+                    }
+
+                    if (limit > memoryTotalSize) {
+                        errorDialog("This hole exceeeded total memory size.\n"
+                                + "Error in Process " + Integer.valueOf(k) + ", Seg " + Integer.valueOf(i));
+                        validProcess = false;
+                        break;
+                    }
+
+                    Segment newSeg = new Segment(limit, segNameRead, true);
+                    newProcess.add_Segment(newSeg);
+                    validProcess = true;
+                }
+                if (validProcess) {
+                    switch (allocationMethod) {
+                        case FirstFit:
+                            if (firstFitAlgorithm.allocate_process(newProcess)) {
+                                alertDialog("This process successfully allocated");
+                            } else {
+                                alertDialog("This process can't be allocated, it will be put in waiting queue");
+                            }
+                            break;
+                        case BestFit:
+                            if (bestFitAlgorithm.allocate_process(newProcess)) {
+                                alertDialog("This process successfully allocated");
+                            } else {
+                                alertDialog("This process can't be allocated, it will be put in waiting queue");
+                            }
+                            break;
+                        case WorstFit:
+                            if (worstFitAlgorithm.allocate_process(newProcess)) {
+                                alertDialog("This process successfully allocated");
+                            } else {
+                                alertDialog("This process can't be allocated, it will be put in waiting queue");
+                            }
+                            break;
+                    }
+                    draw();
+                }
+            }
+            scanner.close();
+        }
     }
 
     private void allocateProcessDialog() throws IOException {
@@ -425,6 +631,7 @@ public class MemorySimulationController implements Initializable {
             newProcess.clear_segment_vector();
         }
 
+        validProcess = false;
         AddProcessController ctrl = fxmlLoader.getController();
         ctrl.sceneInitialization(myController, newProcess);
 
@@ -835,9 +1042,9 @@ public class MemorySimulationController implements Initializable {
                 break;
         }
         MemoryFreeSize_Label.setText(Long.toString(freeSize));
-        MemoryFreePrcentage_Label.setText(String.format("%.5g%n", ((double) freeSize / (double) totalSize) * 100));
+        MemoryFreePrcentage_Label.setText(String.format("%.5g", ((double) freeSize / (double) totalSize) * 100));
         MemoryUsed_Label.setText(Long.toString(usedSize));
-        MemoryUsedPercentage_Label.setText(String.format("%.5g%n", ((double) usedSize / (double) totalSize) * 100));
+        MemoryUsedPercentage_Label.setText(String.format("%.5g", ((double) usedSize / (double) totalSize) * 100));
     }
 
     private void zoomOut() {
