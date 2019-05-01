@@ -165,9 +165,9 @@ public class Worst_fit {
     }
 
     public void remove_all_runing() {
-        for (int i = 0; i < my_memory.getRuning_Process().size(); i++) {
+        for (int i = 0; i < my_memory.getRuning_Process().size(); ) {
             my_memory.deallocate_process(my_memory.getRuning_Process().get(0));
-            i = 0;
+          
         }
 
         for (int i = 0; i < my_memory.get_waiting_vector().size(); i++) {
