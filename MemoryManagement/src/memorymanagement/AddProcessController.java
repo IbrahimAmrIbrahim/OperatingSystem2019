@@ -197,10 +197,16 @@ public class AddProcessController implements Initializable {
                 Double tempSizeD = Double.valueOf(sizeInputed.getText());
                 Long tempSize = Math.round(tempSizeD);
                 String selectedValue = sizeUnit_choiceBox.getValue();
-
+                Long forEditing = 0L;
+                if (editing) {
+                    forEditing = newProcess.get_total_size() - selectedSegment.getLimit();
+                } else {
+                    forEditing = newProcess.get_total_size();
+                }
+                
                 switch (selectedValue) {
                     case "Byte":
-                        if (newProcess.get_total_size() + tempSize > (maxSize)) {
+                        if (forEditing + tempSizeD > (maxSize)) {
                             errorDialog("Total Memory Size exceeded the maximum limit allowed.");
                             return;
                         } else {
@@ -208,7 +214,7 @@ public class AddProcessController implements Initializable {
                         }
                         break;
                     case "KB":
-                        if (newProcess.get_total_size() + (tempSize * 1024L) > (maxSize)) {
+                        if (forEditing + (tempSizeD * 1024L) > (maxSize)) {
                             errorDialog("Total Memory Size exceeded the maximum limit allowed.");
                             return;
                         } else {
@@ -217,7 +223,7 @@ public class AddProcessController implements Initializable {
 
                         break;
                     case "MB":
-                        if (newProcess.get_total_size() + (tempSize * 1024L * 1024L) > (maxSize)) {
+                        if (forEditing + (tempSizeD * 1024L * 1024L) > (maxSize)) {
                             errorDialog("Total Memory Size exceeded the maximum limit allowed.");
                             return;
                         } else {
@@ -226,7 +232,7 @@ public class AddProcessController implements Initializable {
 
                         break;
                     case "GB":
-                        if (newProcess.get_total_size() + (tempSize * 1024L * 1024L * 1024L) > (maxSize)) {
+                        if (forEditing + (tempSizeD * 1024L * 1024L * 1024L) > (maxSize)) {
                             errorDialog("Total Memory Size exceeded the maximum limit allowed.");
                             return;
                         } else {
@@ -235,7 +241,7 @@ public class AddProcessController implements Initializable {
 
                         break;
                     case "TB":
-                        if (newProcess.get_total_size() + (tempSize * 1024L * 1024L * 1024L * 1024L) > maxSize) {
+                        if (forEditing + (tempSizeD * 1024L * 1024L * 1024L * 1024L) > maxSize) {
                             errorDialog("Total Memory Size exceeded the maximum limit allowed.");
                             return;
                         } else {
@@ -304,15 +310,17 @@ public class AddProcessController implements Initializable {
             Double tempSizeD = Double.valueOf(sizeInputed.getText());
             Long tempSize = Math.round(tempSizeD);
             String selectedValue = sizeUnit_choiceBox.getValue();
+            
             Long forEditing = 0L;
             if (editing) {
                 forEditing = newProcess.get_total_size() - selectedSegment.getLimit();
             } else {
                 forEditing = newProcess.get_total_size();
             }
+            
             switch (selectedValue) {
                 case "Byte":
-                    if (forEditing + tempSize > (maxSize)) {
+                    if (forEditing + tempSizeD > (maxSize)) {
                         errorDialog("Total Memory Size exceeded the maximum limit allowed.");
                         return;
                     } else {
@@ -320,7 +328,7 @@ public class AddProcessController implements Initializable {
                     }
                     break;
                 case "KB":
-                    if (forEditing + (tempSize * 1024L) > (maxSize)) {
+                    if (forEditing + (tempSizeD * 1024L) > (maxSize)) {
                         errorDialog("Total Memory Size exceeded the maximum limit allowed.");
                         return;
                     } else {
@@ -329,7 +337,7 @@ public class AddProcessController implements Initializable {
 
                     break;
                 case "MB":
-                    if (forEditing + (tempSize * 1024L * 1024L) > (maxSize)) {
+                    if (forEditing + (tempSizeD * 1024L * 1024L) > (maxSize)) {
                         errorDialog("Total Memory Size exceeded the maximum limit allowed.");
                         return;
                     } else {
@@ -338,7 +346,7 @@ public class AddProcessController implements Initializable {
 
                     break;
                 case "GB":
-                    if (forEditing + (tempSize * 1024L * 1024L * 1024L) > (maxSize)) {
+                    if (forEditing + (tempSizeD * 1024L * 1024L * 1024L) > (maxSize)) {
                         errorDialog("Total Memory Size exceeded the maximum limit allowed.");
                         return;
                     } else {
@@ -347,7 +355,7 @@ public class AddProcessController implements Initializable {
 
                     break;
                 case "TB":
-                    if (forEditing + (tempSize * 1024L * 1024L * 1024L * 1024L) > maxSize) {
+                    if (forEditing + (tempSizeD * 1024L * 1024L * 1024L * 1024L) > maxSize) {
                         errorDialog("Total Memory Size exceeded the maximum limit allowed.");
                         return;
                     } else {
@@ -386,6 +394,8 @@ public class AddProcessController implements Initializable {
                 newProcess.add_Segment(SegmentsArray[segmentIndex]);
                 segmentsTable.getItems().add(newProcess.get_segemnt_i(segmentIndex));
 
+                System.out.println(newProcess.get_total_size());
+                
                 segmentIndex++;
 
                 nameInputed.setText("");
@@ -516,6 +526,7 @@ public class AddProcessController implements Initializable {
         newProcess = process;
         isEdit = false;
         maxSize = parentCtrl.getMemoryTotalSize();
+        System.out.println(maxSize);
         osSize = parentCtrl.getOsReservedSize();
         option = parentCtrl.getMemoryAlignment();
         Segment.setSEGMENT_ID(0);
