@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.Scanner;
 import java.util.Vector;
@@ -18,6 +19,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Accordion;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
@@ -263,6 +265,26 @@ public class MemorySimulationController implements Initializable {
     @FXML
     private void memoryCompaction_KeyboardEvent(KeyEvent event) {
         if (event.getCode().toString().equals("ENTER")) {
+            if (yesNoDialog("Are you sure you want to do memory compaction?")) {
+                switch (allocationMethod) {
+                    case FirstFit:
+                        firstFitAlgorithm.memoryCompaction();
+                        break;
+                    case BestFit:
+                        bestFitAlgorithm.memoryCompaction();
+                        break;
+                    case WorstFit:
+                        worstFitAlgorithm.memoryCompaction();
+                        break;
+                }
+                draw();
+            }
+        }
+    }
+
+    @FXML
+    private void memoryCompaction_mouseEvent(MouseEvent event) {
+        if (yesNoDialog("Are you sure you want to do memory compaction?")) {
             switch (allocationMethod) {
                 case FirstFit:
                     firstFitAlgorithm.memoryCompaction();
@@ -279,24 +301,28 @@ public class MemorySimulationController implements Initializable {
     }
 
     @FXML
-    private void memoryCompaction_mouseEvent(MouseEvent event) {
-        switch (allocationMethod) {
-            case FirstFit:
-                firstFitAlgorithm.memoryCompaction();
-                break;
-            case BestFit:
-                bestFitAlgorithm.memoryCompaction();
-                break;
-            case WorstFit:
-                worstFitAlgorithm.memoryCompaction();
-                break;
+    private void deallocateAll_keyboardEvent(KeyEvent event) {
+        if (event.getCode().toString().equals("ENTER")) {
+            if (yesNoDialog("Are you sure you want to deallocate all processes?")) {
+                switch (allocationMethod) {
+                    case FirstFit:
+                        firstFitAlgorithm.remove_all_runing();
+                        break;
+                    case BestFit:
+                        bestFitAlgorithm.remove_all_runing();
+                        break;
+                    case WorstFit:
+                        worstFitAlgorithm.remove_all_runing();
+                        break;
+                }
+                draw();
+            }
         }
-        draw();
     }
 
     @FXML
-    private void deallocateAll_keyboardEvent(KeyEvent event) {
-        if (event.getCode().toString().equals("ENTER")) {
+    private void deallocateAll_mouseEvent(MouseEvent event) {
+        if (yesNoDialog("Are you sure you want to deallocate all processes?")) {
             switch (allocationMethod) {
                 case FirstFit:
                     firstFitAlgorithm.remove_all_runing();
@@ -313,24 +339,28 @@ public class MemorySimulationController implements Initializable {
     }
 
     @FXML
-    private void deallocateAll_mouseEvent(MouseEvent event) {
-        switch (allocationMethod) {
-            case FirstFit:
-                firstFitAlgorithm.remove_all_runing();
-                break;
-            case BestFit:
-                bestFitAlgorithm.remove_all_runing();
-                break;
-            case WorstFit:
-                worstFitAlgorithm.remove_all_runing();
-                break;
+    private void deleteAllWaitingProcesses_keyboardEvent(KeyEvent event) {
+        if (event.getCode().toString().equals("ENTER")) {
+            if (yesNoDialog("Are you sure you want to delete all waiting processes?")) {
+                switch (allocationMethod) {
+                    case FirstFit:
+                        firstFitAlgorithm.clear_waiting_process();
+                        break;
+                    case BestFit:
+                        bestFitAlgorithm.clear_waiting_process();
+                        break;
+                    case WorstFit:
+                        worstFitAlgorithm.clear_waiting_process();
+                        break;
+                }
+                tableFill();
+            }
         }
-        draw();
     }
 
     @FXML
-    private void deleteAllWaitingProcesses_keyboardEvent(KeyEvent event) {
-        if (event.getCode().toString().equals("ENTER")) {
+    private void deleteAllWaitingProcesses_mouseEvent(MouseEvent event) {
+        if (yesNoDialog("Are you sure you want to delete all waiting processes?")) {
             switch (allocationMethod) {
                 case FirstFit:
                     firstFitAlgorithm.clear_waiting_process();
@@ -347,31 +377,19 @@ public class MemorySimulationController implements Initializable {
     }
 
     @FXML
-    private void deleteAllWaitingProcesses_mouseEvent(MouseEvent event) {
-        switch (allocationMethod) {
-            case FirstFit:
-                firstFitAlgorithm.clear_waiting_process();
-                break;
-            case BestFit:
-                bestFitAlgorithm.clear_waiting_process();
-                break;
-            case WorstFit:
-                worstFitAlgorithm.clear_waiting_process();
-                break;
-        }
-        tableFill();
-    }
-
-    @FXML
     private void memoryHardwareConfiguration_keyboardEvent(KeyEvent event) throws IOException {
         if (event.getCode().toString().equals("ENTER")) {
-            memoryHardwareConfigDialog();
+            if (yesNoDialog("Are you sure you want to change memory configuration?")) {
+                memoryHardwareConfigDialog();
+            }
         }
     }
 
     @FXML
     private void memoryHardwareConfiguration_mouseEvent(MouseEvent event) throws IOException {
-        memoryHardwareConfigDialog();
+        if (yesNoDialog("Are you sure you want to change memory configuration?")) {
+            memoryHardwareConfigDialog();
+        }
     }
 
     @FXML
@@ -443,6 +461,32 @@ public class MemorySimulationController implements Initializable {
         alert.setContentText(msg);
 
         alert.showAndWait();
+    }
+
+    /**
+     * For Open Yes and No Question Messages.
+     *
+     * @param msg Question string
+     * @return return True if Yes ; return False if No
+     */
+    private boolean yesNoDialog(String msg) {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Confirmation Dialog");
+        alert.setHeaderText(null);
+        alert.setContentText(msg);
+
+        ButtonType buttonTypeYes = new ButtonType("Yes");
+        ButtonType buttonTypeNo = new ButtonType("No");
+
+        alert.getButtonTypes().setAll(buttonTypeYes, buttonTypeNo);
+
+        Optional<ButtonType> result = alert.showAndWait();
+
+        if (result.get() == buttonTypeYes) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     private void loadFromFile() throws FileNotFoundException {

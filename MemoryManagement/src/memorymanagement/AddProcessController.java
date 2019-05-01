@@ -73,12 +73,6 @@ public class AddProcessController implements Initializable {
     private TableColumn<Segment, Long> segmentSize;
 
     @FXML
-    private Label labelPID;
-
-    @FXML
-    private Label currentPID;
-
-    @FXML
     private Label segmentNumber;
 
     @FXML
@@ -426,19 +420,14 @@ public class AddProcessController implements Initializable {
     }
 
     @FXML
-    void handlecSegmentNameConfirmation(ActionEvent event) {
-
-    }
-
-    @FXML
     void handleKeySegmentNumberConfirmTextfeild(KeyEvent event) {
         if (event.getCode().equals(KeyCode.ENTER)) {
-            if (Integer.valueOf(numberInputed.getText()) < 0) {
-                errorDialog("Number can't be negative");
-                return;
-            }
             try {
                 numberOfSegments = Integer.valueOf(numberInputed.getText());
+                if (numberOfSegments < 0) {
+                    errorDialog("Number can't be negative");
+                    return;
+                }
                 labelsegmentName.setDisable(false);
                 nameInputed.setDisable(false);
                 labelsegmentSize.setDisable(false);
@@ -463,13 +452,13 @@ public class AddProcessController implements Initializable {
 
     @FXML
     void handleKeySegmentNumberConfirmButton(KeyEvent event) {
-        if (Integer.valueOf(numberInputed.getText()) < 0) {
-            errorDialog("Number can't be negative");
-            return;
-        }
         if (event.getCode().equals(KeyCode.ENTER)) {
             try {
                 numberOfSegments = Integer.valueOf(numberInputed.getText());
+                if (numberOfSegments < 0) {
+                    errorDialog("Number can't be negative");
+                    return;
+                }
                 labelsegmentName.setDisable(false);
                 nameInputed.setDisable(false);
                 labelsegmentSize.setDisable(false);
@@ -494,12 +483,12 @@ public class AddProcessController implements Initializable {
 
     @FXML
     void handlecSegmentNumberConfirmation(MouseEvent event) {
-        if (Integer.valueOf(numberInputed.getText()) < 0) {
-            errorDialog("Number can't be negative");
-            return;
-        }
         try {
             numberOfSegments = Integer.valueOf(numberInputed.getText());
+            if (numberOfSegments < 0) {
+                errorDialog("Number can't be negative");
+                return;
+            }
             labelsegmentName.setDisable(false);
             nameInputed.setDisable(false);
             labelsegmentSize.setDisable(false);
@@ -519,11 +508,6 @@ public class AddProcessController implements Initializable {
             WrongEntry.setContentText("Input must be an Integer");
             WrongEntry.show();
         }
-    }
-
-    @FXML
-    void handlecSegmentSizeConfirmation(ActionEvent event) {
-
     }
 
     private void initializeChoiceBox() {
@@ -548,7 +532,7 @@ public class AddProcessController implements Initializable {
         Segment.setSEGMENT_ID(0);
         allocateProcessTitlePane.setText("Process " + newProcess.getID());
         initializeChoiceBox();
-        
+
     }
 
     @Override
@@ -556,7 +540,6 @@ public class AddProcessController implements Initializable {
         segmentName.setCellValueFactory(new PropertyValueFactory<>("name"));
         segmentSize.setCellValueFactory(new PropertyValueFactory<>("limit"));
         segmentIDColumn.setCellValueFactory(new PropertyValueFactory<>("ID"));
-//        initializeChoiceBox();
     }
 
 }
