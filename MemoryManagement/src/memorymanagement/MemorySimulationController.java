@@ -844,9 +844,7 @@ public class MemorySimulationController implements Initializable {
         allocatedProcessTable.setRoot(null);
         // Create the root node and add children
         TreeItem<TableData> allocatedTableRootNode = new TreeItem<>();
-        TreeItem<TableData> OSNode = new TreeItem<>(new TableData("OS Reserved",
-                Color.RED,
-                (Process) null));
+        TreeItem<TableData> OSNode = new TreeItem<>(new TableData("OS Reserved", "", "0", Long.toString(osReservedSize), Color.RED));
         allocatedTableRootNode.getChildren().add(OSNode);
         for (int i = 0; i < allocatedProcess_vector.size(); i++) {
             TreeItem<TableData> Node = new TreeItem<>(new TableData(("P" + Long.toString(allocatedProcess_vector.get(i).getID())),

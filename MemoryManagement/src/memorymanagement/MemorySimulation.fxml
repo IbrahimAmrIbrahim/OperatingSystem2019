@@ -26,11 +26,11 @@
                   <Pane layoutX="-29.0" layoutY="458.0" prefHeight="180.0" prefWidth="475.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0">
                      <children>
                         <Button fx:id="allocateProcess_btn" layoutX="15.0" layoutY="9.0" mnemonicParsing="false" onKeyPressed="#allocateProcess_keyboardEvent" onMouseClicked="#allocateProcess_mouseEvent" prefHeight="31.0" prefWidth="214.0" text="Allocate Process" />
-                        <Button fx:id="MemoryConfig_btn" layoutX="118.0" layoutY="140.0" mnemonicParsing="false" onKeyPressed="#memoryHardwareConfiguration_keyboardEvent" onMouseClicked="#memoryHardwareConfiguration_mouseEvent" text="Memory Hardware Configuration" />
                         <Button fx:id="LoadFromFile_btn" layoutX="247.0" layoutY="9.0" mnemonicParsing="false" onKeyPressed="#loadProcessesFromFile_keyboardEvent" onMouseClicked="#loadProcessesFromFile_mouseEvent" prefHeight="31.0" prefWidth="214.0" text="Load Processes From File" />
-                        <Button fx:id="memoryCompaction_btn" layoutX="118.0" layoutY="98.0" mnemonicParsing="false" onKeyPressed="#memoryCompaction_KeyboardEvent" onMouseClicked="#memoryCompaction_mouseEvent" prefHeight="31.0" prefWidth="239.0" text="Memory Compaction" />
                         <Button fx:id="deallocateAll_btn" layoutX="15.0" layoutY="52.0" mnemonicParsing="false" onKeyPressed="#deallocateAll_keyboardEvent" onMouseClicked="#deallocateAll_mouseEvent" prefHeight="31.0" prefWidth="214.0" text="Deallocate All" />
                         <Button fx:id="deleteAllWaitingProcesses_btn" layoutX="247.0" layoutY="52.0" mnemonicParsing="false" onKeyPressed="#deleteAllWaitingProcesses_keyboardEvent" onMouseClicked="#deleteAllWaitingProcesses_mouseEvent" prefHeight="31.0" prefWidth="214.0" text="Delete All Waiting Processes" />
+                        <Button fx:id="memoryCompaction_btn" layoutX="118.0" layoutY="98.0" mnemonicParsing="false" onKeyPressed="#memoryCompaction_KeyboardEvent" onMouseClicked="#memoryCompaction_mouseEvent" prefHeight="31.0" prefWidth="239.0" text="Memory Compaction" />
+                        <Button fx:id="MemoryConfig_btn" layoutX="118.0" layoutY="140.0" mnemonicParsing="false" onKeyPressed="#memoryHardwareConfiguration_keyboardEvent" onMouseClicked="#memoryHardwareConfiguration_mouseEvent" prefHeight="31.0" prefWidth="239.0" text="Memory Hardware Configuration" />
                      </children>
                   </Pane>
                   <Accordion fx:id="accordionPane" layoutY="7.0" AnchorPane.bottomAnchor="180.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
