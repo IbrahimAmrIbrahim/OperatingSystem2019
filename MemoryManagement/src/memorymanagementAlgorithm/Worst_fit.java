@@ -1,16 +1,7 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package memorymanagementAlgorithm;
 
 import java.util.*;
 
-/**
- *
- * @author ahmed
- */
 public class Worst_fit {
 
     private Memory my_memory;
@@ -123,9 +114,6 @@ public class Worst_fit {
         // now the memory have the old process and free location
     }
 
-    public void get_total_free() {
-
-    }
     //==================================//
 
     public Vector<Process> getAllocatedProcessVector() {

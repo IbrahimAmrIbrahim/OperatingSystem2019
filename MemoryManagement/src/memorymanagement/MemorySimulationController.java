@@ -412,7 +412,9 @@ public class MemorySimulationController implements Initializable {
 
     @FXML
     private void loadProcessesFromFile_keyboardEvent(KeyEvent event) throws FileNotFoundException {
-        loadFromFile();
+        if (event.getCode().toString().equals("ENTER")) {
+            loadFromFile();
+        }
     }
 
     @FXML
