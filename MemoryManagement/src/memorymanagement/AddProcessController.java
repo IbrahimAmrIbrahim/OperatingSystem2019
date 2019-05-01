@@ -393,8 +393,6 @@ public class AddProcessController implements Initializable {
 
                 newProcess.add_Segment(SegmentsArray[segmentIndex]);
                 segmentsTable.getItems().add(newProcess.get_segemnt_i(segmentIndex));
-
-                System.out.println(newProcess.get_total_size());
                 
                 segmentIndex++;
 
@@ -526,7 +524,6 @@ public class AddProcessController implements Initializable {
         newProcess = process;
         isEdit = false;
         maxSize = parentCtrl.getMemoryTotalSize();
-        System.out.println(maxSize);
         osSize = parentCtrl.getOsReservedSize();
         option = parentCtrl.getMemoryAlignment();
         Segment.setSEGMENT_ID(0);
