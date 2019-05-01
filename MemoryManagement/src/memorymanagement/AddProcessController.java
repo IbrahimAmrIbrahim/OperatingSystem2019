@@ -198,8 +198,8 @@ public class AddProcessController implements Initializable {
                     forEditing = newProcess.get_total_size();
                 }
 
-                if (tempSizeD < 0) {
-                    errorDialog("Size can't be negative");
+                if (tempSizeD <= 0) {
+                    errorDialog("Size can't be negative or equal to zero");
                     return;
                 }
                 switch (selectedValue) {
@@ -315,8 +315,8 @@ public class AddProcessController implements Initializable {
             } else {
                 forEditing = newProcess.get_total_size();
             }
-            if (tempSizeD < 0) {
-                errorDialog("Size can't be negative");
+            if (tempSizeD <= 0) {
+                errorDialog("Size can't be negative or equal to zero");
                 return;
             }
             switch (selectedValue) {
@@ -424,8 +424,8 @@ public class AddProcessController implements Initializable {
         if (event.getCode().equals(KeyCode.ENTER)) {
             try {
                 numberOfSegments = Integer.valueOf(numberInputed.getText());
-                if (numberOfSegments < 0) {
-                    errorDialog("Number can't be negative");
+                if (numberOfSegments <= 0) {
+                    errorDialog("Number can't be negative or equal to zero");
                     return;
                 }
                 labelsegmentName.setDisable(false);
@@ -455,8 +455,8 @@ public class AddProcessController implements Initializable {
         if (event.getCode().equals(KeyCode.ENTER)) {
             try {
                 numberOfSegments = Integer.valueOf(numberInputed.getText());
-                if (numberOfSegments < 0) {
-                    errorDialog("Number can't be negative");
+                if (numberOfSegments <= 0) {
+                    errorDialog("Number can't be negative or equal to zero");
                     return;
                 }
                 labelsegmentName.setDisable(false);
@@ -485,8 +485,8 @@ public class AddProcessController implements Initializable {
     void handlecSegmentNumberConfirmation(MouseEvent event) {
         try {
             numberOfSegments = Integer.valueOf(numberInputed.getText());
-            if (numberOfSegments < 0) {
-                errorDialog("Number can't be negative");
+            if (numberOfSegments <= 0) {
+                errorDialog("Number can't be negativeor equal to zero");
                 return;
             }
             labelsegmentName.setDisable(false);
