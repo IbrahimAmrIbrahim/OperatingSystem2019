@@ -546,7 +546,9 @@ public class AddProcessController implements Initializable {
         osSize = parentCtrl.getOsReservedSize();
         option = parentCtrl.getMemoryAlignment();
         Segment.setSEGMENT_ID(0);
+        allocateProcessTitlePane.setText("Process " + newProcess.getID());
         initializeChoiceBox();
+        
     }
 
     @Override
@@ -554,7 +556,6 @@ public class AddProcessController implements Initializable {
         segmentName.setCellValueFactory(new PropertyValueFactory<>("name"));
         segmentSize.setCellValueFactory(new PropertyValueFactory<>("limit"));
         segmentIDColumn.setCellValueFactory(new PropertyValueFactory<>("ID"));
-        allocateProcessTitlePane.setText("Process x");
 //        initializeChoiceBox();
     }
 
