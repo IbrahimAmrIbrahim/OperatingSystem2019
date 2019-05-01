@@ -203,7 +203,11 @@ public class AddProcessController implements Initializable {
                 } else {
                     forEditing = newProcess.get_total_size();
                 }
-                
+
+                if (tempSizeD < 0) {
+                    errorDialog("Size can't be negative");
+                    return;
+                }
                 switch (selectedValue) {
                     case "Byte":
                         if (forEditing + tempSizeD > (maxSize)) {
@@ -310,14 +314,17 @@ public class AddProcessController implements Initializable {
             Double tempSizeD = Double.valueOf(sizeInputed.getText());
             Long tempSize = Math.round(tempSizeD);
             String selectedValue = sizeUnit_choiceBox.getValue();
-            
+
             Long forEditing = 0L;
             if (editing) {
                 forEditing = newProcess.get_total_size() - selectedSegment.getLimit();
             } else {
                 forEditing = newProcess.get_total_size();
             }
-            
+            if (tempSizeD < 0) {
+                errorDialog("Size can't be negative");
+                return;
+            }
             switch (selectedValue) {
                 case "Byte":
                     if (forEditing + tempSizeD > (maxSize)) {
@@ -393,7 +400,7 @@ public class AddProcessController implements Initializable {
 
                 newProcess.add_Segment(SegmentsArray[segmentIndex]);
                 segmentsTable.getItems().add(newProcess.get_segemnt_i(segmentIndex));
-                
+
                 segmentIndex++;
 
                 nameInputed.setText("");
@@ -426,6 +433,10 @@ public class AddProcessController implements Initializable {
     @FXML
     void handleKeySegmentNumberConfirmTextfeild(KeyEvent event) {
         if (event.getCode().equals(KeyCode.ENTER)) {
+            if (Integer.valueOf(numberInputed.getText()) < 0) {
+                errorDialog("Number can't be negative");
+                return;
+            }
             try {
                 numberOfSegments = Integer.valueOf(numberInputed.getText());
                 labelsegmentName.setDisable(false);
@@ -452,6 +463,10 @@ public class AddProcessController implements Initializable {
 
     @FXML
     void handleKeySegmentNumberConfirmButton(KeyEvent event) {
+        if (Integer.valueOf(numberInputed.getText()) < 0) {
+            errorDialog("Number can't be negative");
+            return;
+        }
         if (event.getCode().equals(KeyCode.ENTER)) {
             try {
                 numberOfSegments = Integer.valueOf(numberInputed.getText());
@@ -479,6 +494,10 @@ public class AddProcessController implements Initializable {
 
     @FXML
     void handlecSegmentNumberConfirmation(MouseEvent event) {
+        if (Integer.valueOf(numberInputed.getText()) < 0) {
+            errorDialog("Number can't be negative");
+            return;
+        }
         try {
             numberOfSegments = Integer.valueOf(numberInputed.getText());
             labelsegmentName.setDisable(false);
