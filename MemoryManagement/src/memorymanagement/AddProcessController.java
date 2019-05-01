@@ -263,7 +263,7 @@ public class AddProcessController implements Initializable {
                         break;
                 }
                 if (editing) {
-                    selectedSegment.setLimit(tempSize - selectedSegment.getLimit());
+                    selectedSegment.setLimit(tempSize);
                     selectedSegment.setName(nameInputed.getText());
                     segmentsTable.refresh();
 
