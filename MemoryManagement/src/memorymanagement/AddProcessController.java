@@ -189,7 +189,7 @@ public class AddProcessController implements Initializable {
         if (event.getCode().equals(KeyCode.ENTER)) {
             try {
                 Double tempSizeD = Double.valueOf(sizeInputed.getText());
-                Long tempSize = Math.round(tempSizeD);
+                Long tempSize = Math.round(Math.ceil(tempSizeD));
                 String selectedValue = sizeUnit_choiceBox.getValue();
                 Long forEditing = 0L;
                 if (editing) {
@@ -208,7 +208,7 @@ public class AddProcessController implements Initializable {
                             errorDialog("Total Memory Size exceeded the maximum limit allowed.");
                             return;
                         } else {
-                            tempSize = Math.round(tempSizeD);
+                            tempSize = Math.round(Math.ceil(tempSizeD));
                         }
                         break;
                     case "KB":
@@ -216,7 +216,7 @@ public class AddProcessController implements Initializable {
                             errorDialog("Total Memory Size exceeded the maximum limit allowed.");
                             return;
                         } else {
-                            tempSize = Math.round(tempSizeD * 1024.0);
+                            tempSize = Math.round(Math.ceil(tempSizeD * 1024.0));
                         }
 
                         break;
@@ -225,7 +225,7 @@ public class AddProcessController implements Initializable {
                             errorDialog("Total Memory Size exceeded the maximum limit allowed.");
                             return;
                         } else {
-                            tempSize = Math.round(tempSizeD * 1024.0 * 1024.0);
+                            tempSize = Math.round(Math.ceil(tempSizeD * 1024.0 * 1024.0));
                         }
 
                         break;
@@ -234,7 +234,7 @@ public class AddProcessController implements Initializable {
                             errorDialog("Total Memory Size exceeded the maximum limit allowed.");
                             return;
                         } else {
-                            tempSize = Math.round(tempSizeD * 1024.0 * 1024.0 * 1024.0);
+                            tempSize = Math.round(Math.ceil(tempSizeD * 1024.0 * 1024.0 * 1024.0));
                         }
 
                         break;
@@ -243,7 +243,7 @@ public class AddProcessController implements Initializable {
                             errorDialog("Total Memory Size exceeded the maximum limit allowed.");
                             return;
                         } else {
-                            tempSize = Math.round(tempSizeD * 1024.0 * 1024.0 * 1024.0 * 1024.0);
+                            tempSize = Math.round(Math.ceil(tempSizeD * 1024.0 * 1024.0 * 1024.0 * 1024.0));
                         }
 
                         break;
@@ -306,7 +306,7 @@ public class AddProcessController implements Initializable {
     void handleSegmentConfirmation(MouseEvent event) {
         try {
             Double tempSizeD = Double.valueOf(sizeInputed.getText());
-            Long tempSize = Math.round(tempSizeD);
+            Long tempSize = Math.round(Math.ceil(tempSizeD));
             String selectedValue = sizeUnit_choiceBox.getValue();
 
             Long forEditing = 0L;
@@ -325,7 +325,7 @@ public class AddProcessController implements Initializable {
                         errorDialog("Total Memory Size exceeded the maximum limit allowed.");
                         return;
                     } else {
-                        tempSize = Math.round(tempSizeD);
+                        tempSize = Math.round(Math.ceil(tempSizeD));
                     }
                     break;
                 case "KB":
@@ -333,7 +333,7 @@ public class AddProcessController implements Initializable {
                         errorDialog("Total Memory Size exceeded the maximum limit allowed.");
                         return;
                     } else {
-                        tempSize = Math.round(tempSizeD * 1024.0);
+                        tempSize = Math.round(Math.ceil(tempSizeD * 1024.0));
                     }
 
                     break;
@@ -342,7 +342,7 @@ public class AddProcessController implements Initializable {
                         errorDialog("Total Memory Size exceeded the maximum limit allowed.");
                         return;
                     } else {
-                        tempSize = Math.round(tempSizeD * 1024.0 * 1024.0);
+                        tempSize = Math.round(Math.ceil(tempSizeD * 1024.0 * 1024.0));
                     }
 
                     break;
@@ -351,7 +351,7 @@ public class AddProcessController implements Initializable {
                         errorDialog("Total Memory Size exceeded the maximum limit allowed.");
                         return;
                     } else {
-                        tempSize = Math.round(tempSizeD * 1024.0 * 1024.0 * 1024.0);
+                        tempSize = Math.round(Math.ceil(tempSizeD * 1024.0 * 1024.0 * 1024.0));
                     }
 
                     break;
@@ -360,7 +360,7 @@ public class AddProcessController implements Initializable {
                         errorDialog("Total Memory Size exceeded the maximum limit allowed.");
                         return;
                     } else {
-                        tempSize = Math.round(tempSizeD * 1024.0 * 1024.0 * 1024.0 * 1024.0);
+                        tempSize = Math.round(Math.ceil(tempSizeD * 1024.0 * 1024.0 * 1024.0 * 1024.0));
                     }
 
                     break;

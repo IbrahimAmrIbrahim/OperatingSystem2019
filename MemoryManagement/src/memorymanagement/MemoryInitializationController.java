@@ -349,7 +349,7 @@ public class MemoryInitializationController implements Initializable {
                     errorDialog("Total Memory Size exceeded the max limit allowed.");
                     return;
                 } else {
-                    limit = Math.round(limitDouble);
+                    limit = Math.round(Math.ceil(limitDouble));
                 }
                 break;
             case "KB":
@@ -357,7 +357,7 @@ public class MemoryInitializationController implements Initializable {
                     errorDialog("Total Memory Size exceeded the max limit allowed.");
                     return;
                 } else {
-                    limit = Math.round(limitDouble * 1024d);
+                    limit = Math.round(Math.ceil(limitDouble * 1024d));
                 }
                 break;
             case "MB":
@@ -365,7 +365,7 @@ public class MemoryInitializationController implements Initializable {
                     errorDialog("Total Memory Size exceeded the max limit allowed.");
                     return;
                 } else {
-                    limit = Math.round(limitDouble * (1024d * 1024d));
+                    limit = Math.round(Math.ceil(limitDouble * (1024d * 1024d)));
                 }
                 break;
             case "GB":
@@ -373,7 +373,7 @@ public class MemoryInitializationController implements Initializable {
                     errorDialog("Total Memory Size exceeded the max limit allowed.");
                     return;
                 } else {
-                    limit = Math.round(limitDouble * (1024d * 1024d * 1024d));
+                    limit = Math.round(Math.ceil(limitDouble * (1024d * 1024d * 1024d)));
                 }
                 break;
             case "TB":
@@ -381,7 +381,7 @@ public class MemoryInitializationController implements Initializable {
                     errorDialog("Total Memory Size exceeded the max limit allowed.");
                     return;
                 } else {
-                    limit = Math.round(limitDouble * (1024d * 1024d * 1024d * 1024d));
+                    limit = Math.round(Math.ceil(limitDouble * (1024d * 1024d * 1024d * 1024d)));
                 }
                 break;
         }
@@ -535,7 +535,7 @@ public class MemoryInitializationController implements Initializable {
                                                 + "Error in hole " + Integer.valueOf(k));
                                         holeValid = false;
                                     } else {
-                                        limit = Math.round(limitDouble);
+                                        limit = Math.round(Math.ceil(limitDouble));
                                     }
                                     break;
                                 case "KB":
@@ -544,7 +544,7 @@ public class MemoryInitializationController implements Initializable {
                                                 + "Error in hole " + Integer.valueOf(k));
                                         holeValid = false;
                                     } else {
-                                        limit = Math.round(limitDouble * 1024d);
+                                        limit = Math.round(Math.ceil(limitDouble * 1024d));
                                     }
                                     break;
                                 case "MB":
@@ -553,7 +553,7 @@ public class MemoryInitializationController implements Initializable {
                                                 + "Error in hole " + Integer.valueOf(k));
                                         holeValid = false;
                                     } else {
-                                        limit = Math.round(limitDouble * (1024d * 1024d));
+                                        limit = Math.round(Math.ceil(limitDouble * (1024d * 1024d)));
                                     }
                                     break;
                                 case "GB":
@@ -562,7 +562,7 @@ public class MemoryInitializationController implements Initializable {
                                                 + "Error in hole " + Integer.valueOf(k));
                                         holeValid = false;
                                     } else {
-                                        limit = Math.round(limitDouble * (1024d * 1024d * 1024d));
+                                        limit = Math.round(Math.ceil(limitDouble * (1024d * 1024d * 1024d)));
                                     }
                                     break;
                                 case "TB":
@@ -571,7 +571,7 @@ public class MemoryInitializationController implements Initializable {
                                                 + "Error in hole " + Integer.valueOf(k));
                                         holeValid = false;
                                     } else {
-                                        limit = Math.round(limitDouble * (1024d * 1024d * 1024d * 1024d));
+                                        limit = Math.round(Math.ceil(limitDouble * (1024d * 1024d * 1024d * 1024d)));
                                     }
                                     break;
                                 default:

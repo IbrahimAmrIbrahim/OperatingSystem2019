@@ -562,7 +562,7 @@ public class MemorySimulationController implements Initializable {
                                         + "Error in Process " + Integer.valueOf(k) + ", Seg " + Integer.valueOf(i));
                                 validProcess = false;
                             } else {
-                                limit = Math.round(limitDouble);
+                                limit = Math.round(Math.ceil(limitDouble));
                             }
                             break;
                         case "KB":
@@ -571,7 +571,7 @@ public class MemorySimulationController implements Initializable {
                                         + "Error in Process " + Integer.valueOf(k) + ", Seg " + Integer.valueOf(i));
                                 validProcess = false;
                             } else {
-                                limit = Math.round(limitDouble * 1024d);
+                                limit = Math.round(Math.ceil(limitDouble * 1024d));
                             }
                             break;
                         case "MB":
@@ -580,7 +580,7 @@ public class MemorySimulationController implements Initializable {
                                         + "Error in Process " + Integer.valueOf(k) + ", Seg " + Integer.valueOf(i));
                                 validProcess = false;
                             } else {
-                                limit = Math.round(limitDouble * (1024d * 1024d));
+                                limit = Math.round(Math.ceil(limitDouble * (1024d * 1024d)));
                             }
                             break;
                         case "GB":
@@ -589,7 +589,7 @@ public class MemorySimulationController implements Initializable {
                                         + "Error in Process " + Integer.valueOf(k) + ", Seg " + Integer.valueOf(i));
                                 validProcess = false;
                             } else {
-                                limit = Math.round(limitDouble * (1024d * 1024d * 1024d));
+                                limit = Math.round(Math.ceil(limitDouble * (1024d * 1024d * 1024d)));
                             }
                             break;
                         case "TB":
@@ -598,7 +598,7 @@ public class MemorySimulationController implements Initializable {
                                         + "Error in Process " + Integer.valueOf(k) + ", Seg " + Integer.valueOf(i));
                                 validProcess = false;
                             } else {
-                                limit = Math.round(limitDouble * (1024d * 1024d * 1024d * 1024d));
+                                limit = Math.round(Math.ceil(limitDouble * (1024d * 1024d * 1024d * 1024d)));
                             }
                             break;
                         default:
@@ -626,7 +626,7 @@ public class MemorySimulationController implements Initializable {
                     }
 
                     if (limit > memoryTotalSize) {
-                        errorDialog("This hole exceeeded total memory size.\n"
+                        errorDialog("This process exceeeded total memory size.\n"
                                 + "Error in Process " + Integer.valueOf(k) + ", Seg " + Integer.valueOf(i));
                         validProcess = false;
                         break;
@@ -635,6 +635,12 @@ public class MemorySimulationController implements Initializable {
                     Segment newSeg = new Segment(limit, segNameRead, true);
                     newProcess.add_Segment(newSeg);
                     validProcess = true;
+                }
+
+                if (newProcess.get_total_size() > memoryTotalSize) {
+                    errorDialog("This process exceeeded total memory size.\n"
+                            + "Error in Process " + Integer.valueOf(k));
+                    validProcess = false;
                 }
                 if (validProcess) {
                     switch (allocationMethod) {

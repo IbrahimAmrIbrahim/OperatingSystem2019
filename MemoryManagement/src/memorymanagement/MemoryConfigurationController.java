@@ -178,7 +178,7 @@ public class MemoryConfigurationController implements Initializable {
                     errorDialog("Total Memory Size exceeded the max limit allowed.");
                     return;
                 } else {
-                    totalSize = Math.round(totalSizeDouble);
+                    totalSize = Math.round(Math.ceil(totalSizeDouble));
                 }
                 break;
             case "KB":
@@ -186,7 +186,7 @@ public class MemoryConfigurationController implements Initializable {
                     errorDialog("Total Memory Size exceeded the max limit allowed.");
                     return;
                 } else {
-                    totalSize = Math.round(totalSizeDouble * 1024d);
+                    totalSize = Math.round(Math.ceil(totalSizeDouble * 1024d));
                 }
                 break;
             case "MB":
@@ -194,7 +194,7 @@ public class MemoryConfigurationController implements Initializable {
                     errorDialog("Total Memory Size exceeded the max limit allowed.");
                     return;
                 } else {
-                    totalSize = Math.round(totalSizeDouble * (1024d * 1024d));
+                    totalSize = Math.round(Math.ceil(totalSizeDouble * (1024d * 1024d)));
                 }
                 break;
             case "GB":
@@ -202,7 +202,7 @@ public class MemoryConfigurationController implements Initializable {
                     errorDialog("Total Memory Size exceeded the max limit allowed.");
                     return;
                 } else {
-                    totalSize = Math.round(totalSizeDouble * (1024d * 1024d * 1024d));
+                    totalSize = Math.round(Math.ceil(totalSizeDouble * (1024d * 1024d * 1024d)));
                 }
                 break;
             case "TB":
@@ -210,7 +210,7 @@ public class MemoryConfigurationController implements Initializable {
                     errorDialog("Total Memory Size exceeded the max limit allowed.");
                     return;
                 } else {
-                    totalSize = Math.round(totalSizeDouble * (1024d * 1024d * 1024d * 1024d));
+                    totalSize = Math.round(Math.ceil(totalSizeDouble * (1024d * 1024d * 1024d * 1024d)));
                 }
                 break;
         }
@@ -249,7 +249,7 @@ public class MemoryConfigurationController implements Initializable {
                     errorDialog("OS Reserved Size exceeded the max limit allowed.");
                     return;
                 } else {
-                    osSize = Math.round(osSizeDouble);
+                    osSize = Math.round(Math.ceil(osSizeDouble));
                 }
                 break;
             case "KB":
@@ -257,7 +257,7 @@ public class MemoryConfigurationController implements Initializable {
                     errorDialog("OS Reserved Size exceeded the max limit allowed.");
                     return;
                 } else {
-                    osSize = Math.round(osSizeDouble * 1024d);
+                    osSize = Math.round(Math.ceil(osSizeDouble * 1024d));
                 }
                 break;
             case "MB":
@@ -265,7 +265,7 @@ public class MemoryConfigurationController implements Initializable {
                     errorDialog("OS Reserved Size exceeded the max limit allowed.");
                     return;
                 } else {
-                    osSize = Math.round(osSizeDouble * (1024d * 1024d));
+                    osSize = Math.round(Math.ceil(osSizeDouble * (1024d * 1024d)));
                 }
                 break;
             case "GB":
@@ -273,7 +273,7 @@ public class MemoryConfigurationController implements Initializable {
                     errorDialog("OS Reserved Size exceeded the max limit allowed.");
                     return;
                 } else {
-                    osSize = Math.round(osSizeDouble * (1024d * 1024d * 1024d));
+                    osSize = Math.round(Math.ceil(osSizeDouble * (1024d * 1024d * 1024d)));
                 }
                 break;
             case "TB":
@@ -281,7 +281,7 @@ public class MemoryConfigurationController implements Initializable {
                     errorDialog("OS Reserved Size exceeded the max limit allowed.");
                     return;
                 } else {
-                    osSize = Math.round(osSizeDouble * (1024d * 1024d * 1024d * 1024d));
+                    osSize = Math.round(Math.ceil(osSizeDouble * (1024d * 1024d * 1024d * 1024d)));
                 }
                 break;
         }
